@@ -1,0 +1,18 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "startCommand": "npm run dev",
+  "appDir": "src/app",
+  "routes": [
+    "/",
+    "/work",
+    "/work/tourgenz",
+    "/about",
+    "/contact"
+  ],
+  "viewports": [
+    { "name": "mobile", "width": 390, "height": 844 },
+    { "name": "tablet", "width": 768, "height": 1024 },
+    { "name": "desktop", "width": 1440, "height": 900 }
+  ],
+  "designDoc": "design.md"
+}

@@ -1,60 +1,98 @@
-# Haris Portfolio V3
+# harisizm.com — Portfolio V3
 
-Working repo for the third pass at the portfolio. Right now it holds **context
-only** — no app code yet. Everything here was salvaged from Portfolio V2 before
-that folder was deleted (archived 2026-10-27).
+Third pass at the portfolio for **Hafiz Muhammad Haris** (`harisizm`), a full-stack
+engineer in Lahore. Ships to [harisizm.com](https://harisizm.com).
 
-## What is in here
+This one is a design-and-experience project before it is a code project. Every
+project on the site is a full case study with its own journey — problem, approach,
+what was rejected, outcome — rather than a card with three bullets.
+
+---
+
+## Stack
+
+| | |
+|---|---|
+| Framework | Next.js 16 (App Router) + React 19 |
+| Language | TypeScript, `strict` |
+| Styling | Tailwind CSS v4 via PostCSS, with CSS custom-property tokens |
+| Display face | Departure Mono (SIL OFL) — self-hosted, 17 KB |
+| Body face | Inter via `next/font/google` |
+| Motion | IntersectionObserver + CSS. No animation library unless one earns its place |
+
+```bash
+npm run dev        # http://localhost:3000
+npm run build
+npm run typecheck  # tsc --noEmit
+npm run lint
+```
+
+---
+
+## Where things are
 
 ```
-context/            the facts, as markdown — read these first
-├── profile.md      name, contact, positioning, headline copy
-├── projects.md     all 6 projects: bullets, links, stacks (+ a JSON block)
-├── experience.md   jobs, degree, certification
-├── skills.md       18-item toolbox, hobbies, suggested regrouping
-├── copy-deck.md    every user-facing string V2 shipped, with its typos flagged
-├── v2-post-mortem.md   10 structural problems in V2 — the do-not-repeat list
-└── repo-context.md     V2's stack, architecture, config and commit history
+design.md                  THE SPEC. Tokens, grid, type scale, components,
+                           page architecture, the case-study template.
+                           Read it before writing any UI.
+lessons.md                 Decisions made (D-nnn) and dead ends hit (T-nnn).
+                           Read before proposing anything clever.
+CLAUDE.md                  Working rules for this repo.
 
-assets/             the real files — these cannot be regenerated
-├── projects/       6 project screenshots (3 need re-compressing)
-├── personal/       profile photo + 2 memojis
-├── docs/           cv.pdf, Coursera certificate PDF, certificate image
-└── brand/          grain texture, Lahore map, UOL + Mindbridge logos, book cover
+src/
+├── app/                   App Router pages + globals.css (all tokens)
+├── components/ui/         Design-system primitives
+├── data/                  Typed content layer — projects, experience, skills
+├── hooks/                 useReveal, useScrollSpy, useReducedMotion
+└── lib/site.ts            Single source of truth for identity + contact
 
-reference/v2/       V2 source kept to look back at, NOT to build on
-├── sections/       all 8 section components + the old page.tsx (as _page.tsx)
-└── components/     Card, CardHeader, SectionHeader, HeroOrbit, ToolboxItems,
-                    TechIcon, ScrollToTop, smoothScroll
+public/
+├── cursor/                Three 32×32 pixel-art cursors (CSS-driven, no JS)
+├── fonts/                 Departure Mono + its licence
+└── docs/                  CV
+
+context/
+├── reference-nvrmnd.md    UI/UX teardown of the design reference
+├── portfolio-principles.md  What makes a portfolio convert
+├── v2-post-mortem.md      10 structural problems in V2 — the do-not-repeat list
+└── repo-context.md        V2's stack and architecture, for reference
+
+reference/nvrmnd/          41 WebP screenshots of the design reference + an index
+assets/                    Source media. Derive optimised copies; never
+                           overwrite in place.
 ```
 
-## How to use it
+---
 
-1. **`context/v2-post-mortem.md` first.** It is the list of what went wrong and
-   why — the reason V3 exists. Five headline items are summarised at the bottom.
-2. **`context/projects.md` + `experience.md` + `profile.md`** are the content.
-   `projects.md` ends with a JSON block ready to drop into a data layer.
-3. **`context/copy-deck.md`** when writing V3 copy, so the rewrite is deliberate
-   rather than accidental.
-4. **`reference/v2/`** only when you want to see how V2 did something. Treat it
-   as an archive. The code in there does not compile as-is — see the note in
-   `reference/v2/README.md`.
+## The rules that matter
 
-## Known decisions still open
+These exist because V2 got each one wrong. Full detail in `lessons.md`.
 
-- Audience: employers or freelance clients? V2's copy hedged both.
-- Display name: the V2 page title said "Haris Iftikhar" while the hero said
-  "Hafiz Muhammad Haris". Pick one.
-- Whether to keep V2's visual language (dark + emerald/sky gradient + grain) or
-  start fresh. The V2 look came from a template, so there is nothing owned to
-  protect.
-- Whether the non-technical work history stays, and where.
-- `assets/docs/cv.pdf` was never read during the archive — open it and reconcile
-  against `context/experience.md` before writing V3 content.
+1. **Every interactive element resolves to a real destination.** V2's "Hire me"
+   button had no `onClick` and no `href` at all. Where there is no destination —
+   a project with no deployment — the control does not render. That is why
+   `Project.live` is `string | null`.
+2. **No root font-size hack.** V2 set `html { font-size: 77% }` and silently broke
+   every `rem` on the site.
+3. **Content lives in the typed data layer**, never inside components.
+4. **`prefers-reduced-motion` is honoured by every animation**, from the first one.
+   Reveal animations resolve to their final state with JS disabled.
+5. **The contact path works without hover and without JavaScript.**
+6. **Page weight under 1 MB.** V2 shipped ~8 MB of PNGs.
+7. **Nothing invented.** No fabricated testimonials, no placeholder metrics
+   presented as real.
 
-## Status
+---
 
-- [x] V2 content and assets archived
-- [x] V2 post-mortem written
-- [ ] V3 design direction chosen
-- [ ] V3 app scaffolded
+## Design reference
+
+The visual system is modelled closely on [nvrmndstudio.com](https://www.nvrmndstudio.com),
+a deliberate and recorded decision (`lessons.md` D-002). `context/reference-nvrmnd.md`
+documents what was measured and why, including the defects that were **not** carried
+over — notably its complete absence of reduced-motion support and its mobile
+scroll-spy regression.
+
+Both of that site's typefaces are commercially licensed and are **not** reused here;
+Departure Mono and Inter stand in for them (`lessons.md` D-005).
+
+`reference/nvrmnd/` is an archive. Read it; never import from it, never ship it.
