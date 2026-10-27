@@ -40,6 +40,9 @@
   /* Layout */
   --gutter: 16px;
   --rail: 292px; /* sticky case-study rail width */
+  /* Height of the sticky header. Anything else that sticks must offset by this
+     or it renders underneath the bar — the case-study rail's `‹ BACK` did. */
+  --header-h: 76px;
 }
 
 @theme inline {
@@ -83,44 +86,50 @@
 /* ---------------------------------------------------------------------------
    Base
 --------------------------------------------------------------------------- */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+/* All of this sits in `base` so Tailwind utilities, which cascade after it, win.
+   Unlayered element rules beat every layered utility: an unlayered
+   `a { color: inherit }` silently overrode `text-white` on every anchor on the
+   site. Same trap as `.u-label` below. */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-html {
-  /* No root font-size hack. See lessons.md T-001 — this broke every rem in V2. */
-  -webkit-text-size-adjust: 100%;
-}
+  html {
+    /* No root font-size hack. lessons.md T-001 — this broke every rem in V2. */
+    -webkit-text-size-adjust: 100%;
+  }
 
-body {
-  margin: 0;
-  background: var(--canvas);
-  color: var(--ink);
-  font-family: var(--font-body);
-  font-size: var(--text-body);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-}
+  body {
+    margin: 0;
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
 
-h1, h2, h3, h4, h5, h6, p, figure {
-  margin: 0;
-}
+  h1, h2, h3, h4, h5, h6, p, figure {
+    margin: 0;
+  }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 
-img, svg, video {
-  display: block;
-  max-width: 100%;
-}
+  img, svg, video {
+    display: block;
+    max-width: 100%;
+  }
 
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
 }
 
 /* ---------------------------------------------------------------------------

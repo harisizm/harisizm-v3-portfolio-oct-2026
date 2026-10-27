@@ -52,8 +52,11 @@ export function Header() {
     ? "text-accent-2 focus-visible:outline-accent-2"
     : "bg-accent text-white";
 
+  // Solid canvas ground. Left transparent, page content scrolled visibly under
+  // the bar and collided with the status pill and the trigger. The grid rules
+  // give up the header band in exchange; they resume immediately below it.
   return (
-    <header className="sticky top-0 z-50">
+    <header className="sticky top-0 z-50 bg-canvas">
       {/* Above the overlay's z-40, so the trigger stays live while it is open.
           The bar is also what the overlay cycles focus through, which is why it
           carries a ref: everything visible above the overlay has to be

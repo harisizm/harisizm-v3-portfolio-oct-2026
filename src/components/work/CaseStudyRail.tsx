@@ -25,7 +25,7 @@ export interface CaseStudyRailProps {
  */
 export function CaseStudyRail({ project, sections }: CaseStudyRailProps) {
   return (
-    <div className="pt-8 lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col lg:justify-between lg:py-14">
+    <div className="pt-8 lg:sticky lg:top-[var(--header-h)] lg:flex lg:h-[calc(100svh-var(--header-h))] lg:flex-col lg:justify-between lg:py-14">
       <div>
         <Link
           href="/work"
