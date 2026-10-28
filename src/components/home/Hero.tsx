@@ -1,5 +1,6 @@
 /**
- * HERO LINE — three candidates. Haris to pick — CLAUDE.md open item.
+ * HERO LINE. Chosen by Haris on 2026-10-28: the numbers-first line. The two
+ * alternates stay here in case the copy is revisited.
  *
  * The test from `context/portfolio-principles.md`: could a competent developer
  * with a different story put this sentence on their site? Each one below leans
@@ -8,15 +9,15 @@
  * characters per line at 120px, and line 1 shares its row with the support
  * paragraph, so it has to stay at or under 12.
  *
- *   SET (below) — result-led, 40 characters
- *     600 · WHAT YOU DO
- *     600 · BY HAND, I TURN
- *     300 · INTO A SYSTEM.
- *
- *   ALT A — hardest number first, 39 characters (Client Hunt's measured result)
+ *   SET (below): hardest number first, 39 characters (Client Hunt's measured result)
  *     600 · EIGHT HOURS
  *     600 · OF WORK, DONE IN
  *     300 · TEN MINUTES.
+ *
+ *   ALT A: result-led, 40 characters
+ *     600 · WHAT YOU DO
+ *     600 · BY HAND, I TURN
+ *     300 · INTO A SYSTEM.
  *
  *   ALT B — offer-led, 48 characters
  *     600 · I BUILD SYSTEMS
@@ -56,9 +57,9 @@ export function Hero() {
         {/* clamp rather than the `text-hero` token: the token is the 120px cap
             and this has to survive 390px. 0.9 line-height per design.md §4. */}
         <h1 className="text-center text-[clamp(2.25rem,8.4vw,120px)] uppercase leading-[0.9] lg:col-span-3">
-          <span className="block font-semibold">What you do</span>
-          <span className="block font-semibold">by hand, I turn</span>
-          <span className="block font-light">into a system.</span>
+          <span className="block font-semibold">Eight hours</span>
+          <span className="block font-semibold">of work, done in</span>
+          <span className="block font-light">ten minutes.</span>
         </h1>
 
         <p className="mt-10 max-w-[38ch] text-lead font-light text-ink lg:col-start-4 lg:row-start-1 lg:mt-0 lg:pt-3">

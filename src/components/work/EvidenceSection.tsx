@@ -109,14 +109,16 @@ function UsageEvidenceBlock({ usage }: { usage: UsageEvidence }) {
           {artifacts.map((artifact) => (
             <div
               key={artifact.src}
-              className="relative aspect-[16/10] w-full overflow-hidden bg-surface-alt"
+              className="relative aspect-[16/10] w-full overflow-hidden border border-border bg-surface-alt"
             >
+              {/* contain, never cover: a screenshot with its edge cut off reads
+                  as a mistake, and every cover on the site shares this frame. */}
               <Image
                 src={artifact.src}
                 alt={artifact.alt}
                 fill
                 sizes="(min-width: 640px) 32vw, 100vw"
-                className="object-cover"
+                className="object-contain"
               />
             </div>
           ))}

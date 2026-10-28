@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Chakra_Petch, Inter } from "next/font/google";
 import { Footer, Header } from "@/components/layout";
 import { RouteGridOverlay } from "@/components/layout/RouteGridOverlay";
+import { MotionBoot, MotionProvider, PageTransition } from "@/components/motion";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -43,19 +44,30 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${chakra.variable}`}>
+    /* `suppressHydrationWarning`: MotionBoot's inline script stamps `data-js`
+       on this element before React hydrates it. See MotionBoot.tsx. */
+    <html
+      lang="en"
+      className={`${inter.variable} ${chakra.variable}`}
+      suppressHydrationWarning
+    >
       <body>
-        <Header />
-        {/* One grid overlay for the whole page, not one per section: the
-            column rules run unbroken from the header to the footer's top rule
-            (audit A3). The wrapper is the overlay's positioned ancestor and
-            ends where the footer begins, so the footer — which the reference
-            keeps rule-free — never needs to paint over anything. */}
-        <div className="relative">
-          <RouteGridOverlay />
-          {children}
-        </div>
-        <Footer />
+        {/* First in the body, so it runs before any content below is parsed:
+            it decides whether server-rendered "hidden" states stay hidden. */}
+        <MotionBoot />
+        <MotionProvider>
+          <Header />
+          {/* One grid overlay for the whole page, not one per section: the
+              column rules run unbroken from the header to the footer's top rule
+              (audit A3). The wrapper is the overlay's positioned ancestor and
+              ends where the footer begins, so the footer — which the reference
+              keeps rule-free — never needs to paint over anything. */}
+          <div className="relative">
+            <RouteGridOverlay />
+            <PageTransition>{children}</PageTransition>
+          </div>
+          <Footer />
+        </MotionProvider>
       </body>
     </html>
   );

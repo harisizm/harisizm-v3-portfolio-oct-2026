@@ -516,3 +516,35 @@ data over production rows; and when a screen is nothing but other people's
 data, do not use it however good it looks. The Chakra Petch display face and the
 canvas-coloured mask bar make a masked span read as deliberate, not as damage.
 
+---
+
+### D-017 · Motion: the `motion` library, showpiece intensity, cover-led morph
+**2026-10-28**
+
+The site had one animation (the scroll reveal) and the menu reticle. Haris asked
+for a site that feels alive: animation on click, on page change, on section
+change, and continuous motion where it earns its place.
+
+**Chosen:**
+- **Engine: `motion`** (the framer-motion successor). Declarative, built for the
+  App Router, with enter and exit animations, shared layout animations and
+  reduced-motion support in the library itself. Chosen over GSAP (reference
+  parity, but imperative and heavier) and over CSS-only (lightest, but weaker
+  choreography and partial Safari support for View Transitions).
+- **Intensity: showpiece.** Text splits and rises by line, sections stagger,
+  covers scale and parallax, buttons press, the rail marker slides, numbers
+  count up, the status dot pulses, a marquee strip runs, a magnetic follower
+  rides the pointer on links.
+- **Transitions: cover-led morph.** A work card's cover grows into the
+  case-study hero position via a shared layout animation; every other route
+  change fades and rises.
+
+**Non-negotiable:** every animation resolves to its final state under
+`prefers-reduced-motion` and with JavaScript off (T-009). Continuous motion
+(marquee, pulse, follower) is off entirely under reduced motion, not slowed.
+Pointer-driven effects are gated on `(hover: hover) and (pointer: fine)`.
+
+**Why a dependency is justified:** page exit animations and shared layout
+morphs are not expressible in CSS alone with the App Router; the alternative
+was hand-rolling the same machinery.
+

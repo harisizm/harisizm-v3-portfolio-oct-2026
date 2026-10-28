@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { MorphCover, Parallax } from "@/components/motion";
 import { Chip, DarkPanel } from "@/components/ui";
+import { COVER_DRIFT, COVER_FRAME } from "@/components/work/ProjectCover";
 import { sortedProjects, type Project } from "@/data";
 
 import { Reveal } from "./Reveal";
@@ -37,26 +39,52 @@ interface CoverProps {
  * (design.md §8). It is aria-hidden because it carries no information the
  * adjacent title and date row do not already state.
  *
- * The full frame is the reference's 986×676 at 1440 (audit B3), spanning
- * columns 2 to 4. When art arrives, setting `cover.src` switches this to a real
- * `next/image` with `sizes` — §12 wants a genuine srcset on every content image.
+ * The full frame spans columns 2 to 4 in the shared 16:10 cover frame
+ * (`COVER_FRAME`): every cover on the site sits in the same window, contained
+ * and uncropped. With `cover.src` set this is a real `next/image` with `sizes`
+ * (§12 wants a genuine srcset on every content image).
  */
 function Cover({ project, size }: CoverProps) {
   const full = size === "full";
   const { src, alt } = project.cover;
 
-  const frame = full
-    ? "aspect-[986/676] w-full"
-    : "aspect-square w-14 shrink-0";
+  const frame = full ? "" : "aspect-square w-14 shrink-0";
 
   if (src !== null) {
+    /* The large frame is the shared cover frame, image contained and never
+       cropped, and one end of the cover morph (lessons.md D-017): it lifts
+       off the page when the card is followed and lands as the case study's
+       hero. The 56px thumbnail is an icon, so it may crop to fill, and it is
+       a plain image: two covers for one slug would give the morph two places
+       to start from. */
+    if (full) {
+      return (
+        <MorphCover
+          slug={project.slug}
+          departTo={[`/work/${project.slug}`]}
+          className={COVER_FRAME}
+        >
+          <Parallax amount={COVER_DRIFT} overscan={0}>
+            <Image
+              src={src}
+              alt={alt}
+              fill
+              sizes="(min-width: 1024px) 75vw, 100vw"
+              loading="lazy"
+              className="object-contain"
+            />
+          </Parallax>
+        </MorphCover>
+      );
+    }
+
     return (
       <div className={`relative overflow-hidden bg-surface-alt ${frame}`}>
         <Image
           src={src}
           alt={alt}
           fill
-          sizes={full ? "(min-width: 1024px) 75vw, 100vw" : "56px"}
+          sizes="56px"
           loading="lazy"
           className="object-cover"
         />

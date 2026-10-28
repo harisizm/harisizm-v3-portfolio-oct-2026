@@ -23,7 +23,9 @@ export interface WorkIndexEntryProps {
  * - With a cover, the reference's row: one full-bleed image spanning the
  *   content column, nothing else visible. The project name still reaches
  *   assistive tech through a visually hidden span, because the alt text
- *   describes the picture, not the project.
+ *   describes the picture, not the project. The cover is one end of the morph
+ *   (lessons.md D-017): it lifts off when this row is followed and is landed
+ *   on when the case study's `BACK` brings the reader here.
  * - Without one (every project today), a typographic row: number, uppercase
  *   title, tagline, date. A placeholder tile would be a frame promising art
  *   that does not exist (lessons.md T-002).
@@ -46,7 +48,7 @@ export function WorkIndexEntry({
             image={project.cover}
             sizes="(min-width: 1024px) 77vw, 100vw"
             priority={priority}
-            ratioClassName="aspect-[1108/676]"
+            morph={{ slug: project.slug, departTo: [href] }}
           />
           <span className="u-sr-only">
             {project.title}: {project.tagline}

@@ -84,7 +84,6 @@ export function NextUp({ next }: NextUpProps) {
               <ProjectCover
                 image={next.cover}
                 sizes="(min-width: 1024px) 52vw, 100vw"
-                ratioClassName="aspect-[16/10] lg:aspect-auto lg:h-full"
               />
             </Link>
           ) : null}

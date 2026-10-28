@@ -100,8 +100,6 @@ Build continues without these; they slot into existing nulls and stubs. Nothing
 here should be guessed, invented, or worked around with a placeholder that
 renders.
 
-- [ ] **Hero line.** `Hero.tsx` ships "WHAT YOU DO / BY HAND, I TURN / INTO A
-      SYSTEM." with two alternates in the comment at the top of the file.
 - [ ] **Decide** whether `skills.ts` keeps "TLS impersonation" and
       "GraphQL scraping" verbatim, or softens them.
 - [ ] **Booking URL** if one is wanted. `site.booking` is `null`.
@@ -112,6 +110,9 @@ renders.
       architecture, plus the three home-page process diagrams.
 
 ### Resolved 2026-10-28
+
+- **Hero line.** "EIGHT HOURS / OF WORK, DONE IN / TEN MINUTES." chosen by
+  Haris. Alternates remain in the comment at the top of `Hero.tsx`.
 
 - **Sign-off.** All four employer case studies approved as written by Haris on
   2026-10-28 (Tourgenz, Client Hunt, Instagram Lead Generator, Upwork

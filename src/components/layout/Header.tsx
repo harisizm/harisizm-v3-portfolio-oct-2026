@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { AnimatePresence } from "motion/react";
 import { useCallback, useId, useRef, useState, type CSSProperties } from "react";
 
 import { StatusPill, Wordmark } from "@/components/ui";
@@ -135,14 +136,21 @@ export function Header() {
         </div>
       </div>
 
-      {open ? (
-        <MenuOverlay
-          id={overlayId}
-          chromeRef={barRef}
-          onDismiss={dismiss}
-          onNavigate={navigate}
-        />
-      ) : null}
+      {/* AnimatePresence keeps the overlay mounted through its close
+          choreography. Its own effects still end with its lifetime, and while
+          it is leaving it is `inert`, so nothing can be focused or clicked on
+          a menu that is already on its way out. */}
+      <AnimatePresence>
+        {open ? (
+          <MenuOverlay
+            key="menu"
+            id={overlayId}
+            chromeRef={barRef}
+            onDismiss={dismiss}
+            onNavigate={navigate}
+          />
+        ) : null}
+      </AnimatePresence>
     </header>
   );
 }

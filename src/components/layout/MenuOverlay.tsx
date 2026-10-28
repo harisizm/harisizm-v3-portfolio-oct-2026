@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion, useIsPresent } from "motion/react";
 import {
   useEffect,
   useLayoutEffect,
@@ -11,6 +12,7 @@ import {
   type RefObject,
 } from "react";
 
+import { EASE, STAGGER } from "@/components/motion";
 import { GridOverlay } from "@/components/ui";
 import { useReducedMotion } from "@/hooks";
 import { nav, site } from "@/lib/site";
@@ -60,13 +62,88 @@ const MARKS = [
   "-bottom-6 -right-6 border-b-2 border-r-2",
 ] as const;
 
+/* ---------------------------------------------------------------------------
+   Open and close choreography — lessons.md D-017.
+
+   The blue panel wipes in from the top-right corner, where the trigger is
+   (a clip-path inset, 0.5s). The nav items start rising 0.2s into the wipe,
+   0.06s apart, and the contact column fades up once the wipe has landed.
+   Closing runs the sequence backwards and faster: column and items leave
+   first (`when: "afterChildren"`), then the panel wipes back to the corner. The variant labels propagate from the root, so the
+   children carry no `initial`/`animate` of their own.
+
+   `inset()` keeps all four values in percent at both ends; motion interpolates
+   complex strings only when their structure matches.
+--------------------------------------------------------------------------- */
+function panelVariants(reduced: boolean) {
+  return {
+    closed: {
+      clipPath: "inset(0% 0% 100% 100%)",
+      transition: reduced
+        ? { duration: 0 }
+        : { duration: 0.4, ease: EASE, when: "afterChildren" as const },
+    },
+    open: {
+      clipPath: "inset(0% 0% 0% 0%)",
+      transition: reduced ? { duration: 0 } : { duration: 0.5, ease: EASE },
+    },
+  };
+}
+
+function listVariants(reduced: boolean) {
+  return {
+    closed: {
+      transition: reduced
+        ? { duration: 0 }
+        : { staggerChildren: STAGGER / 2, staggerDirection: -1 },
+    },
+    open: {
+      transition: reduced
+        ? { duration: 0 }
+        : { staggerChildren: STAGGER, delayChildren: 0.2 },
+    },
+  };
+}
+
+function itemVariants(reduced: boolean) {
+  return {
+    closed: {
+      opacity: 0,
+      y: reduced ? 0 : 24,
+      transition: reduced ? { duration: 0 } : { duration: 0.2, ease: EASE },
+    },
+    open: {
+      opacity: 1,
+      y: 0,
+      transition: reduced ? { duration: 0 } : { duration: 0.5, ease: EASE },
+    },
+  };
+}
+
+function columnVariants(reduced: boolean) {
+  return {
+    closed: {
+      opacity: 0,
+      transition: reduced ? { duration: 0 } : { duration: 0.15, ease: EASE },
+    },
+    open: {
+      opacity: 1,
+      transition: reduced
+        ? { duration: 0 }
+        : { duration: 0.4, ease: EASE, delay: 0.45 },
+    },
+  };
+}
+
 /**
  * The menu — design.md §8.
  *
  * Full-viewport blue overlay with the dotted column rules still visible through
  * it. Mounted only while open, by `Header`, which owns the open state: that ties
  * every effect here — scroll lock, focus trap, Escape — to the component's own
- * lifetime rather than to a flag, so none of them can leak.
+ * lifetime rather than to a flag, so none of them can leak. `AnimatePresence`
+ * in `Header` extends that lifetime by the close animation; `useIsPresent`
+ * says which side of the close this render is on.
  *
  * The four behaviours the reference site misses (focus trap, Escape, focus
  * restored, `aria-expanded`) are all here or on the trigger.
@@ -79,6 +156,7 @@ export function MenuOverlay({
 }: MenuOverlayProps) {
   const pathname = usePathname();
   const reduced = useReducedMotion();
+  const present = useIsPresent();
 
   const currentIndex = nav.findIndex((item) => isCurrent(pathname, item.href));
   /* Where the reticle rests when nothing is hovered: on the current page, as on
@@ -92,6 +170,10 @@ export function MenuOverlay({
 
   const [marked, setMarked] = useState(restIndex);
   const [reticle, setReticle] = useState<Reticle | null>(null);
+  /* The items rise into place on open, and a box measured mid-rise is wrong
+     by however far the item still has to travel. The reticle waits for the
+     list to report its open animation complete, then measures. */
+  const [settled, setSettled] = useState(reduced);
 
   /* --- Body scroll lock ------------------------------------------------- */
   useEffect(() => {
@@ -119,7 +201,12 @@ export function MenuOverlay({
   }, []);
 
   /* --- Escape, and the focus trap --------------------------------------- */
+  /* Both switch off the moment the close begins: the overlay is `inert` while
+     it animates out, and a trap that kept running would pull focus back into
+     a menu that no longer exists for the pointer. */
   useEffect(() => {
+    if (!present) return;
+
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
@@ -159,7 +246,7 @@ export function MenuOverlay({
 
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [chromeRef, onDismiss]);
+  }, [chromeRef, onDismiss, present]);
 
   /* --- The crop-mark reticle -------------------------------------------- */
   /* FLIP reduced to its useful half: measure the marked item's box with
@@ -168,6 +255,7 @@ export function MenuOverlay({
      viewfinder tracking down the list. Measured in a layout effect, so the box
      is already right at first paint and no measuring happens during render. */
   useLayoutEffect(() => {
+    if (!settled) return;
     let cancelled = false;
 
     const measure = () => {
@@ -197,7 +285,7 @@ export function MenuOverlay({
       cancelled = true;
       window.removeEventListener("resize", measure);
     };
-  }, [marked]);
+  }, [marked, settled]);
 
   /* Keyboard parity with `onPointerLeave`: once focus leaves the list entirely
      the reticle goes back to rest, rather than staying on whichever item was
@@ -218,13 +306,18 @@ export function MenuOverlay({
     "u-label inline-flex min-h-11 items-center text-white transition-opacity duration-300 ease-[ease] hover:opacity-70 focus-visible:outline-accent-2";
 
   return (
-    <div
+    <motion.div
       id={id}
       ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-label="Site menu"
       tabIndex={-1}
+      inert={!present}
+      variants={panelVariants(reduced)}
+      initial="closed"
+      animate="open"
+      exit="closed"
       className="fixed inset-0 z-40 overflow-y-auto bg-accent outline-none"
     >
       {/* The rules sit above the blue, not behind it — design.md §8. */}
@@ -241,7 +334,7 @@ export function MenuOverlay({
             audit C3), with the 64px inset the reference keeps from the rule.
             Below `lg` the nav takes the full width: nothing fits beside it. */}
         <div ref={frameRef} className="relative lg:col-span-2 lg:pr-16">
-          {reticle === null ? null : (
+          {reticle === null || !settled ? null : (
             <span
               aria-hidden="true"
               className="pointer-events-none absolute left-0 top-0"
@@ -265,8 +358,12 @@ export function MenuOverlay({
             </span>
           )}
 
-          <ul
+          <motion.ul
             className="flex flex-col items-end gap-10 sm:gap-12"
+            variants={listVariants(reduced)}
+            onAnimationComplete={(definition) => {
+              if (definition === "open") setSettled(true);
+            }}
             onPointerLeave={() => setMarked(restIndex)}
             onBlur={onListBlur}
           >
@@ -274,7 +371,7 @@ export function MenuOverlay({
               const active = index === currentIndex;
 
               return (
-                <li key={item.href}>
+                <motion.li key={item.href} variants={itemVariants(reduced)}>
                   <Link
                     href={item.href}
                     ref={(node) => {
@@ -298,14 +395,17 @@ export function MenuOverlay({
                       {item.num}
                     </span>
                   </Link>
-                </li>
+                </motion.li>
               );
             })}
-          </ul>
+          </motion.ul>
         </div>
 
         {/* Contact starts at column 3, not 4 (audit C3). */}
-        <div className="flex flex-col gap-12 lg:col-span-2 lg:col-start-3 lg:pl-12">
+        <motion.div
+          variants={columnVariants(reduced)}
+          className="flex flex-col gap-12 lg:col-span-2 lg:col-start-3 lg:pl-12"
+        >
           <div>
             <p className="u-label-sm text-accent-2">Socials</p>
             <SocialLinks
@@ -332,8 +432,8 @@ export function MenuOverlay({
               {site.phone}
             </a>
           </div>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }

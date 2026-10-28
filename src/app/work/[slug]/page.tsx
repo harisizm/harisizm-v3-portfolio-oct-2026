@@ -112,8 +112,10 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
             image={project.cover}
             sizes="(min-width: 1024px) 77vw, 100vw"
             priority
-            ratioClassName="aspect-[16/9]"
             className="mt-8 lg:mt-0"
+            /* The other end of the cover morph: landed on from a card or an
+               index row, lifted off again by either `BACK` link. */
+            morph={{ slug: project.slug, departTo: ["/work"] }}
           />
 
           <ProjectMeta project={project} />
