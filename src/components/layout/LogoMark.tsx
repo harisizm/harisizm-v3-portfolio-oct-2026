@@ -186,7 +186,7 @@ export function LogoMark({ open, onClick }: LogoMarkProps) {
       window.clearTimeout(timer);
       controls?.stop();
     };
-  }, [animate]);
+  }, [animate, scope]);
 
   /* A 1px jitter, back to rest in 0.2s. The outline on hover is CSS, so it
      also works with JS off and under reduced motion; only the twitch is gated. */
