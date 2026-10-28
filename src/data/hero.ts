@@ -1,8 +1,8 @@
 /**
  * The hero headline, as data (lessons.md T-010).
  *
- * Each line is three rows, because the hero sets rows one and two at 600 and
- * row three at 300 and the rows must break where the weight breaks. A segment
+ * Each line is three rows, set left-aligned at one light weight; the accent
+ * segment is the only emphasis. A segment
  * marked `accent` renders in `--accent`: it is the measured number the line
  * is built around, and every number here traces to a case study in
  * `projects.ts`. The first line is what the server renders and what a reader
@@ -52,7 +52,7 @@ export const heroTyping = {
   /** Per character while deleting. */
   erase: 18,
   /** How long a finished line stays before it is erased. */
-  hold: 4200,
+  hold: 2200,
   /** Pause after a line is fully erased, before the next starts. */
   gap: 350,
 } as const;

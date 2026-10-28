@@ -1,28 +1,19 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence } from "motion/react";
 import { useCallback, useId, useRef, useState, type CSSProperties } from "react";
 
 import { Press } from "@/components/motion";
-import { StatusPill, Wordmark } from "@/components/ui";
-import { site } from "@/lib/site";
+import { StatusPill } from "@/components/ui";
 
+import { LogoMark } from "./LogoMark";
 import { MenuOverlay } from "./MenuOverlay";
 
 /* Measured on the reference: 96px bar, 193×58 logo chip, 103×44 menu button
    (audit A4). The `--header-h` token in globals.css must agree — anything that
    sticks below the bar offsets by it. */
 const HEADER_H = "96px";
-
-/* The four tiny "selection handle" squares on the logo chip's corners. */
-const HANDLES = [
-  "-left-px -top-px",
-  "-right-px -top-px",
-  "-bottom-px -left-px",
-  "-bottom-px -right-px",
-] as const;
 
 /**
  * Site header — design.md §6.1, §8.
@@ -83,29 +74,10 @@ export function Header() {
         ref={barRef}
         className="u-container relative z-50 flex min-h-(--header-h) items-center justify-between gap-4"
       >
-        <Link
-          href="/"
-          aria-label={`${site.name}, home`}
-          /* Closes the menu as well as navigating: on the home page the route
-             does not change, so nothing else would. */
-          onClick={navigate}
-          className="relative inline-flex min-h-11 items-center transition-opacity duration-300 ease-[ease] hover:opacity-80"
-        >
-          {/* A box-shadow rather than a border for the open-state outline, so
-              the chip does not grow by 2px and shift the bar when the menu
-              toggles. */}
-          <Wordmark
-            variant="chip"
-            className={open ? "shadow-[0_0_0_1px_var(--accent)]" : ""}
-          />
-          {HANDLES.map((corner) => (
-            <span
-              key={corner}
-              aria-hidden="true"
-              className={`absolute size-[3px] bg-accent ${corner}`}
-            />
-          ))}
-        </Link>
+        {/* The chip, its handles and the once-per-load ghost pointer. `onClick`
+            closes the menu as well as navigating: on the home page the route
+            does not change, so nothing else would. */}
+        <LogoMark open={open} onClick={navigate} />
 
         <div className="flex items-center gap-4">
           {/* Blue text on the blue overlay would be invisible, and the menu is

@@ -66,7 +66,7 @@ export function Hero() {
 
         <Reveal
           delay={CTA_DELAY}
-          className="mt-12 flex justify-center lg:col-span-3 lg:row-start-2 lg:mt-14"
+          className="mt-12 flex justify-start lg:col-span-3 lg:row-start-2 lg:mt-14"
         >
           <Magnetic>
             <SplitCta

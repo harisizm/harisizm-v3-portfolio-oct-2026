@@ -1,9 +1,11 @@
 import { site } from "@/lib/site";
 
-export type WordmarkVariant = "plain" | "chip";
+export type WordmarkVariant = "plain" | "chip" | "chip-text";
 
 export interface WordmarkProps {
-  /** `chip` sets the wordmark blue on a lime ground; `plain` inherits its colour. */
+  /** `chip` sets the wordmark blue on a lime ground; `chip-text` is the same
+      type without the ground, for a parent that paints it; `plain` inherits
+      its colour. */
   variant?: WordmarkVariant;
   className?: string;
 }
@@ -26,7 +28,9 @@ export function Wordmark({ variant = "plain", className = "" }: WordmarkProps) {
   const skin =
     variant === "chip"
       ? "bg-accent-2 px-[30px] py-[15px] text-[28px] leading-none text-accent"
-      : "text-wordmark";
+      : variant === "chip-text"
+        ? "text-[28px] leading-none text-accent"
+        : "text-wordmark";
 
   return (
     <span

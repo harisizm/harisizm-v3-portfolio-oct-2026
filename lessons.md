@@ -608,3 +608,19 @@ runs. `Reveal` never had the problem because it fades in place. The in-view
 check now sits on the whole block, and each line animates from that one
 signal. Never observe the element you have hidden; observe its container.
 
+---
+
+### T-020 · motion cannot animate an inset from `auto`
+**2026-10-28 · from the logo's ghost-cursor drag**
+
+The first build stretched the chip's lime ground by animating `right` and
+`bottom` to negative pixel values. Nothing moved: the properties start as
+`auto`, and motion has no numeric origin to interpolate from, so the frames
+were silently skipped while every other track in the sequence played.
+
+**How to apply:** stretch and move with transforms (`scaleX`, `scaleY`, `x`,
+`y`) and set `transform-origin` for the corner that should stay put. If a
+layout property must animate, give it an explicit starting value in the
+initial style first. And sample mid-animation frames in the browser; a
+sequence that "ran" can still have a track that never did.
+

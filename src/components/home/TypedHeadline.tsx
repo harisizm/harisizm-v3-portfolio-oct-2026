@@ -86,14 +86,14 @@ export function TypedHeadline({ className = "" }: { className?: string }) {
 
   return (
     <h1
-      className={`text-center uppercase leading-[0.9] ${className}`}
+      className={`text-left uppercase leading-[0.9] ${className}`}
       onPointerEnter={() => setPaused(true)}
       onPointerLeave={() => setPaused(false)}
     >
       {rows.map((row, i) => (
         <span
           key={i}
-          className={`block ${i === 2 ? "font-light" : "font-semibold"}`}
+          className="block font-light"
         >
           {row.length === 0 ? " " : null}
           {row.map((c, j) => (

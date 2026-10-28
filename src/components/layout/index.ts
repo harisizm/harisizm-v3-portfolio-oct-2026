@@ -1,5 +1,8 @@
 export { Header } from "./Header";
 
+export { LogoMark } from "./LogoMark";
+export type { LogoMarkProps } from "./LogoMark";
+
 export { Footer, SocialLinks } from "./Footer";
 export type { SocialLinksProps } from "./Footer";
 
