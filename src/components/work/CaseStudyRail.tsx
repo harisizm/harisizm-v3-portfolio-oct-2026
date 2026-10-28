@@ -27,6 +27,16 @@ export interface CaseStudyRailProps {
  * scrolled to the top, which is the single defect this repo exists to not repeat
  * (lessons.md T-002).
  */
+/* The rail is 276px wide. At the 48px heading size that holds about ten
+   uppercase letters, so a title whose longest word runs past that steps down
+   rather than spilling into the content column ("INTELLIGENCE" did). */
+function railTitleSize(title: string): string {
+  const longest = Math.max(...title.split(/\s+/).map((w) => w.length));
+  if (longest <= 9) return "lg:text-heading";
+  if (longest <= 11) return "lg:text-[40px]";
+  return "lg:text-[34px]";
+}
+
 export function CaseStudyRail({ project, sections }: CaseStudyRailProps) {
   return (
     <div className="pt-8 lg:sticky lg:top-[var(--header-h)] lg:flex lg:h-[calc(100svh-var(--header-h))] lg:flex-col lg:justify-between lg:py-14">
@@ -39,7 +49,9 @@ export function CaseStudyRail({ project, sections }: CaseStudyRailProps) {
           Back
         </Link>
 
-        <h1 className="mt-1 text-[32px] uppercase leading-[1.1] tracking-[-1px] sm:text-title lg:text-heading">
+        <h1
+          className={`mt-1 text-[32px] uppercase leading-[1.1] tracking-[-1px] sm:text-title ${railTitleSize(project.shortTitle)}`}
+        >
           {project.shortTitle}
         </h1>
 

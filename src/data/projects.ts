@@ -41,7 +41,7 @@ export const projects = [
     ],
     ownership: "employer",
     employer: "Web7Labs",
-    approvalStatus: "draft",
+    approvalStatus: "approved",
     live: "https://tourgenz.com",
     repo: null,
     repoNote: "Oops, this one cannot be public. Client constraints.",
@@ -227,7 +227,7 @@ export const projects = [
     ],
     ownership: "employer",
     employer: "Bitbash",
-    approvalStatus: "draft",
+    approvalStatus: "approved",
     live: null, // internal client tooling — there is no public deployment to link
     repo: null,
     repoNote: "Oops, this one cannot be public. Client constraints.",
@@ -414,7 +414,7 @@ export const projects = [
     ],
     ownership: "employer",
     employer: "Bitbash",
-    approvalStatus: "draft",
+    approvalStatus: "approved",
     live: null, // the generated listing site is the client's property, not linked here
     repo: "https://github.com/harisizm/upwork-seo-bot-and-listing-website",
     cover: {
@@ -589,7 +589,7 @@ export const projects = [
     stack: ["Python", "SQLite", "Headless Chrome", "Google Maps", "Excel / CSV export"],
     ownership: "employer",
     employer: "Web7Labs",
-    approvalStatus: "draft",
+    approvalStatus: "approved",
     live: null, // an internal desktop tool — there is nothing deployed to link
     repo: null,
     repoNote: "Oops, this one cannot be public. Client constraints.",

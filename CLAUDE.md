@@ -100,12 +100,6 @@ Build continues without these; they slot into existing nulls and stubs. Nothing
 here should be guessed, invented, or worked around with a placeholder that
 renders.
 
-- [ ] **Per-project sign-off** for everything Web7Labs or Bitbash owns:
-      Tourgenz, Client Hunt, Instagram Lead Generator, Upwork platform. All four
-      are `approvalStatus: "draft"`; `approvedProjects()` is the publication
-      gate. See T-014. Approval does **not** generalise between projects. The
-      case studies now carry real screenshots of employer systems, which makes
-      this sign-off more important, not less.
 - [ ] **Hero line.** `Hero.tsx` ships "WHAT YOU DO / BY HAND, I TURN / INTO A
       SYSTEM." with two alternates in the comment at the top of the file.
 - [ ] **Decide** whether `skills.ts` keeps "TLS impersonation" and
@@ -118,6 +112,11 @@ renders.
       architecture, plus the three home-page process diagrams.
 
 ### Resolved 2026-10-28
+
+- **Sign-off.** All four employer case studies approved as written by Haris on
+  2026-10-28 (Tourgenz, Client Hunt, Instagram Lead Generator, Upwork
+  platform). `approvalStatus` is "approved" on all six; `approvedProjects()`
+  now returns everything.
 
 - **Repo links.** All four non-public repos (Tourgenz, Instagram, Client Hunt,
   TransGPA) show a one-line note in place of a Source link; the employer ones
