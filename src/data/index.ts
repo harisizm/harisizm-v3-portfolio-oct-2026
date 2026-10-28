@@ -99,3 +99,4 @@ export function isTestimonial(evidence: Evidence): evidence is Testimonial {
 export function isUsageEvidence(evidence: Evidence): evidence is UsageEvidence {
   return evidence.kind === "usage";
 }
+export { heroLines, heroTyping, type HeroLine, type HeroSegment } from "./hero";

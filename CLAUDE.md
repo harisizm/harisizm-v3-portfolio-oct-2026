@@ -111,8 +111,11 @@ renders.
 
 ### Resolved 2026-10-28
 
-- **Hero line.** "EIGHT HOURS / OF WORK, DONE IN / TEN MINUTES." chosen by
-  Haris. Alternates remain in the comment at the top of `Hero.tsx`.
+- **Hero line.** A typewriter cycling three lines chosen by Haris, each with
+  its stat in accent: "Eight hours of work, done in ten minutes.", "10,000
+  leads in one day, no hands on it.", "95% of the manual work, gone." The
+  lines and timing live in `src/data/hero.ts`; the first line is what the
+  server renders and what reduced-motion readers see.
 
 - **Sign-off.** All four employer case studies approved as written by Haris on
   2026-10-28 (Tourgenz, Client Hunt, Instagram Lead Generator, Upwork
