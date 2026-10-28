@@ -183,7 +183,7 @@ phone, status pill, form labels. Uppercase where the reference is uppercase, 14â
 
 | Role | Size | Weight | Line-height | Tracking | Family |
 |---|---|---|---|---|---|
-| Hero display | 120px | 600 **and** 300 | 0.9 | normal | body |
+| Hero display | 120px cap (105px at 1440: see note) | 600 **and** 300 | 0.9 | normal | body |
 | Menu nav item | 96px | 700 | 1.0 | normal | display |
 | Big statement (home) | 51px | 400 | 1.15 | âˆ’1.5px | body |
 | Case-study statement | 33.6px | 400 | 1.1 | normal | body |
@@ -201,6 +201,11 @@ phone, status pill, form labels. Uppercase where the reference is uppercase, 14â
 > display row. The case-study overview is `--text-statement-cs` = 33.6px/1.1
 > (reference measured 33.6px/36.96px in a 765px measure); `--text-statement` 51px is
 > the home positioning statement only. Labels are body face at 14/16/18.
+
+> Corrected 2026-10-28. The hero headline sits in three of the four columns
+> beside its support paragraph, a 1050px measure at 1440, and the chosen line
+> "OF WORK, DONE IN" does not fit that at 120px. The clamp is `7.3vw`, so the
+> 120px cap applies from about 1650px wide; at 1440 it renders at 105px.
 
 **The hero's signature move:** one sentence, two weights. The first clause in 600,
 the resolving clause in 300, both at 120px. It creates hierarchy inside a single

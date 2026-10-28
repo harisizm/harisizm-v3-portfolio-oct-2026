@@ -69,7 +69,10 @@ export function Hero() {
       <div className="lg:grid lg:grid-cols-4 lg:gap-x-6">
         {/* clamp rather than the `text-hero` token: the token is the 120px cap
             and this has to survive 390px. 0.9 line-height per design.md §4. */}
-        <h1 className="text-center text-[clamp(2.25rem,8.4vw,120px)] uppercase leading-[0.9] lg:col-span-3">
+        {/* 7.3vw, not 8.4: the headline's measure is three columns (1050px at
+            1440), and "OF WORK, DONE IN" at 120px semibold is wider than that,
+            so the cap only applies from about 1650px up. */}
+        <h1 className="text-center text-[clamp(2.25rem,7.3vw,120px)] uppercase leading-[0.9] lg:col-span-3">
           <SplitLines className="font-semibold">Eight hours</SplitLines>
           <SplitLines className="font-semibold" delay={STAGGER}>
             of work, done in

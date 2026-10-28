@@ -582,3 +582,21 @@ page and watch for the old page vanishing before the new one fades in. If it
 does, `PageTransition` has lost its exit frame; either re-pin against the new
 context export or drop to enter-only transitions, which need no internal.
 
+---
+
+### T-019 · Never gate visibility on a measurement
+**2026-10-28 · from the empty hero Haris saw**
+
+`SplitLines` held its headline at `opacity: 0` until it had measured the
+wrapped word positions and re-rendered them as lines. In Haris's browser that
+measurement never completed, so the hero was blank: the paragraph and the CTA
+rendered, the headline did not. The headless pass had not caught it because
+there the measurement happened to land.
+
+**How to apply:** an enhancement may delay how something appears, never
+whether it appears. Anything that starts hidden needs a path to visible that
+does not depend on JavaScript succeeding: `MotionBoot` covers JS-off and
+reduced motion, and `SplitLines` now shows its inline words after a 700 ms
+grace if the split has not arrived. When a primitive measures the DOM, treat
+the measurement as optional.
+

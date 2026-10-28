@@ -53,8 +53,18 @@ export function SplitLines({
   const twinRef = useRef<HTMLSpanElement>(null);
   const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const [lines, setLines] = useState<string[] | null>(null);
+  /* Measurement can fail to land (a bailed hydration, a hot reload that reset
+     state, a font that never reports ready). The headline must not depend on
+     it: after a short grace the inline words show on their own, and a late
+     measurement only upgrades them into rising lines. */
+  const [grace, setGrace] = useState(false);
 
   const words = text.split(/\s+/).filter(Boolean);
+
+  useEffect(() => {
+    const id = window.setTimeout(() => setGrace(true), 700);
+    return () => window.clearTimeout(id);
+  }, []);
 
   useEffect(() => {
     const twin = twinRef.current;
@@ -73,6 +83,7 @@ export function SplitLines({
           grouped[grouped.length - 1] += ` ${words[index]}`;
         }
       });
+      if (grouped.length === 0) return;
       setLines((prev) =>
         prev !== null &&
         prev.length === grouped.length &&
@@ -98,9 +109,10 @@ export function SplitLines({
   }, [text, reduced]);
 
   const split = !reduced && lines !== null;
-  /* Hidden until the lines exist, so the inline words never flash before
-     their split copies rise. `MotionBoot` lifts this for JS-off and reduced. */
-  const style: CSSProperties = { opacity: split || reduced ? 1 : 0 };
+  /* Hidden only while a split is still plausible, so the inline words do not
+     flash before their copies rise. `MotionBoot` lifts this for JS-off and
+     reduced; `grace` lifts it when measurement never arrives. */
+  const style: CSSProperties = { opacity: split || reduced || grace ? 1 : 0 };
 
   const inline = words.map((word, i) => (
     <Fragment key={i}>
