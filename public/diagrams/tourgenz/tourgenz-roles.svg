@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Board tourgenz-roles: five roles compared by equality per route, no ladder; STAFF carries per-screen ticks in its token -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="1200" height="750" role="img" aria-labelledby="t" font-family="Inter, system-ui, sans-serif" font-size="16" fill="#222222">
+  <title id="t">The five Tourgenz roles, each route naming the roles it admits, and the per-screen ticks a STAFF token carries.</title>
+  <style>
+    .box{fill:none;stroke:#222222;stroke-width:1.5}
+    .acc{fill:none;stroke:#033FED;stroke-width:1.5}
+    .cap{font-size:14px;letter-spacing:0.08em;fill:#727272}
+    .h{font-size:18px;font-weight:600}
+    .sub{fill:#727272}
+    .sm{font-size:14px}
+    .mid{text-anchor:middle}
+    .code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px}
+    .blue{fill:#033FED}
+  </style>
+
+  <text class="cap" x="45" y="40">ENUM ROLE, FIVE VALUES</text>
+
+  <rect class="box" x="45" y="60" width="200" height="110"/>
+  <text class="h mid" x="145" y="95">USER</text>
+  <text class="sub sm mid" x="145" y="124">Default role for a login</text>
+  <text class="sub sm mid" x="145" y="144">that signs itself up</text>
+
+  <rect class="box" x="275" y="60" width="200" height="110"/>
+  <text class="h mid" x="375" y="95">VENDOR</text>
+  <text class="sub sm mid" x="375" y="124">Approved before its listings</text>
+  <text class="sub sm mid" x="375" y="144">reach the public catalog</text>
+
+  <rect class="box" x="505" y="60" width="200" height="110"/>
+  <text class="h mid" x="605" y="95">STAFF</text>
+  <text class="sub sm mid" x="605" y="124">Admin tier; one person or</text>
+  <text class="sub sm mid" x="605" y="144">a whole team sharing it</text>
+
+  <rect class="box" x="735" y="60" width="200" height="110"/>
+  <text class="h mid" x="835" y="95">ADMIN</text>
+  <text class="sub sm mid" x="835" y="124">Admin tier, split from the</text>
+  <text class="sub sm mid" x="835" y="144">owner role in 2026-09</text>
+
+  <rect class="box" x="965" y="60" width="200" height="110"/>
+  <text class="h mid" x="1065" y="95">SUPER_ADMIN</text>
+  <text class="sub sm mid" x="1065" y="124">Admin tier; the only one who</text>
+  <text class="sub sm mid" x="1065" y="144">can reveal a team password</text>
+
+  <!-- deliberately no arrows between the boxes -->
+  <text class="cap blue" x="45" y="212">NO INHERITANCE BETWEEN ROLES</text>
+  <text x="45" y="240">authorize.js compares roles by equality, not hierarchy (decision #29). Adding a value widens nothing on its own.</text>
+  <text x="45" y="264">Every route says which roles it admits, so SUPER_ADMIN is not an implicit superset of STAFF.</text>
+
+  <!-- one route -->
+  <text class="cap" x="45" y="318">ONE ROUTE</text>
+  <rect class="box" x="45" y="330" width="540" height="220"/>
+  <text class="code" x="70" y="368">requireRole("VENDOR")</text>
+  <text class="sm sub" x="70" y="394">req.user.role !== role, then 403 "Vendor access required"</text>
+  <text class="sm" x="70" y="426">admits</text>
+  <text class="code blue" x="190" y="426">VENDOR</text>
+  <text class="sm" x="70" y="450">refuses</text>
+  <text class="code" x="190" y="450">USER  STAFF  ADMIN  SUPER_ADMIN</text>
+  <text class="code" x="70" y="494">requireAdminTier("SUPER_ADMIN")</text>
+  <text class="sm sub" x="70" y="520">admits exactly that value and refuses ADMIN and STAFF alike</text>
+
+  <!-- staff token -->
+  <text class="cap" x="615" y="318">STAFF TOKEN</text>
+  <rect class="acc" x="615" y="330" width="540" height="220"/>
+  <text class="code" x="640" y="368">role: "STAFF"</text>
+  <text class="code" x="640" y="396">caps: [</text>
+  <g class="acc" stroke-width="2">
+    <path d="M668 418l6 6 11 -12"/>
+    <path d="M668 442l6 6 11 -12"/>
+    <path d="M668 466l6 6 11 -12"/>
+  </g>
+  <text class="code blue" x="700" y="424">"deposits.view"</text>
+  <text class="code blue" x="700" y="448">"deposits.act"</text>
+  <text class="code blue" x="700" y="472">"payouts.view"</text>
+  <text class="code" x="640" y="500">]</text>
+  <text class="sm sub" x="640" y="530">View and Edit ticks per screen; in the JWT, so the route scope costs no database read</text>
+
+  <!-- what was not built -->
+  <text class="sub" x="45" y="610">Rejected: a role ladder, where a higher role inherits everything a lower one may do.</text>
+  <g fill="none" stroke="#727272" stroke-width="1.5" stroke-dasharray="4 4">
+    <rect x="45" y="636" width="150" height="44"/>
+    <rect x="215" y="656" width="150" height="44"/>
+    <rect x="385" y="676" width="180" height="44"/>
+  </g>
+  <g class="sub mid sm">
+    <text x="120" y="663">VENDOR</text>
+    <text x="290" y="683">ADMIN inherits</text>
+    <text x="475" y="703">SUPER_ADMIN inherits</text>
+  </g>
+</svg>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Board tourgenz-booking-state: offer, counter, accept, cancel, refund, every edge through one shared transition path -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="1200" height="750" role="img" aria-labelledby="t" font-family="Inter, system-ui, sans-serif" font-size="16" fill="#222222">
+  <title id="t">State machine diagram of the Tourgenz booking lifecycle.</title>
+  <defs>
+    <marker id="ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#222222"/></marker>
+    <marker id="acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#033FED"/></marker>
+  </defs>
+  <style>
+    .box{fill:none;stroke:#222222;stroke-width:1.5}
+    .ln{fill:none;stroke:#222222;stroke-width:1.5}
+    .up{fill:none;stroke:#033FED;stroke-width:1.5}
+    .cap{font-size:14px;letter-spacing:0.08em;fill:#727272}
+    .h{font-size:18px;font-weight:600}
+    .sub{fill:#727272}
+    .mid{text-anchor:middle}
+    .ev{text-anchor:end}
+  </style>
+
+  <text class="mid" x="140" y="52">Traveller names a price</text>
+  <path class="ln" d="M140 64V108" marker-end="url(#ink)"/>
+
+  <rect class="box" x="45" y="110" width="190" height="70"/><text class="h mid" x="140" y="152">Offered</text>
+  <rect class="box" x="285" y="110" width="190" height="70"/><text class="h mid" x="380" y="152">Countered</text>
+  <rect class="box" x="525" y="110" width="190" height="70"/><text class="h mid" x="620" y="152">Accepted</text>
+  <rect class="box" x="765" y="110" width="190" height="70"/><text class="h mid" x="860" y="152">Cancelled</text>
+  <rect class="box" x="1005" y="110" width="190" height="70"/><text class="h mid" x="1100" y="152">Refunded</text>
+  <text class="cap" x="1010" y="205">TERMINAL</text>
+
+  <!-- events out of each state, all into the one path -->
+  <path class="ln" d="M115 180V438" marker-end="url(#ink)"/>
+  <text class="ev" x="105" y="232">counter</text>
+  <text class="ev" x="105" y="258">accept</text>
+  <text class="ev" x="105" y="284">cancel</text>
+
+  <path class="ln" d="M355 180V438" marker-end="url(#ink)"/>
+  <text class="ev" x="345" y="232">counter</text>
+  <text class="ev" x="345" y="258">accept</text>
+  <text class="ev" x="345" y="284">cancel</text>
+
+  <path class="ln" d="M595 180V438" marker-end="url(#ink)"/>
+  <text class="ev" x="585" y="232">cancel</text>
+
+  <path class="ln" d="M835 180V438" marker-end="url(#ink)"/>
+  <text class="ev" x="825" y="232">refund</text>
+
+  <!-- the new state comes back out of the same path -->
+  <path class="up" d="M405 440V182" marker-end="url(#acc)"/>
+  <path class="up" d="M645 440V182" marker-end="url(#acc)"/>
+  <path class="up" d="M885 440V182" marker-end="url(#acc)"/>
+  <path class="up" d="M1125 440V182" marker-end="url(#acc)"/>
+  <text class="cap" x="420" y="300" fill="#033FED">NEW STATE</text>
+
+  <text class="cap" x="180" y="428">ONE PATH</text>
+  <rect class="box" x="45" y="440" width="1110" height="110" stroke="#033FED"/>
+  <text class="h mid" x="600" y="484" fill="#033FED">transition(booking, event)</text>
+  <text class="mid" x="600" y="516">discount floor, counter-offer limit, role check, then one audit row</text>
+
+  <text class="sub" x="45" y="610">Rejected: a status update per endpoint, with the same limits copied into every caller.</text>
+  <g fill="none" stroke="#727272" stroke-width="1.5" stroke-dasharray="4 4">
+    <rect x="45" y="636" width="150" height="44"/>
+    <rect x="215" y="636" width="150" height="44"/>
+    <rect x="385" y="636" width="150" height="44"/>
+    <rect x="555" y="636" width="150" height="44"/>
+    <rect x="725" y="636" width="150" height="44"/>
+  </g>
+  <g class="sub mid" font-size="14">
+    <text x="120" y="663">limits, again</text>
+    <text x="290" y="663">limits, again</text>
+    <text x="460" y="663">limits, again</text>
+    <text x="630" y="663">limits, again</text>
+    <text x="800" y="663">limits, again</text>
+  </g>
+</svg>

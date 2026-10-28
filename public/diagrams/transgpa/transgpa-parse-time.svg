@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="t">
+<!-- Board: transgpa-parse-time. Measurement panel: a real transcript parsed locally against the two-second budget, with the network row at zero. -->
+<title id="t">Measurement panel showing local PDF parse timing under two seconds.</title>
+<defs>
+  <style>
+    text { font-family: Inter, system-ui, sans-serif; fill: #222222; }
+    .k  { font-size: 16px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .l  { font-size: 18px; }
+    .s  { font-size: 16px; fill: #727272; }
+    .a  { fill: #033FED; }
+    .ln { fill: none; stroke: #222222; stroke-width: 1.5; }
+    .acc { stroke: #033FED; }
+    .dash { stroke-dasharray: 6 6; }
+  </style>
+</defs>
+
+<!-- Panel frame -->
+<rect x="60" y="60" width="1080" height="630" fill="none" stroke="#222222" stroke-width="1.5"/>
+
+<!-- Header -->
+<text class="k" x="90" y="100">Measurement</text>
+<text class="s" x="1110" y="100" text-anchor="end">performance.now() from file drop to first chart paint</text>
+<text class="l" x="90" y="134">A real University of Lahore transcript, dropped on the page</text>
+
+<!-- Big number -->
+<text x="90" y="250" style="font-size:112px; font-weight:600; letter-spacing:-3px" class="a">&lt;2.0 s</text>
+<text class="s" x="90" y="284">file dropped to first chart on screen, on the student's own machine</text>
+
+<!-- Scale: 0 to 3 s, 300 px per second -->
+<!-- x = 90 + seconds * 300 -->
+<path class="ln" d="M90 380 H1110"/>
+<g class="s" text-anchor="middle">
+  <path class="ln" d="M90 374 V386 M390 374 V386 M690 374 V386 M990 374 V386"/>
+  <text x="90" y="410">0 s</text>
+  <text x="390" y="410">1 s</text>
+  <text x="690" y="410">2 s</text>
+  <text x="990" y="410">3 s</text>
+</g>
+
+<!-- Budget line at 2.0 s -->
+<path class="ln dash" d="M690 330 V368 M690 420 V560"/>
+<text class="k" x="700" y="344">Budget 2.0 s</text>
+
+<!-- Row 1: local parse, measured. Bar ends short of the budget line. -->
+<text class="k" x="90" y="450">Local parse</text>
+<!-- The bar stops short of the budget line; the exact figure varies by machine and is not printed. -->
+<rect x="90" y="462" width="540" height="28" fill="#033FED"/>
+<text class="l a" x="704" y="483">under 2.0 s</text>
+<text class="s" x="90" y="512">read file, pdf.js text extraction, parse rows into courses, render charts</text>
+
+<!-- Row 2: the server round trip that does not exist -->
+<text class="k" x="90" y="572">Network</text>
+<rect x="90" y="584" width="1.5" height="28" fill="#222222"/>
+<text class="l" x="106" y="605">0 requests, 0 bytes up, 0 bytes stored</text>
+<text class="s" x="106" y="634">There is no round trip to wait for, so there is no row to measure.</text>
+
+<!-- Footer -->
+<path class="ln" d="M90 662 H1110" style="stroke:#727272"/>
+<text class="s" x="90" y="682">One run, one real transcript. Timing varies by machine; the second guarantee does not.</text>
+</svg>

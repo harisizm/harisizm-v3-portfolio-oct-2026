@@ -1,0 +1,18 @@
+<!-- Process 03, Automate: a repeating lattice on a loop, one segment closed and running -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" fill="none" stroke="#222222" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="100" cy="100" r="80"/>
+  <circle cx="100" cy="100" r="30"/>
+  <!-- the {8/3} star: every node tied to the one three steps on -->
+  <path d="M180 100L43.4 156.6 100 20 156.6 156.6 20 100 156.6 43.4 100 180 43.4 43.4Z" stroke-opacity="0.35"/>
+  <!-- direction of travel on the loop -->
+  <path d="M15 106L20 100 25 106M106 175L100 180 106 185"/>
+  <g fill="#222222" stroke="none">
+    <circle cx="156.6" cy="156.6" r="1.75"/><circle cx="100" cy="180" r="1.75"/><circle cx="43.4" cy="156.6" r="1.75"/><circle cx="20" cy="100" r="1.75"/><circle cx="43.4" cy="43.4" r="1.75"/><circle cx="156.6" cy="43.4" r="1.75"/>
+    <circle cx="100" cy="100" r="2.5"/>
+  </g>
+  <g stroke="#033FED">
+    <path d="M100 20A80 80 0 0 1 180 100"/>
+    <path d="M175 94L180 100 185 94"/>
+    <g fill="#033FED" stroke="none"><circle cx="100" cy="20" r="2.5"/><circle cx="180" cy="100" r="2.5"/></g>
+  </g>
+</svg>

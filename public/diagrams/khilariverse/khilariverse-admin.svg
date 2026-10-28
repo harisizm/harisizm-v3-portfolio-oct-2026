@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="t">
+<!-- Board: khilariverse-admin. Wireframe of the operator's dashboard: the five analytics modules fed by one adminAuth endpoint. -->
+<title id="t">Wireframe of the Khilariverse admin analytics modules.</title>
+<defs>
+  <style>
+    text { font-family: Inter, system-ui, sans-serif; fill: #222222; }
+    .k  { font-size: 16px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .l  { font-size: 18px; }
+    .s  { font-size: 16px; fill: #727272; }
+    .a  { fill: #033FED; }
+    .box { fill: none; stroke: #222222; stroke-width: 1.5; }
+    .ln  { fill: none; stroke: #222222; stroke-width: 1.5; }
+    .ph  { fill: #727272; opacity: 0.35; }
+  </style>
+</defs>
+
+<!-- Source line: one request, admin only -->
+<text class="k" x="60" y="46">GET /api/analytics/dashboard</text>
+<rect x="356" y="30" width="118" height="22" fill="none" stroke="#033FED" stroke-width="1.5"/>
+<text class="k a" x="364" y="46">adminAuth</text>
+<text class="s" x="1140" y="46" text-anchor="end">one aggregate over users, products, orders; one render</text>
+
+<!-- Window frame -->
+<rect class="box" x="60" y="70" width="1080" height="620"/>
+
+<!-- Sidebar -->
+<path class="ln" d="M280 70 V690"/>
+<text class="k" x="84" y="110">khilariverse admin</text>
+<g class="l">
+  <rect x="60" y="136" width="4" height="30" fill="#033FED"/>
+  <text x="84" y="158" class="a">Dashboard</text>
+  <text x="84" y="206">Add product</text>
+  <text x="84" y="254">List products</text>
+  <text x="84" y="302">Orders</text>
+</g>
+<text class="s" x="84" y="640">Add product sends its</text>
+<text class="s" x="84" y="660">four images straight</text>
+<text class="s" x="84" y="680">to Cloudinary.</text>
+
+<!-- Stat tiles: 01 to 04 -->
+<g>
+  <rect class="box" x="304" y="100" width="194" height="120"/>
+  <text class="k" x="320" y="126">01 Total sales</text>
+  <rect class="ph" x="320" y="146" width="120" height="30"/>
+  <text class="s" x="320" y="204">Delivered orders only</text>
+
+  <rect class="box" x="510" y="100" width="194" height="120"/>
+  <text class="k" x="526" y="126">02 Orders</text>
+  <rect class="ph" x="526" y="146" width="70" height="30"/>
+  <text class="s" x="526" y="204">All statuses</text>
+
+  <rect class="box" x="716" y="100" width="194" height="120"/>
+  <text class="k" x="732" y="126">03 Products</text>
+  <text x="732" y="174" style="font-size:30px; font-weight:600">100+</text>
+  <text class="s" x="732" y="204">In the catalog</text>
+
+  <rect class="box" x="922" y="100" width="194" height="120"/>
+  <text class="k" x="938" y="126">04 Users</text>
+  <rect class="ph" x="938" y="146" width="80" height="30"/>
+  <text class="s" x="938" y="204">Registered accounts</text>
+</g>
+
+<!-- 05 Sales by day -->
+<rect class="box" x="304" y="244" width="500" height="420"/>
+<text class="k" x="320" y="270">05 Sales by day</text>
+<text class="s" x="788" y="270" text-anchor="end">graphData</text>
+<!-- axes -->
+<path class="ln" d="M340 600 H780 M340 300 V600" style="stroke:#727272"/>
+<g class="s">
+  <text x="340" y="628">day 1</text>
+  <text x="780" y="628" text-anchor="end">day 30</text>
+</g>
+<!-- schematic series, straight segments only -->
+<polyline fill="none" stroke="#033FED" stroke-width="1.5"
+  points="340,560 384,540 428,548 472,500 516,512 560,460 604,476 648,420 692,436 736,380 780,396"/>
+<circle cx="780" cy="396" r="4" fill="#033FED"/>
+
+<!-- 06 Recent orders -->
+<rect class="box" x="828" y="244" width="288" height="420"/>
+<text class="k" x="844" y="270">Recent orders</text>
+<text class="s" x="1100" y="270" text-anchor="end">last 5</text>
+<path class="ln" d="M828 290 H1116" style="stroke:#727272"/>
+<g>
+  <rect class="ph" x="844" y="312" width="80" height="14"/><rect class="ph" x="1010" y="312" width="90" height="14"/>
+  <rect class="ph" x="844" y="372" width="80" height="14"/><rect class="ph" x="1010" y="372" width="90" height="14"/>
+  <rect class="ph" x="844" y="432" width="80" height="14"/><rect class="ph" x="1010" y="432" width="90" height="14"/>
+  <rect class="ph" x="844" y="492" width="80" height="14"/><rect class="ph" x="1010" y="492" width="90" height="14"/>
+  <rect class="ph" x="844" y="552" width="80" height="14"/><rect class="ph" x="1010" y="552" width="90" height="14"/>
+  <path class="ln" d="M844 346 H1100 M844 406 H1100 M844 466 H1100 M844 526 H1100" style="stroke:#727272; stroke-dasharray:2 4"/>
+</g>
+<text class="s" x="844" y="604">id, amount, status</text>
+<text class="s" x="844" y="628">status changes from here</text>
+</svg>

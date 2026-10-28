@@ -19,8 +19,8 @@ export interface ProcessStep {
   readonly subtitle: string;
   readonly body: string;
   /**
-   * Path to a line-art SVG under /public, or null while it does not exist. A
-   * null diagram renders as empty space, not a placeholder frame (T-002).
+   * Path to a line-art SVG under /public, or null if one is ever removed. A
+   * null diagram holds the slot as empty space, not a placeholder frame (T-002).
    */
   readonly diagram: string | null;
 }
@@ -31,20 +31,20 @@ export const processSteps = [
     name: "Ship",
     subtitle: "Ship // Production",
     body: "The first useful version goes somewhere real. Tourgenz has been live since September 2026 with a traveller app, five vendor portals and an admin control room, all of them carrying actual bookings. Everything after launch lands on software people already use.",
-    diagram: null,
+    diagram: "/diagrams/process/ship.svg",
   },
   {
     num: "Ø2",
     name: "Measure",
     subtitle: "Measure // Evidence",
     body: "A claim gets a number or it does not get made. Tourgenz is held in place by roughly 2,000 automated tests across 214 files and 111 hand-written SQL migrations, with no CI pipeline to lean on. TransGPA parses a transcript in under two seconds because it was timed, not because it felt quick.",
-    diagram: null,
+    diagram: "/diagrams/process/measure.svg",
   },
   {
     num: "Ø3",
     name: "Automate",
     subtitle: "Automate // Replace",
     body: "Once the manual process is understood well enough, it gets replaced. An eight-hour prospecting day became about ten minutes. A research job that took days became 10,000 qualified profiles in 24 hours, running unattended on a VPS.",
-    diagram: null,
+    diagram: "/diagrams/process/automate.svg",
   },
 ] as const satisfies readonly ProcessStep[];

@@ -1,0 +1,15 @@
+<!-- Process 02, Measure: a ruled dial with one reading taken -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" fill="none" stroke="#222222" stroke-width="1.25" stroke-linecap="round">
+  <circle cx="100" cy="100" r="80"/>
+  <circle cx="100" cy="100" r="32"/>
+  <!-- 36 minor ticks: a 6px-wide ring dashed at 1.25px every 1/36 of its circumference -->
+  <circle cx="100" cy="100" r="74" stroke-width="6" stroke-dasharray="1.25 11.666" stroke-linecap="butt"/>
+  <path d="M160 100H180M152 70L169.3 60M130 48L140 30.7M100 40V20M70 48L60 30.7M48 70L30.7 60M40 100H20M48 130L30.7 140M70 152L60 169.3M100 160V180M130 152L140 169.3M152 130L169.3 140"/>
+  <path d="M100 68V132M68 100H132" stroke-opacity="0.35"/>
+  <circle cx="100" cy="100" r="2.5" fill="#222222" stroke="none"/>
+  <g stroke="#033FED">
+    <path d="M100 100L151.4 38.7"/>
+    <path d="M146 100A46 46 0 0 0 129.6 64.8"/>
+    <circle cx="151.4" cy="38.7" r="2.5" fill="#033FED" stroke="none"/>
+  </g>
+</svg>

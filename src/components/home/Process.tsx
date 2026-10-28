@@ -16,9 +16,7 @@ const DIAGRAM_PX = 200;
  */
 function Diagram({ step }: { step: ProcessStep }) {
   if (step.diagram === null) {
-    /* Until the diagrams are drawn, a modest gap rather than the full slot:
-       200px of nothing read as a broken layout in the audit pass. */
-    return <div aria-hidden="true" style={{ height: 48 }} />;
+    return <div aria-hidden="true" style={{ height: DIAGRAM_PX }} />;
   }
 
   return (
