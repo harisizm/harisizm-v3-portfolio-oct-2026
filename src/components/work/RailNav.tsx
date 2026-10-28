@@ -14,8 +14,10 @@ export interface RailNavProps {
 
 /**
  * The scroll-spy section nav, pinned to the bottom of the sticky rail
- * (design.md §9.2). Active is dark with a marker; inactive is `--mid-grey` and
- * not `--dim`, which is ~2.2:1 on this canvas and fails WCAG AA (§11).
+ * (design.md §9.2). Body face at the 16px label size, sentence case: the
+ * reference's "Overview / Challenge / Strategy" column (audit E2). Active is
+ * dark with a marker; inactive is `--mid-grey` and not `--dim`, which is
+ * ~2.2:1 on this canvas and fails WCAG AA (§11).
  *
  * Real anchors to real section ids — no `preventDefault` and no scripted scroll,
  * so the nav works before hydration and with JS off. The spy only decides which
@@ -40,13 +42,13 @@ export function RailNav({ sections, className = "" }: RailNavProps) {
               <a
                 href={`#${section.id}`}
                 aria-current={isActive ? "true" : undefined}
-                className={`flex min-h-11 items-center gap-2 transition-opacity duration-300 ease-[ease] hover:opacity-70 ${
-                  isActive ? "text-ink" : "text-mid-grey"
+                className={`flex min-h-6 items-center gap-1.5 text-label transition-opacity duration-300 ease-[ease] hover:opacity-70 ${
+                  isActive ? "font-medium text-ink" : "text-mid-grey"
                 }`}
               >
                 <span
                   aria-hidden="true"
-                  className={isActive ? "visible" : "invisible"}
+                  className={`text-[10px] ${isActive ? "visible" : "invisible"}`}
                 >
                   &#9642;
                 </span>

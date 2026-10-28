@@ -19,6 +19,12 @@ interface FormFieldCommon {
   placeholder?: string;
   /** Short help text under the field, wired up with `aria-describedby`. */
   hint?: string;
+  /**
+   * Validation message. When set the control gets `aria-invalid` and the
+   * message id is appended to `aria-describedby` after the hint, so screen
+   * readers announce hint then error.
+   */
+  error?: string;
   autoComplete?: string;
   className?: string;
   inputClassName?: string;
@@ -50,8 +56,9 @@ export type FormFieldProps =
       onChange?: (event: ChangeEvent<HTMLSelectElement>) => void;
     });
 
-/* Shared control skin: 1px blue border, transparent fill, square corners. The
-   18px body size is also what stops iOS zooming the viewport on focus. */
+/* Shared control skin: 1px blue border, transparent fill (the reference's inputs
+   sit straight on the canvas — audit G3), square corners. The 18px body size is
+   also what stops iOS zooming the viewport on focus. */
 const CONTROL =
   "w-full rounded-none border border-accent bg-transparent px-4 font-body text-body text-ink placeholder:text-mid-grey";
 
@@ -60,7 +67,9 @@ const CONTROL =
  *
  * The label is a blue chip straddling the input's top border, not a line of text
  * above it: the 10px of wrapper padding is what the chip hangs into, so the
- * border crosses it rather than clearing it.
+ * border crosses it rather than clearing it. The chip is body face, 16px,
+ * sentence case ("Website Type*") — the reference does not uppercase it and does
+ * not use the pixel face here.
  *
  * Client component because `useId` makes the label/input pairing automatic — the
  * association cannot be forgotten at the call site — and because the change
@@ -73,6 +82,7 @@ export function FormField(props: FormFieldProps) {
     required = false,
     placeholder,
     hint,
+    error,
     autoComplete,
     className = "",
     inputClassName = "",
@@ -81,13 +91,16 @@ export function FormField(props: FormFieldProps) {
   const generatedId = useId();
   const id = props.id ?? `${name}-${generatedId}`;
   const hintId = hint ? `${id}-hint` : undefined;
+  const errorId = error ? `${id}-error` : undefined;
+  const describedBy = [hintId, errorId].filter(Boolean).join(" ") || undefined;
 
   const shared = {
     id,
     name,
     required,
     autoComplete,
-    "aria-describedby": hintId,
+    "aria-describedby": describedBy,
+    "aria-invalid": error ? true : undefined,
   };
 
   let control: React.ReactElement;
@@ -146,24 +159,29 @@ export function FormField(props: FormFieldProps) {
       <div className="relative pt-2.5">
         <label
           htmlFor={id}
-          className="u-label absolute left-4 top-0 z-10 bg-accent px-2 py-1 text-white"
+          className="absolute left-4 top-0 z-10 bg-accent px-2 py-0.5 font-body text-label leading-[1.2] text-white"
         >
           {label}
-          {required ? <span aria-hidden="true"> *</span> : null}
+          {required ? <span aria-hidden="true">*</span> : null}
         </label>
         {control}
         {props.type === "select" ? (
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute bottom-0 right-4 flex h-11 items-center font-display text-accent"
+            className="pointer-events-none absolute bottom-0 right-4 flex h-11 items-center text-accent"
           >
             ▾
           </span>
         ) : null}
       </div>
       {hint ? (
-        <p id={hintId} className="mt-2 text-label text-mid-grey">
+        <p id={hintId} className="mt-2 text-label-sm text-mid-grey">
           {hint}
+        </p>
+      ) : null}
+      {error ? (
+        <p id={errorId} role="alert" className="mt-2 text-label-sm text-accent">
+          {error}
         </p>
       ) : null}
     </div>

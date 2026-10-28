@@ -47,3 +47,7 @@ export { WorkIndexRail } from "./WorkIndexRail";
 export type { WorkIndexRailProps } from "./WorkIndexRail";
 
 export { hasContent } from "./content";
+export { RAIL_CELL, RAIL_GRID } from "./layout";
+
+export { TagChip } from "./TagChip";
+export type { TagChipProps } from "./TagChip";

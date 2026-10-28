@@ -21,7 +21,7 @@ export function ContactPreview() {
       <Reveal className="grid gap-8 lg:grid-cols-4 lg:gap-6">
         <div className="lg:col-span-3">
           <Chip>Contact</Chip>
-          <h2 className="mt-8 max-w-[22ch] text-[clamp(1.75rem,4.2vw,51px)] font-normal leading-[1.15] tracking-[-0.025em]">
+          <h2 className="mt-8 max-w-[22ch] text-[clamp(1.75rem,4.2vw,51px)] font-normal uppercase leading-[1.15] tracking-[-1.5px]">
             Tell me what your team is still doing by hand.
           </h2>
         </div>
@@ -34,34 +34,33 @@ export function ContactPreview() {
       <Reveal className="mt-14 grid gap-6 lg:mt-20 lg:grid-cols-2">
         {/* Grey panel — the first step of the trio. Hand-rolled rather than a
             DarkPanel on a lighter ground, because the `↗` and the label need to
-            stay ink-on-grey for contrast. */}
+            stay ink-on-grey for contrast. The label gets its own block with a
+            fixed top gap: this card's body is the longer of the two, so the
+            flex slack that spaces card 02's label never existed here and the
+            label sat flush under the paragraph (audit B6). */}
         <Link
           href="/contact"
           className="group relative flex min-h-[180px] flex-col justify-end bg-surface-alt p-6 transition-opacity duration-300 ease-[ease] hover:opacity-90"
         >
           <span
             aria-hidden="true"
-            className="absolute right-6 top-6 font-display text-[20px] leading-none text-accent"
+            className="absolute right-6 top-6 text-body leading-none text-accent"
           >
             ↗
           </span>
           <div className="mb-auto max-w-[34ch] pr-10">
-            <p className="font-display text-body font-bold leading-[1.1] text-mid-grey">
-              Ø1
-            </p>
+            <p className="u-pixel-num text-mid-grey">Ø1</p>
             <p className="mt-4 text-lead font-light">
               Start a project. A few questions about scope, budget and timeline,
               and you get a straight answer about whether I am the right person
               for it.
             </p>
           </div>
-          <span className="u-label text-accent">Start a project</span>
+          <span className="u-label mt-8 block text-accent">Start a project</span>
         </Link>
 
         <DarkPanel href="/contact" label="Hiring or something else">
-          <p className="font-display text-body font-bold leading-[1.1] text-accent-2">
-            Ø2
-          </p>
+          <p className="u-pixel-num text-accent-2">Ø2</p>
           <p className="mt-4 text-lead font-light">
             Hiring, or something else entirely. The CV, the code and the
             profiles, without a form in the way.
@@ -88,7 +87,7 @@ export function ContactPreview() {
           <p className="mt-6">
             <a
               href={`tel:${site.phoneHref}`}
-              className="u-label inline-flex min-h-11 items-center transition-opacity duration-300 ease-[ease] hover:opacity-80"
+              className="u-label inline-flex min-h-11 items-center text-white transition-opacity duration-300 ease-[ease] hover:opacity-80"
             >
               {site.phone}
             </a>

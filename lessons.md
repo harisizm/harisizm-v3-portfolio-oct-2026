@@ -454,3 +454,39 @@ bypass, reverse-engineered internal GraphQL APIs and TLS impersonation. Naming t
 techniques on a commercial site carries ToS and client-perception risk. Default to
 framing the *outcome and architecture*, and raise the detail question explicitly when
 each draft goes up for approval.
+
+---
+
+### D-015 · Display face: Chakra Petch 700
+**2026-10-28 · supersedes D-005 / D-012**
+
+The reference-parity audit (`context/audit-2026-10-28.md`, A2) showed that
+Departure Mono, a monospace *text* face, cannot carry the display roles: at 96px
+in the menu and 276px in the footer it read as terminal output, with monospace
+gaps between letters. Five candidates were mocked in every display role
+(Pixelify Sans, Handjet, Sixtyfour, DotGothic16, Chakra Petch).
+
+**Chosen: Chakra Petch 700**, a squared technical sans that is not a pixel face.
+The site reads engineered rather than retro. Loaded through `next/font/google`
+as `--font-chakra`; only the 700 cut, since every display role is bold.
+
+**Consequences:** Departure Mono and its licence file are removed from
+`public/fonts/`. The pixel-art cursors are redrawn as clean vectors so the
+system stays coherent. The `.u-pixel` class keeps its name for now; it means
+"small display-face label", not "pixel".
+
+---
+
+### T-015 · No em dashes, no en dashes, in anything a visitor reads
+**2026-10-28 · standing rule from Haris**
+
+Nowhere in the data layer, component copy or metadata. A dash that was
+splicing two thoughts becomes a proper sentence, a colon, or a comma followed by
+a real clause. Hyphens inside compound words are fine. Code comments are exempt.
+
+**Why:** dashes are the signature of generated prose: hard cuts standing in for
+sentences that were never written. The site should read as written by a person.
+
+**How to apply:** grep `src/` for `—` and `–` before every commit; the copy pass
+on 2026-10-28 removed the ones already there. New copy is written without them
+from the start, and read aloud once before it ships.

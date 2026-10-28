@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { GridOverlay } from "@/components/ui";
 import {
   ApproachSection,
   BoardStrip,
@@ -12,6 +11,8 @@ import {
   OverviewSection,
   ProjectCover,
   ProjectMeta,
+  RAIL_CELL,
+  RAIL_GRID,
   ScrollProgress,
   hasPublishableEvidence,
 } from "@/components/work";
@@ -72,6 +73,11 @@ export async function generateMetadata({
  * the spy — one list, so a section can never exist without a nav entry or the
  * other way round. Evidence drops out of both together when there is nothing
  * publishable in the slot.
+ *
+ * The nav shows the short form of each label ("Challenge", not "The
+ * Challenge"): the reference's rail reads Overview / Challenge / Strategy while
+ * the section headings keep their article (audit E2). Only the display label
+ * changes; the ids the spy and the anchors use are untouched.
  */
 export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
   const { slug } = await params;
@@ -80,26 +86,31 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
 
   const { caseStudy } = project;
   const showEvidence = hasPublishableEvidence(caseStudy.evidence);
-  const sections = caseStudySections.filter(
-    (section) => section.id !== "evidence" || showEvidence,
-  );
+  const sections = caseStudySections
+    .filter((section) => section.id !== "evidence" || showEvidence)
+    .map((section) => ({
+      id: section.id,
+      label: section.label.replace(/^The /, ""),
+    }));
   const { next } = adjacentProjects(project.slug);
 
   return (
-    <main className="relative">
-      <GridOverlay />
-
+    <main>
       {/* The reference drops its scroll-spy entirely below 1024px, on a
           nine-screen page. This replaces it (design.md §9.2, lessons.md T-007). */}
       <ScrollProgress sections={sections} className="lg:hidden" />
 
-      <div className="u-container lg:grid lg:grid-cols-[var(--rail)_1fr] lg:items-start lg:gap-x-12">
-        <CaseStudyRail project={project} sections={sections} />
+      {/* The grid overlay is mounted once in app/layout.tsx; the rail cell
+          draws its own solid divider (audit E5). */}
+      <div className={RAIL_GRID}>
+        <div className={RAIL_CELL}>
+          <CaseStudyRail project={project} sections={sections} />
+        </div>
 
         <div className="min-w-0 lg:pt-14">
           <ProjectCover
             image={project.cover}
-            sizes="(min-width: 1024px) 70vw, 100vw"
+            sizes="(min-width: 1024px) 77vw, 100vw"
             priority
             ratioClassName="aspect-[16/9]"
             className="mt-8 lg:mt-0"

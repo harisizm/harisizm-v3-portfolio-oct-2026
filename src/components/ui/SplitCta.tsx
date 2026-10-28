@@ -23,6 +23,10 @@ export interface SplitCtaProps {
  * `↗`. They live inside a single anchor, so there is exactly one tab stop, one
  * hover target and one destination — "two controls, one action" enforced by the
  * markup rather than by convention.
+ *
+ * Label is the body face at 18px uppercase (audit A1), not the pixel face. The
+ * reference button measures 220×42 for "LET'S BUILD YOURS"; 42px tall with 24px
+ * side padding lands a label of that length at about that width.
  */
 export function SplitCta({
   href,
@@ -35,9 +39,9 @@ export function SplitCta({
 
   const shell = `group inline-flex items-stretch gap-2 ${className}`;
   const filled =
-    "u-label flex min-h-11 items-center bg-accent px-6 text-white transition-opacity duration-300 ease-[ease] group-hover:opacity-80";
+    "u-label-lg flex min-h-[42px] items-center bg-accent px-6 text-white transition-opacity duration-300 ease-[ease] group-hover:opacity-80";
   const square =
-    "flex size-11 shrink-0 items-center justify-center border border-accent text-accent transition-opacity duration-300 ease-[ease] group-hover:opacity-80";
+    "flex size-[42px] shrink-0 items-center justify-center border border-accent text-accent transition-opacity duration-300 ease-[ease] group-hover:opacity-80";
 
   const inner = (
     <>

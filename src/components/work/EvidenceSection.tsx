@@ -56,7 +56,7 @@ function TestimonialEvidence({ testimonial }: { testimonial: Testimonial }) {
 
   return (
     <figure>
-      <blockquote className="max-w-[24ch] text-[24px] font-medium leading-[1.25] tracking-[-0.5px] md:text-[32px]">
+      <blockquote className="text-[24px] font-medium leading-[1.25] tracking-[-0.5px] md:text-[32px]">
         &ldquo;{testimonial.quote}&rdquo;
       </blockquote>
       <figcaption className="mt-10 flex items-center gap-4">
@@ -75,13 +75,13 @@ function TestimonialEvidence({ testimonial }: { testimonial: Testimonial }) {
           </span>
         )}
         <span>
-          <span className="u-label block">{testimonial.author}</span>
-          <span className="u-label mt-1 block text-mid-grey">
+          <span className="block">{testimonial.author}</span>
+          <span className="u-label-sm mt-1 block text-mid-grey">
             {testimonial.authorRole}, {testimonial.company}
           </span>
         </span>
       </figcaption>
-      <p className="u-label mt-6 text-mid-grey">
+      <p className="u-label-sm mt-6 text-mid-grey">
         Collected{" "}
         <time dateTime={testimonial.collectedOn}>
           {collectedFormat.format(new Date(testimonial.collectedOn))}
@@ -99,7 +99,7 @@ function UsageEvidenceBlock({ usage }: { usage: UsageEvidence }) {
 
   return (
     <div>
-      <p className="max-w-[26ch] text-[24px] font-medium leading-[1.25] tracking-[-0.5px] md:text-[32px]">
+      <p className="text-[24px] font-medium leading-[1.25] tracking-[-0.3px] md:text-[28px]">
         {usage.headline}
       </p>
       <MetricList metrics={usage.metrics} className="mt-14" />
@@ -124,7 +124,7 @@ function UsageEvidenceBlock({ usage }: { usage: UsageEvidence }) {
       ) : null}
 
       {/* Where the numbers came from, so a reader can challenge them. */}
-      <p className="u-label mt-12 max-w-[60ch] text-mid-grey">
+      <p className="u-label-sm mt-12 text-mid-grey">
         Source: <span className="normal-case">{usage.source}</span>
       </p>
     </div>

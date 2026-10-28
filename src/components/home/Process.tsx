@@ -1,83 +1,94 @@
-import { Chip } from "@/components/ui";
+import Image from "next/image";
+
+import { Chip, RuleToLink } from "@/components/ui";
+import { processSteps, type ProcessStep } from "@/data";
 
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
 
+/** The reference's line-art slot is about 200px square (audit B4). */
+const DIAGRAM_PX = 200;
+
 /**
- * Three steps — design.md §9.1 item 4.
- *
- * Written from what the case studies in `@/data` actually show, not from agency
- * vocabulary: the work ships to a live deployment first, every claim it makes is
- * a measured one, and the manual process it replaced is the result. Every number
- * quoted here appears in a project's `outcome` or `evidence` fields.
- *
- * This copy belongs in the data layer eventually — `src/data` is owned by
- * another agent in this pass, so it sits here as a typed module constant rather
- * than inline in the JSX (lessons.md T-010).
+ * The diagram slot. A null `diagram` is spacing, not a placeholder: the column
+ * keeps its rhythm so the SVG drops into the same spot when it is drawn, and
+ * nothing renders that could be mistaken for a broken image (T-002).
  */
-interface Step {
-  readonly num: string;
-  readonly name: string;
-  readonly subtitle: string;
-  readonly body: string;
+function Diagram({ step }: { step: ProcessStep }) {
+  if (step.diagram === null) {
+    /* Until the diagrams are drawn, a modest gap rather than the full slot:
+       200px of nothing read as a broken layout in the audit pass. */
+    return <div aria-hidden="true" style={{ height: 48 }} />;
+  }
+
+  return (
+    <Image
+      src={step.diagram}
+      alt=""
+      width={DIAGRAM_PX}
+      height={DIAGRAM_PX}
+      loading="lazy"
+      className="mx-auto"
+    />
+  );
 }
 
-const steps = [
-  {
-    num: "Ø1",
-    name: "Ship",
-    subtitle: "to production // not to a demo folder",
-    body:
-      "The first useful version goes somewhere real. Tourgenz has been live since September 2026 — a traveller app, five vendor portals and an admin control room, all carrying actual bookings. Everything after launch lands on software people are already using.",
-  },
-  {
-    num: "Ø2",
-    name: "Measure",
-    subtitle: "the claim // or do not make it",
-    body:
-      "Tourgenz is held together by roughly 2,000 automated tests across 214 files and 111 hand-written SQL migrations, with no CI pipeline to lean on. TransGPA's parse time is under two seconds because it was timed, not because it felt quick.",
-  },
-  {
-    num: "Ø3",
-    name: "Automate",
-    subtitle: "the part nobody should be doing // by hand",
-    body:
-      "Once the manual process is understood well enough, it gets replaced. An eight-hour prospecting day became about ten minutes. A multi-day research process became 10,000 qualified profiles in 24 hours, running unattended on a VPS.",
-  },
-] as const satisfies readonly Step[];
-
+/**
+ * Process — design.md §9.1 item 4, composed like `home-4250.webp`.
+ *
+ * Heading, intro and `LEARN MORE ↗` in column 1; the three steps fill columns
+ * 2 to 4, each centred: number, display-face name, body-face subtitle with the
+ * `//` separator, diagram slot, body. The copy lives in `src/data/process.ts`.
+ *
+ * The column-1 link is a `RuleToLink` with its rule hidden on desktop: the
+ * reference has a bare `LEARN MORE ↗` there, and reusing the primitive keeps
+ * one implementation of the arrow link (T-005).
+ */
 export function Process() {
   return (
     <Section id="process">
-      <Reveal className="grid gap-8 lg:grid-cols-4 lg:gap-6">
-        <div className="lg:col-span-3">
+      <div className="grid gap-14 lg:grid-cols-4 lg:gap-6">
+        <Reveal className="lg:pr-6">
           <Chip>Process</Chip>
-          <h2 className="mt-8 max-w-[24ch] text-[clamp(1.75rem,3.6vw,48px)] font-medium leading-[1.1] tracking-[-0.02em]">
-            Three steps, and the third one is the point.
+          <h2 className="mt-4 text-[clamp(1.75rem,3.6vw,48px)] font-medium uppercase leading-[1.1] tracking-[-1px]">
+            How I work
           </h2>
-        </div>
-      </Reveal>
+          <p className="mt-4 max-w-[34ch] text-body font-light text-mid-grey">
+            Three steps, and the third one is the point. This is how a process
+            that runs by hand becomes a system that runs on its own:
+          </p>
+          <RuleToLink
+            className="mt-6 lg:[&>span]:hidden"
+            href="/about"
+            label="Learn more"
+          />
+        </Reveal>
 
-      <ol className="mt-16 grid gap-14 lg:mt-24 lg:grid-cols-3 lg:gap-6">
-        {steps.map((step) => (
-          <li key={step.num}>
-            <Reveal className="lg:pr-8">
-              <p className="font-display text-body font-bold leading-[1.1] text-mid-grey">
-                {step.num}
-              </p>
+        <ol className="grid gap-14 lg:col-span-3 lg:grid-cols-3 lg:gap-6">
+          {processSteps.map((step) => (
+            <li key={step.num} className="text-center">
+              <Reveal className="mx-auto max-w-[36ch] lg:px-4">
+                <p className="u-pixel-num text-mid-grey">{step.num}</p>
 
-              {/* Step name: display face, 48px/700/+1px — design.md §4. */}
-              <h3 className="mt-4 font-display text-[clamp(1.75rem,3.6vw,48px)] font-bold uppercase leading-[1.1] tracking-[1px] text-accent">
-                {step.name}
-              </h3>
+                {/* Step name: display face, 48px/700/+1px — design.md §4. */}
+                <h3 className="mt-1 font-display text-[clamp(1.75rem,3.6vw,48px)] font-bold uppercase leading-[1.1] tracking-[1px] text-accent">
+                  {step.name}
+                </h3>
 
-              <p className="u-label mt-3 text-mid-grey">{step.subtitle}</p>
+                <p className="mt-2 text-lead font-normal leading-[1.4] text-ink">
+                  {step.subtitle}
+                </p>
 
-              <p className="mt-6 max-w-[42ch] text-body">{step.body}</p>
-            </Reveal>
-          </li>
-        ))}
-      </ol>
+                <div className="my-10">
+                  <Diagram step={step} />
+                </div>
+
+                <p className="text-body">{step.body}</p>
+              </Reveal>
+            </li>
+          ))}
+        </ol>
+      </div>
     </Section>
   );
 }

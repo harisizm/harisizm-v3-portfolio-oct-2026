@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- pointer cursor: pointing hand, index finger leftmost, thumb low-left, cuff. Hotspot 12 0 on the index fingertip (globals.css). 2x asset: same geometry x2. -->
+  <path d="M19 2 H31 V20 H40 V24 H49 V28 H58 V61 H20 V54 L9 48 V41 L19 34 Z M31 20 V36 M40 24 V36 M49 28 V36 M20 54 H58" fill="#fff" stroke="#000" stroke-width="3" stroke-linejoin="miter" stroke-linecap="square"/>
+</svg>

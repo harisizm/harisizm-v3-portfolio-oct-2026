@@ -1,17 +1,11 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   Departure Mono — SIL Open Font License 1.1, (c) Helena Zhang
-   Licence text: src/fonts/DepartureMono-LICENSE.txt
-   Stands in for Off-Bit, which is commercially licensed. See lessons.md D-005.
+   Display face: Chakra Petch 700 (SIL OFL), loaded through next/font/google in
+   app/layout.tsx, which exposes it as --font-chakra. Chosen 2026-10-28 over the
+   reference's pixel face: squared and technical rather than retro. lessons.md
+   D-015. Body face: Inter, exposed as --font-inter the same way.
 --------------------------------------------------------------------------- */
-@font-face {
-  font-family: "Departure Mono";
-  src: url("/fonts/DepartureMono-Regular.woff2") format("woff2");
-  font-weight: 400 700;
-  font-style: normal;
-  font-display: swap;
-}
 
 /* ---------------------------------------------------------------------------
    Tokens — design.md §2. Nothing in the app hardcodes a hex value.
@@ -34,15 +28,17 @@
   --grid-line: #2467ec;
 
   /* Type */
-  --font-display: "Departure Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-display: var(--font-chakra), "Chakra Petch", system-ui, sans-serif;
   --font-body: var(--font-inter), system-ui, -apple-system, sans-serif;
+
+  --text-statement-cs: 33.6px;
 
   /* Layout */
   --gutter: 16px;
   --rail: 292px; /* sticky case-study rail width */
   /* Height of the sticky header. Anything else that sticks must offset by this
      or it renders underneath the bar — the case-study rail's `‹ BACK` did. */
-  --header-h: 76px;
+  --header-h: 96px;
 }
 
 @theme inline {
@@ -68,6 +64,11 @@
   --text-statement: 51px;
   --text-statement--line-height: 1.15;
   --text-statement--letter-spacing: -1.5px;
+  /* Case-study overview statement. Reference: 33.6px/36.96px in a 765px
+     measure (~6 lines). §9.2 originally reused --text-statement here and
+     produced a 13-line tower — audit A5. */
+  --text-statement-cs: 33.6px;
+  --text-statement-cs--line-height: 1.1;
   --text-heading: 48px;
   --text-heading--line-height: 1.1;
   --text-heading--letter-spacing: -1px;
@@ -79,8 +80,14 @@
   --text-lead--line-height: 1.4;
   --text-body: 18px;
   --text-body--line-height: 1.5;
-  --text-label: 13px;
+  /* Labels are the body face at 14/16/18 — see .u-label-* below. The pixel
+     face only survives at small sizes on chips and the menu button (.u-pixel). */
+  --text-label-sm: 14px;
+  --text-label: 16px;
+  --text-label-lg: 18px;
   --text-label--line-height: 1.2;
+  --text-pixel: 16px;
+  --text-pixel-num: 18px;
 }
 
 /* ---------------------------------------------------------------------------
@@ -135,16 +142,22 @@
 /* ---------------------------------------------------------------------------
    Cursor — design.md §5. Pure CSS, no JS follower.
    Pointer-fine only, so touch devices keep their native behaviour.
+   2x assets via image-set(): at Windows 125%/150% a 32px SVG is rasterised at
+   40/48px and the 2px cells snap unevenly (audit H4). Safari still needs the
+   -webkit- form; the unprefixed one follows so it wins where supported.
 --------------------------------------------------------------------------- */
 @media (hover: hover) and (pointer: fine) {
   body {
-    cursor: url("/cursor/default.svg") 2 0, auto;
+    cursor: -webkit-image-set(url("/cursor/default.svg") 1x, url("/cursor/default@2x.svg") 2x) 2 0, auto;
+    cursor: image-set(url("/cursor/default.svg") 1x, url("/cursor/default@2x.svg") 2x) 2 0, auto;
   }
   body :is(p, h1, h2, h3, h4, h5, h6, input[type="text"], input[type="email"], textarea) {
-    cursor: url("/cursor/text.svg") 9 19, text;
+    cursor: -webkit-image-set(url("/cursor/text.svg") 1x, url("/cursor/text@2x.svg") 2x) 9 19, text;
+    cursor: image-set(url("/cursor/text.svg") 1x, url("/cursor/text@2x.svg") 2x) 9 19, text;
   }
   body :is(a, a *, button, button *, input[type="submit"], [role="button"]) {
-    cursor: url("/cursor/pointer.svg") 12 0, pointer;
+    cursor: -webkit-image-set(url("/cursor/pointer.svg") 1x, url("/cursor/pointer@2x.svg") 2x) 12 0, pointer;
+    cursor: image-set(url("/cursor/pointer.svg") 1x, url("/cursor/pointer@2x.svg") 2x) 12 0, pointer;
   }
 }
 
@@ -175,13 +188,53 @@
     padding-inline: var(--gutter);
   }
 
-  /* Labels, nav, numbers, chips — always display face, always uppercase. */
-  .u-label {
-    font-family: var(--font-display);
+  /* Label roles — audit A1. The reference sets every small label, link,
+     button, rail item, social and status pill in the BODY face, uppercase,
+     14–18px. The pixel face only appears small on chips and the menu button.
+     Sizes are tokens so page code never types a px value. */
+  .u-label,
+  .u-label-sm,
+  .u-label-lg {
+    font-family: var(--font-body);
+    font-weight: 400;
     font-size: var(--text-label);
     line-height: var(--text-label--line-height);
     letter-spacing: 0.2px;
     text-transform: uppercase;
+  }
+  .u-label-sm {
+    font-size: var(--text-label-sm);
+  }
+  .u-label-lg {
+    font-size: var(--text-label-lg);
+  }
+
+  /* "Overview" / "The Challenge" / "Client Notes" — body face, sentence case,
+     ink. The one label role the reference does NOT uppercase. */
+  .u-section-label {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-label);
+    line-height: var(--text-label--line-height);
+    color: var(--ink);
+  }
+
+  /* Pixel face, small. ONLY chips and the menu button — reference chip is
+     Offbit 16px / 0.8px tracking, rendered 29px tall at padding 8/10/5. */
+  .u-pixel {
+    font-family: var(--font-display);
+    font-size: var(--text-pixel);
+    line-height: 1;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+
+  /* `Ø1`-style sequence numbers. Role unchanged from the original spec. */
+  .u-pixel-num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-pixel-num);
+    line-height: 1.1;
   }
 }
 

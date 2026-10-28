@@ -1,7 +1,8 @@
 import Link from "next/link";
 
-import { Chip, GridOverlay, Wordmark } from "@/components/ui";
 import { nav, site } from "@/lib/site";
+
+import { FooterWordmark } from "./FooterWordmark";
 
 /* ---------------------------------------------------------------------------
    Socials
@@ -30,6 +31,12 @@ const SOCIALS = [
 export interface SocialLinksProps {
   /** Show the network name beside the icon. Off in the tight bottom rail. */
   showLabels?: boolean;
+  /**
+   * `icons` (default) — brand mark, plus the name when `showLabels` is on.
+   * `inline` — names only, comma-separated, as the reference's footer and hero
+   * rail set them. Implies `showLabels`.
+   */
+  variant?: "icons" | "inline";
   /** Layout only — the container sets no `align-items`, so callers may. */
   className?: string;
   /** Colour and state for each link. */
@@ -38,32 +45,47 @@ export interface SocialLinksProps {
 
 export function SocialLinks({
   showLabels = false,
+  variant = "icons",
   className = "",
   linkClassName = "",
 }: SocialLinksProps) {
+  const inline = variant === "inline";
+  const labelled = inline || showLabels;
+
   return (
-    <ul className={`flex flex-wrap gap-x-4 gap-y-2 ${className}`}>
-      {SOCIALS.map((social) => (
-        <li key={social.label}>
+    <ul
+      className={`flex flex-wrap items-center ${inline ? "gap-x-1" : "gap-x-4 gap-y-2"} ${className}`}
+    >
+      {SOCIALS.map((social, index) => (
+        <li key={social.label} className="inline-flex items-center">
           <a
             href={social.href}
             target="_blank"
             rel="noreferrer noopener"
             /* The icon is not the label: an icon-only link needs a real
                accessible name, never a hover tooltip. design.md §11. */
-            aria-label={showLabels ? undefined : social.label}
+            aria-label={labelled ? undefined : social.label}
             className={`u-label inline-flex min-h-11 min-w-11 items-center justify-center gap-2 transition-opacity duration-300 ease-[ease] ${linkClassName}`}
           >
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="size-4 shrink-0"
-            >
-              <path d={social.path} />
-            </svg>
-            {showLabels ? <span>{social.label}</span> : null}
+            {inline ? null : (
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="size-4 shrink-0"
+              >
+                <path d={social.path} />
+              </svg>
+            )}
+            {labelled ? <span>{social.label}</span> : null}
           </a>
+          {/* The separator is decorative, so it stays out of the accessible
+              name — and out of the link, so it is not a click target. */}
+          {inline && index < SOCIALS.length - 1 ? (
+            <span aria-hidden="true" className="u-label">
+              ,
+            </span>
+          ) : null}
         </li>
       ))}
     </ul>
@@ -78,33 +100,39 @@ const linkSkin =
   "u-label inline-flex min-h-11 items-center transition-opacity duration-300 ease-[ease] hover:opacity-70";
 
 /**
- * Footer — design.md §9.1 item 8.
+ * Footer — design.md §9.1 item 8, rebuilt to the reference (audit B7).
  *
- * Giant `harisizm` wordmark, quick links as a comma-separated inline list, the
- * email in brackets, the phone, socials, and a copyright year that is computed.
- * V2 hardcoded the year; it was wrong within twelve months.
+ * Top to bottom: a thin full-width rule where the page's column rules end,
+ * "Quick Links" over an inline nav on the left and socials over `[ email ]` and
+ * the phone on the right, a full-width ink rule, the giant uppercase wordmark
+ * spanning gutter to gutter, and a centred © line. No chip-labelled columns,
+ * and no column rules: the footer sits outside the page-level grid overlay's
+ * wrapper (see `app/layout.tsx`), so it needs no background of its own to be
+ * rule-free.
+ *
+ * The year is computed. V2 hardcoded it; it was wrong within twelve months.
  */
 export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative mt-32">
-      <GridOverlay />
-
+    /* ink at 20% rather than `--border`: the reference's top rule is a
+       quieter line than its form borders. */
+    <footer className="mt-32 border-t border-[color-mix(in_srgb,var(--ink)_20%,transparent)]">
       <div className="u-container">
-        <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-t border-border py-12 sm:grid-cols-2 lg:grid-cols-4">
-          <nav aria-label="Footer" className="sm:col-span-2">
-            <Chip>Menu</Chip>
+        <div className="flex flex-col gap-10 pb-10 pt-12 sm:flex-row sm:items-start sm:justify-between">
+          <nav aria-label="Footer">
+            <p className="u-label-sm text-mid-grey">Quick Links</p>
             {/* Comma-separated inline list. The separator is decorative, so it
                 stays out of each link's accessible name. */}
-            <ul className="mt-3 flex flex-wrap items-center gap-x-1">
+            <ul className="flex flex-wrap items-center gap-x-1">
               {nav.map((item, index) => (
                 <li key={item.href} className="inline-flex items-center">
                   <Link href={item.href} className={linkSkin}>
                     {item.label}
                   </Link>
                   {index < nav.length - 1 ? (
-                    <span aria-hidden="true" className="u-label text-mid-grey">
+                    <span aria-hidden="true" className="u-label">
                       ,
                     </span>
                   ) : null}
@@ -113,41 +141,34 @@ export function Footer() {
             </ul>
           </nav>
 
-          <div>
-            <Chip>Contact</Chip>
-            <p className="mt-3">
-              <a href={`mailto:${site.email}`} className="inline-flex min-h-11 items-center transition-opacity duration-300 ease-[ease] hover:opacity-70">
-                <Chip variant="bracketed">{site.email}</Chip>
-              </a>
-            </p>
-            <p>
-              <a href={`tel:${site.phoneHref}`} className={linkSkin}>
-                {site.phone}
-              </a>
-            </p>
-          </div>
-
-          <div>
-            <Chip>Socials</Chip>
+          <div className="flex flex-col sm:items-end">
             <SocialLinks
-              showLabels
-              className="mt-3 flex-col"
-              linkClassName="justify-start hover:opacity-70"
+              variant="inline"
+              className="sm:justify-end"
+              linkClassName="hover:opacity-70"
             />
+            <a
+              href={`mailto:${site.email}`}
+              className={`${linkSkin} text-accent`}
+            >
+              <span aria-hidden="true">[&nbsp;</span>
+              {site.email}
+              <span aria-hidden="true">&nbsp;]</span>
+            </a>
+            <a
+              href={`tel:${site.phoneHref}`}
+              className={`${linkSkin} text-mid-grey`}
+            >
+              {site.phone}
+            </a>
           </div>
         </div>
 
-        {/* Sized to span the gutters exactly, from the font's own metrics
-            rather than by eye: Departure Mono is monospace at 350/550 = 0.6364em
-            per character, so eight characters occupy 5.09 × the font size, and
-            (100vw - 2 × 16px gutter) / 5.09 = 19.6vw - 6.3px. The negative
-            tracking leaves a little slack. `overflow-hidden` is the guarantee,
-            not the intent: at no width can this push the page sideways. */}
-        <div className="overflow-hidden pt-6">
-          <Wordmark className="text-[clamp(2.5rem,19.6vw_-_6.3px,24rem)] leading-none tracking-[-0.01em]" />
+        <div className="border-t border-ink pt-12">
+          <FooterWordmark />
         </div>
 
-        <p className="u-label border-t border-border py-6 text-mid-grey">
+        <p className="u-label-sm py-8 text-center text-mid-grey">
           © {year} {site.fullName} · {site.location}
         </p>
       </div>

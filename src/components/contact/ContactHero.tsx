@@ -1,24 +1,44 @@
-import { Chip, GridOverlay } from "@/components/ui";
+import { SocialLinks } from "@/components/layout";
+import { Chip } from "@/components/ui";
+import { contactCopy } from "@/data";
 
 /**
- * Page header — `[ CONTACT ]` over the two-weight headline (design.md §4): the
- * opening clause at 600, the resolving clause at 300, one size, one colour.
+ * Page header, built to `contact-0.webp`: `[ CONTACT ]` over a two-line
+ * headline at weight 300, socials with icons sitting at the column-4 edge, and
+ * a full-width 1px ink rule closing the band.
+ *
+ * Light weight and sentence case here are deliberate (audit G1): the reference
+ * sets this page's heading that way, unlike its uppercase section titles. The
+ * two lines are data; the break between them is the component's.
+ *
+ * No grid overlay of its own: the page-level one in `app/layout.tsx` runs the
+ * rules under every section (audit A3).
  */
 export function ContactHero() {
+  const { chip, heading } = contactCopy;
+
   return (
-    <header className="u-container relative pb-16 pt-12 lg:pb-20 lg:pt-20">
-      <GridOverlay />
-      <div className="mx-auto w-full max-w-[1408px]">
-        <Chip variant="bracketed">Contact</Chip>
-        <h1 className="mt-6 max-w-[20ch] text-balance text-title tracking-tight sm:text-statement xl:text-hero">
-          <span className="font-semibold">Tell me what you are building.</span>{" "}
-          <span className="font-light">I will tell you what it takes.</span>
-        </h1>
-        <p className="mt-8 max-w-[56ch] text-lead font-light">
-          Two routes below, depending on why you are here. Either way a real person
-          reads it — there is no inbox robot on the other end of this page.
-        </p>
+    <header className="u-container pt-12 lg:pt-20">
+      <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <Chip variant="bracketed">{chip}</Chip>
+          {/* clamp rather than the `text-hero` token: 100px is the reference's
+              size for this page and it has to survive 390px. */}
+          <h1 className="mt-4 text-[clamp(2.75rem,7vw,100px)] font-light leading-[1.05] tracking-tight">
+            {heading.map((line) => (
+              <span key={line} className="block">
+                {line}
+              </span>
+            ))}
+          </h1>
+        </div>
+        <SocialLinks
+          showLabels
+          className="shrink-0 lg:justify-end lg:pb-2"
+          linkClassName="text-ink hover:opacity-70"
+        />
       </div>
+      <hr className="mt-12 border-0 border-t border-ink lg:mt-16" />
     </header>
   );
 }

@@ -8,6 +8,9 @@ export * from "./types";
 export { projects, type ProjectSlug } from "./projects";
 export { experience, education, certifications } from "./experience";
 export { skills, type SkillGroupId } from "./skills";
+export * from "./about";
+export * from "./enquiry";
+export { processSteps, type ProcessStep } from "./process";
 
 import { projects } from "./projects";
 import type {

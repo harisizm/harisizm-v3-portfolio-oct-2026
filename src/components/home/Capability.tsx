@@ -18,7 +18,7 @@ export function Capability() {
       <Reveal className="grid gap-8 lg:grid-cols-4 lg:gap-6">
         <div className="lg:col-span-3">
           <Chip>Capability</Chip>
-          <h2 className="mt-8 max-w-[24ch] text-[clamp(1.75rem,3.6vw,48px)] font-medium leading-[1.1] tracking-[-0.02em]">
+          <h2 className="mt-8 max-w-[24ch] text-[clamp(1.75rem,3.6vw,48px)] font-medium uppercase leading-[1.1] tracking-[-1px]">
             The stack these systems are actually built on.
           </h2>
         </div>
@@ -44,7 +44,7 @@ export function Capability() {
       <Reveal className="mt-16 lg:mt-20">
         <RuleToLink
           heading="Experience and education"
-          headingClassName="text-[clamp(1.5rem,2.6vw,32px)] font-medium leading-[1.1] tracking-[-0.02em]"
+          headingClassName="text-[clamp(1.5rem,2.6vw,32px)] font-medium uppercase leading-[1.1] tracking-[-0.02em]"
           as="h3"
           href="/about"
           label="Read the full history"

@@ -56,9 +56,12 @@ anyway; we will not.
 font so the 300/400/500/600 weights this spec calls for cost one file. `Geist` is an
 equally safe alternative.
 
-> **Until the display face is chosen, build with Departure Mono + Inter.** Swapping
-> the display face later is a one-line token change if every rule references
-> `--font-display` rather than a family name.
+> **Resolved 2026-10-28: the display face is Chakra Petch 700** (SIL OFL, via
+> `next/font/google`). It replaced Departure Mono after the parity audit showed a
+> monospace text face cannot carry a 96px menu or a 276px wordmark, and the owner
+> chose a squared technical face over a pixel one. The cursors were redrawn as
+> clean vectors to match. Every rule still references `--font-display`, never a
+> family name.
 
 ---
 
@@ -85,7 +88,7 @@ Declared once, as CSS custom properties on `:root`. Nothing hardcodes a hex valu
   --grid-line:   #2467EC;  /* the dotted column rules — a lighter blue than --accent */
 
   /* Type */
-  --font-display: "Departure Mono", ui-monospace, monospace; /* or Off-Bit, once licensed */
+  --font-display: var(--font-chakra), "Chakra Petch", system-ui, sans-serif;
   --font-body:    "Inter", system-ui, sans-serif;
 }
 ```
@@ -115,13 +118,25 @@ Measured at 1440px:
   padding-inline: 16px;
   pointer-events: none;
 }
-.grid-overlay > span { border-left: 1px dotted var(--grid-line); }
-.grid-overlay > span:last-child { border-right: 1px dotted var(--grid-line); }
+.grid-overlay > span { border-left: 1px dotted color-mix(in srgb, var(--ink) 12%, transparent); }
+.grid-overlay > span:last-child { border-right: 1px dotted color-mix(in srgb, var(--ink) 12%, transparent); }
 ```
+
+> Corrected 2026-10-28. The reference *declares* its rules in blue
+> (`rgb(36,103,236)`), but pixel-sampling its screenshots shows they *render*
+> as a neutral `rgb(202,202,202)` on the `#D9D9D9` canvas, about 12% ink. Ours
+> painted the declared blue at full strength and read as loud and busy. The rule
+> now matches the rendered result, not the declared colour. On the blue menu
+> overlay the same rules are white at 22% (`GridOverlay tone="overlay"`). The
+> `--grid-line` token stays defined for the work-card placeholder frames only.
 
 - 16px outer gutter, 1408px content width at 1440px viewport
 - 4 equal columns (352px each at 1440px)
 - Dotted 1px rules on every column boundary — **5 visible lines**, including both edges
+- **One page-level overlay**, mounted once in `app/layout.tsx` around the page
+  content so the rules are continuous from the header to the footer rule.
+  Sections do not mount their own; per-section overlays left a 128px gap above
+  the footer and double-painted where they met. The footer has no rules.
 - The overlay is decorative: `pointer-events: none` and `aria-hidden="true"`
 
 The rules are a visible motif, not a dev tool. They stay in production. They are
@@ -137,10 +152,32 @@ listed in the post-mortem.
 
 Two families, strictly divided by job.
 
-**`--font-display` (pixel)** — labels, nav, numbers, step names, the wordmark, chips.
-Always uppercase, always letter-spaced. Never body copy; it is unreadable in paragraphs.
+**`--font-display` (pixel)** — **only** the logo chip, section chips, the menu
+button, the menu nav items, process step names, `Ø` sequence numbers and the footer
+wordmark. Always uppercase (except the wordmark), always letter-spaced. Never body
+copy; it is unreadable in paragraphs.
 
-**`--font-body` (Inter)** — every sentence a human reads.
+**`--font-body` (Inter)** — every sentence a human reads, **and every other label,
+link and button**: CTAs, back-links, section labels, rail nav items, socials, email,
+phone, status pill, form labels. Uppercase where the reference is uppercase, 14–18px.
+
+> Corrected 2026-10-28. The first draft put every small label in the pixel face at
+> 13px (audit A1). Measured on the reference, the pixel face appears small in exactly
+> two places — chips and the menu button, both 16px — and everything else is the
+> body face. The `.u-label` family in `globals.css` encodes this:
+>
+> | Class | Family | Size | Case | Tracking | Use |
+> |---|---|---|---|---|---|
+> | `.u-label` | body | 16px | upper | +0.2px | rail items, socials, email, links, bracketed chips, dark-panel label |
+> | `.u-label-sm` | body | 14px | upper | +0.2px | status pill, small meta |
+> | `.u-label-lg` | body | 18px | upper | +0.2px | primary CTA text, `‹ BACK` |
+> | `.u-section-label` | body | 16px | sentence | normal | "Overview", "The Challenge", ink |
+> | `.u-pixel` | display | 16px | upper | +0.8px | solid chips and the menu button only |
+> | `.u-pixel-num` | display, 700 | 18px | — | normal | `Ø1`-style numbers |
+>
+> **Case:** the hero, project titles and section headings ("HOW IT WORKS", "SEE FOR
+> YOURSELF", "INTELLETE") are set in **uppercase** (audit A6). Sentence case at 120px
+> reads as a giant paragraph; uppercase is what makes it a title.
 
 ### Scale (measured)
 
@@ -148,7 +185,8 @@ Always uppercase, always letter-spaced. Never body copy; it is unreadable in par
 |---|---|---|---|---|---|
 | Hero display | 120px | 600 **and** 300 | 0.9 | normal | body |
 | Menu nav item | 96px | 700 | 1.0 | normal | display |
-| Big statement | 51px | 400 | 1.15 | −1.5px | body |
+| Big statement (home) | 51px | 400 | 1.15 | −1.5px | body |
+| Case-study statement | 33.6px | 400 | 1.1 | normal | body |
 | Section heading | 48px | 500 | 1.1 | −1px | body |
 | Step name | 48px | 700 | 1.1 | +1px | display |
 | Project title | 40px | 500 | 1.1 | normal | body |
@@ -156,7 +194,13 @@ Always uppercase, always letter-spaced. Never body copy; it is unreadable in par
 | Lead paragraph | 20px | 300 | 1.4 | −0.1px | body |
 | Body | 18px | 400 | 1.5 | normal | body |
 | Number (`Ø1`) | 18px | 700 | 1.1 | normal | display |
-| Label / chip | 13px | 400 | 1.2 | +0.2px | display |
+| Label | 16px (14 / 18) | 400 | 1.2 | +0.2px | body |
+| Chip / menu button | 16px | 400 | 1.0 | +0.8px | display |
+
+> Corrected 2026-10-28. "Big statement" was one 51px row and "Label / chip" one 13px
+> display row. The case-study overview is `--text-statement-cs` = 33.6px/1.1
+> (reference measured 33.6px/36.96px in a 765px measure); `--text-statement` 51px is
+> the home positioning statement only. Labels are body face at 14/16/18.
 
 **The hero's signature move:** one sentence, two weights. The first clause in 600,
 the resolving clause in 300, both at 120px. It creates hierarchy inside a single
@@ -175,8 +219,15 @@ small detail that does a lot of the technical-register work.
 
 ## 5. Cursor
 
-Three 32×32 pixel-art SVGs, swapped by plain CSS. **No JavaScript follower element** —
+Three 32×32 SVGs, swapped by plain CSS. **No JavaScript follower element** —
 the reference does this entirely in CSS, which is why it never lags behind the pointer.
+
+> Corrected 2026-10-28. The cursors are now clean geometric **vectors**, not
+> pixel art, to match Chakra Petch (D-015): a slim arrow with a single diagonal
+> tail, a thin I-beam, and a squat pointing hand. No `shape-rendering` attribute,
+> and a 2× variant of each is served through `image-set()` so Windows 125% and
+> 150% scaling renders even edges instead of alternating 2px and 3px steps
+> (audit H4). Pixel-grid cursors were tried and rejected for exactly that reason.
 
 ```css
 body { cursor: url("/cursor/default.svg") 2 0, auto; }
@@ -191,8 +242,8 @@ body :is(a,a *,button,button *,input[type=submit],[role=button]) {
 Hotspots matter: `2 0` for the arrow tip, `9 19` for the I-beam centre, `12 0` for
 the pointing finger's fingertip. Get these wrong and clicks feel misaligned.
 
-Draw original cursors on a 32×32 pixel grid in the same lo-fi register — a stepped
-arrow, a bracketed I-beam, a pointing hand. Always supply the native keyword
+Draw original cursors as straight-edged vectors on integer or half-integer
+coordinates with a 1.5px outline — a slim arrow, a thin I-beam, a pointing hand. Always supply the native keyword
 fallback (`auto` / `text` / `pointer`) so the site stays usable if the SVG 404s.
 
 **Touch devices:** ship the custom cursor behind `@media (hover: hover) and (pointer: fine)`.
@@ -249,9 +300,13 @@ via JS on load — never ship content that is invisible until a script runs.
 ## 7. Components
 
 ### 7.1 Section label chip
-Small uppercase display-face text, white on `--accent`, tight padding, square corners.
-Sits above every section heading. `[ bracketed ]` variant for page-level labels
-(`[ WORK ]`, `[ CONTACT ]`) rendered in blue on canvas.
+Uppercase display-face text at **16px, +0.8px tracking**, white on `--accent`,
+padding **8px 10px 5px** (renders 29px tall), square corners. Sits above every
+section heading. `[ bracketed ]` variant for page-level labels (`[ WORK ]`,
+`[ CONTACT ]`) rendered in blue on canvas — body face, `.u-label`.
+
+> Corrected 2026-10-28. Was "small" (13px). The reference chip is Offbit 16px with
+> 0.8px tracking; the solid chip and the menu button are the only small pixel text.
 
 ### 7.2 Split CTA
 The primary action is **two adjacent controls**: a filled blue button with the label,
@@ -261,6 +316,12 @@ Both must be inside one `<a>` or point at the same destination — two controls,
 action. **This is where V2 failed hardest:** the "Hire me" button had no handler at
 all. Every CTA on V3 resolves to a real `href`.
 
+Label: **body face, 18px, 400, uppercase** (`.u-label-lg`). Filled button
+**220×42** for "LET'S BUILD YOURS"; the `↗` square is **42×42** with a 1px
+`--accent` border.
+
+> Corrected 2026-10-28. Was display face 13px in a ~175×44 box (audit A1).
+
 ### 7.3 Rule-to-link
 A section heading on the left, a 1px rule spanning the empty middle, and a
 `LABEL ↗` link flush right. Used for "MORE ABOUT US", service rows, any
@@ -268,7 +329,12 @@ heading-plus-action line. Cheap to build, does a lot of structural work.
 
 ### 7.4 Form field
 The label is a blue chip **overlapping the top border of the input**, not sitting
-above it. Input has a 1px blue border and a transparent fill.
+above it — **body face, 16px, sentence case** ("Website Type*"), white on
+`--accent`. Input has a 1px blue border, **transparent fill** (it sits straight on
+the canvas), 18px Inter text.
+
+> Corrected 2026-10-28. The build had a 13px uppercase pixel-face label and a light
+> fill (audit G3). The reference uses neither.
 
 Accessibility: the chip is a real `<label for>`, never a placeholder. Placeholders
 carry example text only, and that text should have personality.
@@ -280,8 +346,10 @@ The escalating trio — grey panel, then dark panel, then blue panel — is the
 reference's strongest hierarchy device. Reuse it for any three-step sequence.
 
 ### 7.6 Status pill
-A small `--accent-2` square followed by uppercase display-face text in blue:
-`▪ AVAILABLE FOR WORK — [MONTH]`.
+A 6px `--accent-2` square followed by uppercase **body-face 14px** text in blue
+(`.u-label-sm`): `▪ AVAILABLE FOR WORK — [MONTH]`.
+
+> Corrected 2026-10-28. Was display face (audit A1: reference pill is SF Pro 14px).
 
 **Make it one data flag**, not baked into markup. V2 hardcoded "Available for new
 projects" into an SVG `textPath` with no way to turn it off. If the flag is false,
@@ -355,26 +423,40 @@ burying shipped work under a degree that finishes in 2027.
 
 This is the thing the whole site exists to deliver. Two columns.
 
-**Sticky left rail** (persists the entire scroll):
-- `‹ BACK`
-- Project title, large
+**Sticky left rail** (persists the entire scroll). Everything in it is the
+**body face** — nothing here is pixel text:
+- `‹ BACK` — 18px (`.u-label-lg`)
+- Project title, large, **UPPERCASE**
 - One-line description
-- `🌐 VIEW LIVE` — **omit entirely when there is no deployment.** V2 rendered a
-  "Live Demo" button pointing at `#` for Grocery POS, which scrolled to the top
-- Pinned to the bottom: scroll-spy section nav, active item dark with a `▪` marker,
-  inactive in `--dim`
+- `🌐 VIEW LIVE` — body face uppercase (`.u-label`) with a globe icon. **Omit
+  entirely when there is no deployment.** V2 rendered a "Live Demo" button
+  pointing at `#` for Grocery POS, which scrolled to the top
+- Pinned to the bottom: scroll-spy section nav, body 16px (`.u-label`), active
+  item dark with a `▪` marker, inactive in `--dim`
+
+> Corrected 2026-10-28. The rail was built in the 13px pixel face with a
+> sentence-case title (audit E2).
 
 **Scrolling right column:**
 
 | Section | Content |
 |---|---|
 | Hero image | Art-directed, full-bleed |
-| **Overview** | The situation as narrative. Big statement paragraph, then a smaller **right-aligned** continuation. That asymmetry is the signature rhythm — big left block, small right block |
+| **Overview** | The situation as narrative. Statement paragraph at **33.6px** (`--text-statement-cs`) in a **~765px measure, ~6 lines**, then a smaller **right-aligned** continuation. That asymmetry is the signature rhythm — big left block, small right block |
 | **The Challenge** | Prose intro, then `Core Problems:` as a tight list, then the breaking point in one line |
 | **The Approach** | Numbered sub-headings (`1.`, `2.`, `3.`) — what you considered, what you chose, **why you rejected the alternative** |
 | **The Outcome** | Honest results. Metrics where they exist, qualitative where they do not |
 | **Evidence** | See below |
 | **Next Up** | `‹ BACK` left, `[ VIEW NEXT ]` right, next project title + its hero image, plus the dark contact card |
+
+Section labels ("Overview", "The Challenge", "Client Notes" → "Evidence") are
+**body face, 16px, sentence case, ink** (`.u-section-label`).
+
+> Corrected 2026-10-28. The overview statement was specified at the home
+> statement's 51px, which produced a 13-line tower in a 515px measure (audit A5 —
+> the single largest "too big" offender). Reference: 33.6px/36.96px, 765px wide.
+> Section labels were 13px uppercase pixel face in grey; the reference is body
+> 16px sentence case in ink.
 
 Between text sections, drop **craft-evidence boards** — the reference shows a colour
 palette board with hex codes and a type specimen sheet. The engineering equivalents,
@@ -419,6 +501,11 @@ The success state names a real response window and mentions the spam folder.
 
 ## 10. Content rules
 
+- **No em dashes, no en dashes, anywhere a visitor reads.** A dash that was
+  joining two thoughts becomes a sentence, a colon, or a comma with a real
+  clause after it. Hyphens in compound words stay. Code comments are exempt.
+- **Write like a writer.** Sentences that read aloud, specific nouns, no
+  fragments stapled together. Adopted 2026-10-28 as a standing rule.
 - **Lead with identity, not job title.** See
   [`context/portfolio-principles.md`](context/portfolio-principles.md) — a hero that
   opens "Full-stack developer" is indistinguishable from every other application.

@@ -16,12 +16,12 @@ export interface ChallengeSectionProps {
 export function ChallengeSection({ challenge }: ChallengeSectionProps) {
   return (
     <CaseStudySection id="challenge" label="The Challenge">
-      <p className="max-w-[62ch] text-lead font-light">{challenge.intro}</p>
+      <p className="font-light">{challenge.intro}</p>
 
       <p className="u-label mt-12 text-accent">Core Problems:</p>
       <ul className="mt-4 space-y-3">
         {challenge.problems.map((problem) => (
-          <li key={problem} className="flex max-w-[64ch] gap-3">
+          <li key={problem} className="flex gap-3">
             <span aria-hidden="true" className="mt-[0.45em] text-accent">
               &#9642;
             </span>
@@ -31,7 +31,7 @@ export function ChallengeSection({ challenge }: ChallengeSectionProps) {
       </ul>
 
       {hasContent(challenge.breakingPoint) ? (
-        <p className="mt-12 max-w-[56ch] border-l-2 border-accent pl-5 text-lead">
+        <p className="mt-12 border-l-2 border-accent pl-5 text-lead">
           {challenge.breakingPoint}
         </p>
       ) : null}

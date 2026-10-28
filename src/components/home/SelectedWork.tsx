@@ -37,15 +37,16 @@ interface CoverProps {
  * (design.md §8). It is aria-hidden because it carries no information the
  * adjacent title and date row do not already state.
  *
- * When art arrives, setting `cover.src` switches this to a real `next/image`
- * with `sizes` — §12 wants a genuine srcset on every content image.
+ * The full frame is the reference's 986×676 at 1440 (audit B3), spanning
+ * columns 2 to 4. When art arrives, setting `cover.src` switches this to a real
+ * `next/image` with `sizes` — §12 wants a genuine srcset on every content image.
  */
 function Cover({ project, size }: CoverProps) {
   const full = size === "full";
   const { src, alt } = project.cover;
 
   const frame = full
-    ? "aspect-[4/3] w-full"
+    ? "aspect-[986/676] w-full"
     : "aspect-square w-14 shrink-0";
 
   if (src !== null) {
@@ -55,7 +56,7 @@ function Cover({ project, size }: CoverProps) {
           src={src}
           alt={alt}
           fill
-          sizes={full ? "(min-width: 1024px) 50vw, 100vw" : "56px"}
+          sizes={full ? "(min-width: 1024px) 75vw, 100vw" : "56px"}
           loading="lazy"
           className="object-cover"
         />
@@ -98,47 +99,51 @@ function Cover({ project, size }: CoverProps) {
   );
 }
 
-function WorkRow({ project }: { project: Project }) {
+/**
+ * One card is one link (audit B3). Chip and uppercase title at the top of
+ * column 1, the tagline and thumbnail row pushed to the bottom so they sit on
+ * the image's baseline, the image across columns 2 to 4. No second "read the
+ * case study" control: the card is the control, and the link's accessible name
+ * is the heading plus the tagline, which is what a reader would want announced.
+ */
+function WorkCard({ project }: { project: Project }) {
   return (
     <Reveal>
-      <article className="grid gap-8 lg:grid-cols-4 lg:items-start lg:gap-6">
-        <div className="lg:col-span-2 lg:pr-10">
-          <Chip>{project.tags[0]}</Chip>
-
-          <h3 className="mt-6 text-[clamp(1.6rem,3vw,40px)] font-medium leading-[1.1]">
-            <Link
-              href={`/work/${project.slug}`}
-              className="inline-block transition-opacity duration-300 ease-[ease] hover:opacity-70"
-            >
-              {project.title}
-            </Link>
-          </h3>
-
-          <p className="mt-5 max-w-[46ch] text-lead font-light text-ink">
-            {project.tagline}
-          </p>
-
-          <div className="mt-8 flex items-center gap-4 border-t border-border pt-5">
-            <Cover project={project} size="thumb" />
-            <div className="min-w-0">
-              <p className="u-label">{project.shortTitle}</p>
-              <p className="u-label mt-1 text-mid-grey">{project.dateLabel}</p>
-            </div>
+      <Link
+        href={`/work/${project.slug}`}
+        className="group grid gap-8 lg:grid-cols-4 lg:gap-6"
+      >
+        <div className="flex flex-col lg:justify-between lg:pr-10">
+          <div>
+            <Chip>Work</Chip>
+            <h3 className="mt-6 text-[clamp(1.6rem,3vw,40px)] font-medium uppercase leading-[1.1] transition-opacity duration-300 ease-[ease] group-hover:opacity-70">
+              {project.shortTitle}
+            </h3>
           </div>
 
-          <Link
-            href={`/work/${project.slug}`}
-            className="u-label mt-6 inline-flex min-h-11 items-center gap-2 text-accent transition-opacity duration-300 ease-[ease] hover:opacity-70"
-          >
-            Read the case study
-            <span aria-hidden="true">↗</span>
-          </Link>
+          <div className="mt-8 lg:mt-16">
+            <p className="max-w-[40ch] text-body font-light text-ink">
+              {project.tagline}
+            </p>
+
+            <div className="mt-6 flex items-center gap-4">
+              <Cover project={project} size="thumb" />
+              <div className="min-w-0">
+                <p className="text-body font-medium leading-tight">
+                  {project.shortTitle}
+                </p>
+                <p className="mt-1 text-label-sm text-mid-grey">
+                  {project.dateLabel}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="lg:col-span-2">
+        <div className="transition-opacity duration-300 ease-[ease] group-hover:opacity-90 lg:col-span-3">
           <Cover project={project} size="full" />
         </div>
-      </article>
+      </Link>
     </Reveal>
   );
 }
@@ -147,24 +152,18 @@ function WorkRow({ project }: { project: Project }) {
  * Selected work — design.md §9.1 item 3. The top three of the curated strength
  * order, which leads with the production work rather than the newest commit
  * (lessons.md D-010).
+ *
+ * No section heading and no chip above the cards: the reference opens straight
+ * on the first card, and each card carries its own `WORK` chip (audit B3).
  */
 export function SelectedWork() {
   const featured = sortedProjects().slice(0, 3);
 
   return (
     <Section id="work">
-      <Reveal className="grid gap-8 lg:grid-cols-4 lg:gap-6">
-        <div className="lg:col-span-3">
-          <Chip>Selected work</Chip>
-          <h2 className="mt-8 max-w-[24ch] text-[clamp(1.75rem,3.6vw,48px)] font-medium leading-[1.1] tracking-[-0.02em]">
-            Three systems in production, not three screenshots.
-          </h2>
-        </div>
-      </Reveal>
-
-      <div className="mt-16 flex flex-col gap-20 lg:mt-24 lg:gap-28">
+      <div className="flex flex-col gap-20 lg:gap-28">
         {featured.map((project) => (
-          <WorkRow key={project.slug} project={project} />
+          <WorkCard key={project.slug} project={project} />
         ))}
       </div>
 
@@ -173,10 +172,11 @@ export function SelectedWork() {
           className="lg:col-span-2 lg:col-start-3"
           href="/work"
           label="[ View all projects ]"
+          subline="Each one includes the alternative that was rejected, and why."
         >
           <p className="text-lead font-light">
-            Six case studies — four of them systems built for Web7Labs and
-            Bitbash, each one with the rejected alternative written down.
+            Six case studies, four of them systems built for Web7Labs and
+            Bitbash.
           </p>
         </DarkPanel>
       </Reveal>

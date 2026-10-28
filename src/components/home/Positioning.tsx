@@ -1,46 +1,60 @@
 import { Chip, RuleToLink } from "@/components/ui";
+import { site } from "@/lib/site";
 
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
 
 /**
- * Positioning — design.md §9.1 item 2.
+ * Positioning — design.md §9.1 item 2, composed like `home-850.webp`.
  *
- * One 51px statement paragraph, then the rule-to-link through to About. The
- * statement is the "identity before job title" slot: it says what kind of
- * problem arrives, not what the job is called.
+ * Chip in column 1; the 51px statement starts in column 2 with a first-line
+ * indent, runs to the right edge, and is the "identity before job title" slot:
+ * it says what kind of problem arrives, not what the job is called. Below it a
+ * bare rule to `MORE ABOUT HARIS ↗` (no heading: the statement is the heading),
+ * then a body paragraph in column 2 with the arrow glyph at its left and an
+ * italic sign-off.
  */
 export function Positioning() {
   return (
     <Section id="positioning">
       <Reveal className="grid gap-10 lg:grid-cols-4 lg:gap-6">
-        <div className="lg:col-span-3">
+        <div>
           <Chip>About</Chip>
-
-          <p className="mt-8 max-w-[26ch] text-[clamp(1.75rem,4.2vw,51px)] font-normal leading-[1.15] tracking-[-0.025em] lg:max-w-[30ch]">
-            Most of my work starts as a process somebody is still running by
-            hand — a spreadsheet, an eight-hour Monday, a booking taken over
-            WhatsApp. I build the system that takes it over, then put it into
-            production and keep it there.
-          </p>
         </div>
 
-        <div className="lg:col-start-4 lg:pl-6">
-          <p className="text-body text-mid-grey">
-            Full-stack, with the backend and the data pipeline usually being the
-            hard part: Next.js and React on the surface, Express, FastAPI,
-            PostgreSQL and Python underneath. No agency, no account manager —
-            you talk to the person writing it.
-          </p>
-        </div>
+        {/* The reference's first line starts about 200px further right than the
+            rest; the indent shrinks with the column so it never eats a whole
+            line at 1024. */}
+        <p className="text-[clamp(1.75rem,4.2vw,51px)] font-normal leading-[1.15] tracking-[-1.5px] lg:col-span-3 lg:indent-[clamp(120px,14vw,200px)]">
+          Most of my work starts as a process somebody is still running by hand:
+          a spreadsheet, an eight-hour Monday, a booking taken over WhatsApp. I
+          build the system that takes it over, then put it into production and
+          keep it there.
+        </p>
 
         <RuleToLink
-          className="lg:col-span-4 lg:mt-8"
-          heading="How I work"
-          headingClassName="text-[clamp(1.75rem,3.6vw,48px)] font-medium leading-[1.1] tracking-[-0.02em]"
+          className="lg:col-span-3 lg:col-start-2 lg:mt-4"
           href="/about"
           label="More about Haris"
         />
+
+        <div className="relative text-body font-light lg:col-span-2 lg:col-start-2 lg:mt-2 lg:max-w-[60ch]">
+          {/* The reference's pixel pointing hand, sitting in the margin to the
+              left of the text so the paragraph still aligns to the column. */}
+          <span
+            aria-hidden="true"
+            className="mb-3 flex size-6 items-center justify-center border border-accent font-display text-[14px] font-bold leading-none text-accent lg:absolute lg:-left-10 lg:top-1 lg:mb-0"
+          >
+            →
+          </span>
+          <p>
+            At <strong className="font-semibold text-accent">{site.name}</strong>{" "}
+            you talk to the person writing the code. I start with the process as
+            your team runs it today, find the step that eats the most hours, and
+            build the system that takes it over, from the database to the screen.
+          </p>
+          <p className="mt-5 font-semibold italic">Then I keep it running.</p>
+        </div>
       </Reveal>
     </Section>
   );

@@ -5,5 +5,3 @@ export { Credentials } from "./Credentials";
 export { ExperienceTimeline } from "./ExperienceTimeline";
 export { StatRow } from "./StatRow";
 export { StoryBlock } from "./StoryBlock";
-
-export type { ApproachCard, CardTone, ResolvedStat, Span, StoryParagraph } from "./content";

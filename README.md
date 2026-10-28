@@ -8,7 +8,7 @@ Full-stack engineer in Lahore. Every project on this site is a full case study:
 the constraint it started from, the decisions behind it, **what was rejected**,
 and what actually changed.
 
-`Next.js 16` · `React 19` · `TypeScript strict` · `Tailwind v4` · `Departure Mono + Inter`
+`Next.js 16` · `React 19` · `TypeScript strict` · `Tailwind v4` · `Chakra Petch + Inter`
 
 </div>
 
@@ -38,7 +38,7 @@ production platform, and three automation systems.
 | Framework | **Next.js 16** (App Router) + React 19 | Matches the daily stack at Web7Labs, so the site is itself consistent with what the CV claims |
 | Language | **TypeScript**, `strict` | Build fails on a type error rather than shipping a broken page |
 | Styling | **Tailwind v4** via PostCSS | Tokens live as CSS custom properties, exposed to utilities through `@theme inline` |
-| Display face | **Departure Mono** (SIL OFL, self-hosted, 17 KB) | Pixel-grid face for labels, nav and numbers |
+| Display face | **Chakra Petch 700** (SIL OFL, via `next/font`) | Squared technical face for the logo, chips, menu, step names, numbers and wordmark |
 | Body face | **Inter** via `next/font` | Everything a human reads in a sentence |
 | Motion | IntersectionObserver + CSS | No animation library earned its place yet |
 | Images | AVIF → WebP via `next/image` | V2 shipped ~8 MB of PNGs |
@@ -50,7 +50,7 @@ production platform, and three automation systems.
 ![The menu overlay](docs/screenshots/02-menu.webp)
 
 A full-viewport overlay in the one accent blue, with the dotted column rules still
-visible through it. Nav items sit in the pixel face at up to 96px, numbered `Ø1`–`Ø4`
+visible through it. Nav items sit in the display face at up to 96px, numbered `Ø1`–`Ø4`
 in lime.
 
 The detail that carries it: **a reticle of four lime crop marks frames the hovered
@@ -119,10 +119,10 @@ Two accents, and nothing else. The restraint is the system.
 production as a motif rather than as a dev tool. It is what makes the whitespace read
 as composed rather than empty.
 
-**The cursors are three 32×32 pixel-art SVGs**, swapped with plain CSS — no JavaScript
-follower, so they never lag the pointer. Each is a white core inside a black outline
-so it reads on both the grey canvas and the blue overlay, and each hotspot is placed
-on the shape rather than at the corner.
+**The cursors are three 32×32 vector SVGs**, swapped with plain CSS — no JavaScript
+follower, so they never lag the pointer. Clean geometric shapes with a white core
+inside a black outline, so they read on both the grey canvas and the blue overlay,
+and scale evenly at 125% and 150% Windows DPI (a 2× variant ships via `image-set()`).
 
 **The hero sets one sentence in two weights at one size** — the opening clause at 600,
 the resolving clause at 300. Hierarchy without a change of size or colour.
@@ -149,8 +149,7 @@ src/
 ├── hooks/                 useReveal · useScrollSpy · useReducedMotion
 └── lib/site.ts            identity + contact, single source of truth
 
-public/cursor/             three pixel-art cursors
-public/fonts/              Departure Mono + licence
+public/cursor/             three vector cursors, 1× and 2×
 context/                   reference teardown, portfolio principles, V2 post-mortem
 reference/nvrmnd/          41 annotated screenshots of the design reference
 ```
@@ -218,7 +217,7 @@ across a nine-screen page.
 Both of that site's typefaces are commercially licensed and are **not** reused here.
 Off-Bit is a Power Type Foundry release that is free for personal use only, and SF Pro
 is licensed by Apple for interface design on Apple platforms — neither covers a
-commercial site. Departure Mono (SIL OFL) and Inter (SIL OFL) stand in for them, behind
+commercial site. Chakra Petch (SIL OFL) and Inter (SIL OFL) stand in for them, behind
 `--font-display` and `--font-body` tokens so either can be swapped in one line.
 
 `reference/nvrmnd/` is an archive. Read it; never import from it, never ship it.

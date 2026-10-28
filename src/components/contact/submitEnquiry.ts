@@ -8,7 +8,7 @@
  * To wire a real endpoint, set `NEXT_PUBLIC_ENQUIRY_ENDPOINT` to something that
  * accepts `POST` with a JSON `EnquiryPayload` and answers 2xx. Nothing else in
  * the form changes: `submitEnquiry` starts returning `{ status: "sent" }` and
- * the success copy below is what the visitor reads.
+ * the success copy in `src/data/enquiry.ts` is what the visitor reads.
  *
  * Until that variable exists, a submission resolves to `{ status: "handoff" }`
  * and the form hands the visitor a pre-filled mail draft — the same route the
@@ -16,13 +16,17 @@
  * reports "sent" that was not sent (lessons.md T-002).
  */
 
+import {
+  enquiryCopy,
+  enquiryFieldOrder,
+  fieldCopy,
+  labelFor,
+  responseWindow,
+  type EnquiryField,
+} from "@/data";
 import { site } from "@/lib/site";
-import { fieldCopy, labelFor, type EnquiryField } from "./fields";
 
 export type EnquiryPayload = Readonly<Record<EnquiryField, string>>;
-
-/** The real window, printed in the success copy. Change it here, once. */
-export const RESPONSE_WINDOW = "within 24–48 hours";
 
 export type EnquiryResult =
   | { readonly status: "sent"; readonly responseWindow: string }
@@ -32,30 +36,18 @@ export type EnquiryResult =
 
 const ENDPOINT = process.env.NEXT_PUBLIC_ENQUIRY_ENDPOINT ?? null;
 
-const ORDER: readonly EnquiryField[] = [
-  "projectType",
-  "goal",
-  "budget",
-  "timeline",
-  "name",
-  "email",
-  "brief",
-];
-
-export const ENQUIRY_SUBJECT = "Project enquiry via harisizm.com";
-
 /**
  * The `mailto:` the JS path hands off to. Labels, not slugs — the mail that
  * lands has to be readable by a human on both ends.
  */
 export function buildEnquiryMailto(payload: EnquiryPayload): string {
-  const body = ORDER.map(
-    (field) => `${fieldCopy[field].label}: ${labelFor(field, payload[field])}`,
-  ).join("\n\n");
+  const body = enquiryFieldOrder
+    .map((field) => `${fieldCopy[field].label}: ${labelFor(field, payload[field])}`)
+    .join("\n\n");
 
   // Hand-encoded rather than URLSearchParams: that serialiser writes spaces as
   // `+`, which mail clients paste into the draft literally instead of decoding.
-  const query = `subject=${encodeURIComponent(ENQUIRY_SUBJECT)}&body=${encodeURIComponent(body)}`;
+  const query = `subject=${encodeURIComponent(enquiryCopy.subject)}&body=${encodeURIComponent(body)}`;
   return `mailto:${site.email}?${query}`;
 }
 
@@ -72,17 +64,11 @@ export async function submitEnquiry(payload: EnquiryPayload): Promise<EnquiryRes
     });
 
     if (!response.ok) {
-      return {
-        status: "error",
-        message: `The form could not reach the server (HTTP ${response.status}).`,
-      };
+      return { status: "error", message: enquiryCopy.result.httpError(response.status) };
     }
 
-    return { status: "sent", responseWindow: RESPONSE_WINDOW };
+    return { status: "sent", responseWindow };
   } catch {
-    return {
-      status: "error",
-      message: "The form could not reach the server — you may be offline.",
-    };
+    return { status: "error", message: enquiryCopy.result.offline };
   }
 }

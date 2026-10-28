@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
-import { GridOverlay } from "@/components/ui";
-import { WorkIndexEntry, WorkIndexRail } from "@/components/work";
+import {
+  RAIL_CELL,
+  RAIL_GRID,
+  WorkIndexEntry,
+  WorkIndexRail,
+} from "@/components/work";
 import { sortedProjects } from "@/data";
 
 /**
@@ -27,13 +31,13 @@ export const metadata: Metadata = {
 
 export default function WorkIndexPage() {
   return (
-    <main className="relative">
-      <GridOverlay />
-
-      {/* The rail is one grid column, not a floated aside, so its sticky box is
-          the column itself and it releases exactly where the list ends. */}
-      <div className="u-container lg:grid lg:grid-cols-[var(--rail)_1fr] lg:items-start lg:gap-x-12">
-        <WorkIndexRail count={projects.length} />
+    <main>
+      {/* The grid overlay is mounted once in app/layout.tsx; the rail cell
+          draws its own solid divider (audit E5). */}
+      <div className={RAIL_GRID}>
+        <div className={RAIL_CELL}>
+          <WorkIndexRail count={projects.length} />
+        </div>
 
         <div className="min-w-0 lg:pt-14">
           {projects.map((project, index) => (

@@ -3,10 +3,15 @@ import { resolveHref } from "./link";
 import type { ReactNode } from "react";
 
 export interface RuleToLinkProps {
-  heading: ReactNode;
+  /**
+   * Optional. With no heading the rule starts at the component's left edge —
+   * the reference's positioning section is exactly that: a bare rule running
+   * from column 2 to `MORE ABOUT US ↗`.
+   */
+  heading?: ReactNode;
   /** Required — the rule points at something, so there is always a destination. */
   href: string;
-  /** The right-hand link text. Rendered uppercase in the display face. */
+  /** The right-hand link text. Rendered uppercase in the body face. */
   label: string;
   /** Heading level. Defaults to `h2`; drop to `h3` inside a section. */
   as?: "h2" | "h3" | "p";
@@ -50,7 +55,9 @@ export function RuleToLink({
     <div
       className={`flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6 ${className}`}
     >
-      <Heading className={headingClassName}>{heading}</Heading>
+      {heading !== undefined && heading !== null ? (
+        <Heading className={headingClassName}>{heading}</Heading>
+      ) : null}
       <span
         aria-hidden="true"
         className="h-px w-full bg-border sm:w-auto sm:flex-1"

@@ -1,5 +1,5 @@
-import { Chip } from "@/components/ui";
 import type { Project } from "@/data";
+import { TagChip } from "./TagChip";
 
 export interface ProjectMetaProps {
   project: Project;
@@ -7,7 +7,10 @@ export interface ProjectMetaProps {
 
 /**
  * The facts under the cover: tags, dates, who owns the work, the stack
- * (teardown §6.4, item 2).
+ * (teardown §6.4, item 2; audit E3). The page mounts it directly after
+ * `ProjectCover`, so when a cover exists this is the row beneath it, like the
+ * reference's date / duration / view-live strip, and when there is none it is
+ * simply the first thing in the column.
  *
  * Tags are desktop-only here because the rail already shows them on mobile,
  * where it is a static header rather than a sticky column. Every row is
@@ -17,9 +20,9 @@ export interface ProjectMetaProps {
 export function ProjectMeta({ project }: ProjectMetaProps) {
   return (
     <div className="pt-10">
-      <div className="hidden flex-wrap gap-2 lg:flex">
+      <div className="hidden flex-wrap gap-x-2 gap-y-2 lg:flex">
         {project.tags.map((tag) => (
-          <Chip key={tag}>{tag}</Chip>
+          <TagChip key={tag}>{tag}</TagChip>
         ))}
       </div>
 
@@ -33,7 +36,7 @@ export function ProjectMeta({ project }: ProjectMetaProps) {
           value={project.employer ?? "Personal project"}
         />
         <div className="sm:col-span-3">
-          <dt className="u-label text-mid-grey">Stack</dt>
+          <dt className="u-label-sm text-mid-grey">Stack</dt>
           <dd className="m-0 mt-2 max-w-[72ch]">{project.stack.join(", ")}</dd>
         </div>
       </dl>
@@ -44,7 +47,7 @@ export function ProjectMeta({ project }: ProjectMetaProps) {
 function MetaRow({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="u-label text-mid-grey">{label}</dt>
+      <dt className="u-label-sm text-mid-grey">{label}</dt>
       <dd className="m-0 mt-2">{value}</dd>
     </div>
   );

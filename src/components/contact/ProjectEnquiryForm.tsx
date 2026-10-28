@@ -2,14 +2,16 @@
 
 import { useRef, useState } from "react";
 import { FormField } from "@/components/ui";
-import { site } from "@/lib/site";
-import { fieldCopy, optionsFor, type EnquiryField } from "./fields";
 import {
-  ENQUIRY_SUBJECT,
-  RESPONSE_WINDOW,
-  submitEnquiry,
-  type EnquiryResult,
-} from "./submitEnquiry";
+  enquiryCopy,
+  enquiryFieldOrder,
+  enquiryGroups,
+  fieldCopy,
+  optionsFor,
+  type EnquiryField,
+} from "@/data";
+import { site } from "@/lib/site";
+import { submitEnquiry, type EnquiryResult } from "./submitEnquiry";
 
 /** Fixed ids: one enquiry form per page, and the error summary links to them. */
 const fieldId = (field: EnquiryField) => `enquiry-${field}`;
@@ -24,26 +26,6 @@ const EMPTY: Record<EnquiryField, string> = {
   brief: "",
 };
 
-const REQUIRED: Record<EnquiryField, string> = {
-  projectType: "Pick the closest project type.",
-  goal: "Pick what it needs to do.",
-  budget: "Pick a range — any range.",
-  timeline: "Pick a timeline.",
-  name: "I need a name to reply to.",
-  email: "I need an email to reply to.",
-  brief: "Tell me what you are building, in a sentence or two.",
-};
-
-const ORDER: readonly EnquiryField[] = [
-  "projectType",
-  "goal",
-  "budget",
-  "timeline",
-  "name",
-  "email",
-  "brief",
-];
-
 /* Narrow enough to satisfy the input, textarea and select change handlers at
    once, so one updater covers all seven fields instead of three near-copies. */
 type ValueEvent = { readonly target: { readonly value: string } };
@@ -51,23 +33,25 @@ type ValueEvent = { readonly target: { readonly value: string } };
 function validate(values: Record<EnquiryField, string>) {
   const errors: Partial<Record<EnquiryField, string>> = {};
 
-  for (const field of ORDER) {
-    if (values[field].trim() === "") errors[field] = REQUIRED[field];
+  for (const field of enquiryFieldOrder) {
+    if (values[field].trim() === "") errors[field] = fieldCopy[field].required;
   }
 
   if (!errors.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim())) {
-    errors.email = "That address does not look right — check it for a typo.";
+    errors.email = enquiryCopy.validation.email;
   }
 
   if (!errors.brief && values.brief.trim().length < 20) {
-    errors.brief = "A little more detail, please — two or three sentences.";
+    errors.brief = enquiryCopy.validation.brief;
   }
 
   return errors;
 }
 
 /**
- * Option Ø1 — the qualifying form (design.md §9.3).
+ * Option 01, the qualifying form (design.md §9.3), in columns 3 to 4 of the
+ * contact body with the groups headed `01 | About your project` and
+ * `02 | About you` as the reference sets them.
  *
  * Progressive enhancement, in this order:
  *
@@ -79,7 +63,7 @@ function validate(values: Record<EnquiryField, string>) {
  *     same draft, pre-filled and readable, and say plainly that nothing was
  *     sent from the page.
  *  3. **JS with `NEXT_PUBLIC_ENQUIRY_ENDPOINT` set.** It POSTs and reports the
- *     real outcome. See `submitEnquiry.ts` — the only file that changes.
+ *     real outcome. See `submitEnquiry.ts`, the only file that changes.
  */
 export function ProjectEnquiryForm() {
   const [values, setValues] = useState<Record<EnquiryField, string>>(EMPTY);
@@ -92,7 +76,7 @@ export function ProjectEnquiryForm() {
     const { value } = event.target;
     setValues((current) => ({ ...current, [field]: value }));
     /* Clear a field's error as it is corrected, but leave the summary in place
-       until the next submit — a summary that empties itself mid-typing moves
+       until the next submit: a summary that empties itself mid-typing moves
        the content under the pointer. */
     setErrors((current) =>
       current[field] ? { ...current, [field]: undefined } : current,
@@ -122,18 +106,56 @@ export function ProjectEnquiryForm() {
     }
   }
 
-  const summary = ORDER.filter((field) => errors[field]);
+  const summary = enquiryFieldOrder.filter((field) => errors[field]);
+
+  /* Props shared by every control: the `error` prop (not `hint`) carries the
+     validation message so the field gets `aria-invalid` and its own `-error` id,
+     and the hint keeps its place underneath. */
+  const common = (field: EnquiryField) => ({
+    id: fieldId(field),
+    name: field,
+    label: fieldCopy[field].label,
+    placeholder: fieldCopy[field].placeholder,
+    hint: fieldCopy[field].hint,
+    error: errors[field],
+    inputClassName: errors[field] ? "border-2" : "",
+    value: values[field],
+    onChange: update(field),
+    required: true,
+  });
+
+  function renderField(field: EnquiryField) {
+    const options = optionsFor[field];
+    if (options) {
+      return <FormField key={field} type="select" options={options} {...common(field)} />;
+    }
+    if (field === "brief") {
+      return (
+        <FormField
+          key={field}
+          type="textarea"
+          rows={6}
+          className="sm:col-span-2"
+          {...common(field)}
+        />
+      );
+    }
+    if (field === "email") {
+      return <FormField key={field} type="email" autoComplete="email" {...common(field)} />;
+    }
+    return <FormField key={field} autoComplete="name" {...common(field)} />;
+  }
 
   return (
     <form
-      /* The no-JS path, kept in the markup rather than added by script — which
-         is the entire point of it. */
-      action={`mailto:${site.email}?subject=${encodeURIComponent(ENQUIRY_SUBJECT)}`}
+      /* The no-JS path, kept in the markup rather than added by script, which
+         is the entire point of it. No wrapper background: the inputs sit
+         straight on the canvas (audit G3). */
+      action={`mailto:${site.email}?subject=${encodeURIComponent(enquiryCopy.subject)}`}
       method="post"
       encType="text/plain"
       onSubmit={handleSubmit}
       aria-busy={pending}
-      className="mt-10"
     >
       {summary.length > 0 ? (
         <div
@@ -144,8 +166,8 @@ export function ProjectEnquiryForm() {
         >
           <p className="u-label text-accent">
             {summary.length === 1
-              ? "One answer still needed"
-              : `${summary.length} answers still needed`}
+              ? enquiryCopy.summary.one
+              : enquiryCopy.summary.many(summary.length)}
           </p>
           <ul className="mt-3 space-y-2">
             {summary.map((field) => (
@@ -154,7 +176,7 @@ export function ProjectEnquiryForm() {
                   href={`#${fieldId(field)}`}
                   className="inline-flex min-h-11 items-center text-body text-ink underline decoration-accent underline-offset-4"
                 >
-                  {fieldCopy[field].label} — {errors[field]}
+                  {fieldCopy[field].label}: {errors[field]}
                 </a>
               </li>
             ))}
@@ -162,96 +184,41 @@ export function ProjectEnquiryForm() {
         </div>
       ) : null}
 
-      <fieldset className="border-0 p-0">
-        <legend className="u-label text-accent">Ø1 | About your project</legend>
-        <div className="mt-8 grid gap-8 sm:grid-cols-2">
-          {(["projectType", "goal", "budget", "timeline"] as const).map((field) => {
-            const options = optionsFor[field];
-            if (!options) return null;
-
-            return (
-              <FormField
-                key={field}
-                id={fieldId(field)}
-                type="select"
-                name={field}
-                label={fieldCopy[field].label}
-                placeholder={fieldCopy[field].placeholder}
-                hint={errors[field] ?? fieldCopy[field].hint}
-                inputClassName={errors[field] ? "border-2" : ""}
-                options={options}
-                value={values[field]}
-                onChange={update(field)}
-                required
-              />
-            );
-          })}
-        </div>
-      </fieldset>
-
-      <fieldset className="mt-14 border-0 p-0">
-        <legend className="u-label text-accent">Ø2 | About you</legend>
-        <div className="mt-8 grid gap-8 sm:grid-cols-2">
-          <FormField
-            id={fieldId("name")}
-            name="name"
-            label={fieldCopy.name.label}
-            placeholder={fieldCopy.name.placeholder}
-            hint={errors.name}
-            inputClassName={errors.name ? "border-2" : ""}
-            autoComplete="name"
-            value={values.name}
-            onChange={update("name")}
-            required
-          />
-          <FormField
-            id={fieldId("email")}
-            type="email"
-            name="email"
-            label={fieldCopy.email.label}
-            placeholder={fieldCopy.email.placeholder}
-            hint={errors.email}
-            inputClassName={errors.email ? "border-2" : ""}
-            autoComplete="email"
-            value={values.email}
-            onChange={update("email")}
-            required
-          />
-          <FormField
-            id={fieldId("brief")}
-            type="textarea"
-            name="brief"
-            rows={6}
-            label={fieldCopy.brief.label}
-            placeholder={fieldCopy.brief.placeholder}
-            hint={errors.brief ?? fieldCopy.brief.hint}
-            inputClassName={errors.brief ? "border-2" : ""}
-            value={values.brief}
-            onChange={update("brief")}
-            required
-            className="sm:col-span-2"
-          />
-        </div>
-      </fieldset>
-
-      {/* The split CTA's skin, as a submit control. `SplitCta` is an anchor by
-          design — it cannot submit a form — so the two-part shape is rebuilt
-          here rather than bending that component into a button. */}
-      <button
-        type="submit"
-        disabled={pending}
-        className="group mt-12 inline-flex items-stretch gap-2 disabled:opacity-60"
-      >
-        <span className="u-label flex min-h-11 items-center bg-accent px-6 text-white transition-opacity duration-300 ease-[ease] group-hover:opacity-80">
-          {pending ? "Sending…" : "Send project request"}
-        </span>
-        <span
-          aria-hidden="true"
-          className="flex size-11 shrink-0 items-center justify-center border border-accent text-accent transition-opacity duration-300 ease-[ease] group-hover:opacity-80"
+      {enquiryGroups.map((group, i) => (
+        <fieldset
+          key={group.num}
+          className={`border-0 p-0 ${i > 0 ? "mt-10 border-t border-border pt-10" : ""}`}
         >
-          ↗
-        </span>
-      </button>
+          <legend className="float-left w-full text-[24px] font-medium leading-[1.2] text-ink">
+            {group.num} | {group.title}
+          </legend>
+          <div className="mt-8 grid gap-8 sm:grid-cols-2">
+            {group.fields.map(renderField)}
+          </div>
+        </fieldset>
+      ))}
+
+      {/* The split CTA's skin (design.md §7.2, 18px body face, 42px tall) as a
+          submit control. `SplitCta` is an anchor by design and cannot submit a
+          form, so the two-part shape is rebuilt here rather than bending that
+          component into a button. */}
+      <div className="mt-10 border-t border-border pt-10">
+        <button
+          type="submit"
+          disabled={pending}
+          className="group inline-flex items-stretch gap-2 disabled:opacity-60"
+        >
+          <span className="u-label-lg flex min-h-[42px] items-center bg-accent px-6 text-white transition-opacity duration-300 ease-[ease] group-hover:opacity-80">
+            {pending ? enquiryCopy.submitting : enquiryCopy.submit}
+          </span>
+          <span
+            aria-hidden="true"
+            className="flex size-[42px] shrink-0 items-center justify-center border border-accent text-accent transition-opacity duration-300 ease-[ease] group-hover:opacity-80"
+          >
+            ↗
+          </span>
+        </button>
+      </div>
 
       <div role="status" aria-live="polite" className="mt-8 max-w-[62ch]">
         {result ? <ResultMessage result={result} /> : null}
@@ -261,6 +228,7 @@ export function ProjectEnquiryForm() {
 }
 
 function ResultMessage({ result }: { result: EnquiryResult }) {
+  const copy = enquiryCopy.result;
   const mailLink = (
     <a
       href={`mailto:${site.email}`}
@@ -273,9 +241,9 @@ function ResultMessage({ result }: { result: EnquiryResult }) {
   if (result.status === "sent") {
     return (
       <p className="text-body text-ink">
-        Sent. I reply to every enquiry {RESPONSE_WINDOW} — if nothing has arrived by
-        then, check your spam folder before assuming it vanished, or mail me directly
-        at {mailLink}.
+        {copy.sent.before}
+        {mailLink}
+        {copy.sent.after}
       </p>
     );
   }
@@ -283,19 +251,21 @@ function ResultMessage({ result }: { result: EnquiryResult }) {
   if (result.status === "handoff") {
     return (
       <p className="text-body text-ink">
-        Your answers are now a draft in your mail app —{" "}
-        <strong className="font-semibold">send it from there</strong> and I will reply{" "}
-        {RESPONSE_WINDOW}. To be straight with you: this form has no send endpoint
-        behind it yet, so email is the real delivery path. If no draft opened, mail me
-        at {mailLink}.
+        {copy.handoff.before}
+        <strong className="font-semibold">{copy.handoff.strong}</strong>
+        {copy.handoff.middle}
+        {mailLink}
+        {copy.handoff.after}
       </p>
     );
   }
 
   return (
     <p className="text-body text-ink">
-      {result.message} Nothing was sent. Mail the same details to {mailLink} and I will
-      reply {RESPONSE_WINDOW}.
+      {result.message}
+      {copy.error.middle}
+      {mailLink}
+      {copy.error.after}
     </p>
   );
 }

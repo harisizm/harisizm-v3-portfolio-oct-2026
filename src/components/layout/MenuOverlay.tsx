@@ -7,6 +7,7 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  type FocusEvent,
   type RefObject,
 } from "react";
 
@@ -49,6 +50,16 @@ function isCurrent(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+/* Crop marks, measured on the reference (audit C1): 12px arms, 2px stroke,
+   sitting 24px OUTSIDE the item box. The old 16px arms at an 8px inset nearly
+   joined into a rectangle. `-inset-6` = 24px, `size-3` = 12px. */
+const MARKS = [
+  "-left-6 -top-6 border-l-2 border-t-2",
+  "-right-6 -top-6 border-r-2 border-t-2",
+  "-bottom-6 -left-6 border-b-2 border-l-2",
+  "-bottom-6 -right-6 border-b-2 border-r-2",
+] as const;
+
 /**
  * The menu — design.md §8.
  *
@@ -74,6 +85,7 @@ export function MenuOverlay({
      the reference. An unrecognised route falls back to the first item. */
   const restIndex = currentIndex === -1 ? 0 : currentIndex;
 
+  const dialogRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
@@ -97,8 +109,13 @@ export function MenuOverlay({
   }, []);
 
   /* --- Initial focus ---------------------------------------------------- */
+  /* The dialog itself takes focus, not the first link. Focusing the link drew
+     the global 2px `:focus-visible` ring — a full rectangle fighting the crop
+     marks (audit C2). A `tabIndex=-1` container is a legitimate focus target
+     for a modal, shows no ring, and the first Tab lands on the first control
+     through the trap below. */
   useEffect(() => {
-    panelRef.current?.querySelector<HTMLElement>(FOCUSABLE)?.focus();
+    dialogRef.current?.focus();
   }, []);
 
   /* --- Escape, and the focus trap --------------------------------------- */
@@ -131,7 +148,8 @@ export function MenuOverlay({
       const active = document.activeElement;
       const inside = active instanceof HTMLElement && cycle.includes(active);
 
-      // Wrap at both ends, and reel focus back in if it escaped altogether.
+      // Wrap at both ends, and reel focus back in if it escaped altogether —
+      // which includes the first Tab, while the dialog container holds focus.
       const atEdge = event.shiftKey ? active === first : active === last;
       if (atEdge || !inside) {
         event.preventDefault();
@@ -181,30 +199,48 @@ export function MenuOverlay({
     };
   }, [marked]);
 
+  /* Keyboard parity with `onPointerLeave`: once focus leaves the list entirely
+     the reticle goes back to rest, rather than staying on whichever item was
+     tabbed through last. */
+  const onListBlur = (event: FocusEvent<HTMLUListElement>) => {
+    if (!event.currentTarget.contains(event.relatedTarget)) {
+      setMarked(restIndex);
+    }
+  };
+
+  /* `outline-none` is deliberate and not a regression: the reticle IS the focus
+     indicator here — `onFocus` moves it onto the focused item — and the global
+     ring would draw a second, full rectangle around the same word. */
   const itemSkin =
-    "inline-flex items-start gap-3 font-display text-[clamp(2.75rem,11vw,var(--text-nav))] font-bold uppercase leading-none text-white transition-opacity duration-300 ease-[ease] focus-visible:outline-accent-2";
+    "relative inline-block font-display text-[clamp(2.75rem,11vw,var(--text-nav))] font-bold uppercase leading-none text-white transition-opacity duration-300 ease-[ease] outline-none";
 
   const contactSkin =
-    "u-label mt-3 inline-flex min-h-11 items-center text-white opacity-75 transition-opacity duration-300 ease-[ease] hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-accent-2";
+    "u-label inline-flex min-h-11 items-center text-white transition-opacity duration-300 ease-[ease] hover:opacity-70 focus-visible:outline-accent-2";
 
   return (
     <div
       id={id}
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-label="Site menu"
-      className="fixed inset-0 z-40 overflow-y-auto bg-accent"
+      tabIndex={-1}
+      className="fixed inset-0 z-40 overflow-y-auto bg-accent outline-none"
     >
       {/* The rules sit above the blue, not behind it — design.md §8. */}
-      <GridOverlay position="fixed" layer="front" />
+      <GridOverlay position="fixed" layer="front" tone="overlay" />
 
+      {/* No column gap: the overlay's rules are plain 1fr tracks, so the panel's
+          tracks have to be the same or the nav's right edge and the column-2
+          rule disagree about where column 2 ends. */}
       <div
         ref={panelRef}
-        className="u-container relative z-20 grid min-h-full grid-cols-1 content-center gap-x-8 gap-y-16 pb-16 pt-24 lg:grid-cols-4"
+        className="u-container relative z-20 grid min-h-full grid-cols-1 content-center gap-y-16 pb-16 pt-24 lg:grid-cols-4"
       >
-        {/* Right-aligned to the column-3 edge on wide viewports. Below `lg` the
-            nav takes the full width: at this size nothing fits beside it. */}
-        <div ref={frameRef} className="relative lg:col-span-3">
+        {/* Nav right-aligned to the right edge of column 2 (x≈655 at 1440 —
+            audit C3), with the 64px inset the reference keeps from the rule.
+            Below `lg` the nav takes the full width: nothing fits beside it. */}
+        <div ref={frameRef} className="relative lg:col-span-2 lg:pr-16">
           {reticle === null ? null : (
             <span
               aria-hidden="true"
@@ -220,16 +256,19 @@ export function MenuOverlay({
                   : "transform .3s ease, width .3s ease, height .3s ease",
               }}
             >
-              <span className="absolute -left-2 -top-2 size-4 border-l-2 border-t-2 border-accent-2" />
-              <span className="absolute -right-2 -top-2 size-4 border-r-2 border-t-2 border-accent-2" />
-              <span className="absolute -bottom-2 -left-2 size-4 border-b-2 border-l-2 border-accent-2" />
-              <span className="absolute -bottom-2 -right-2 size-4 border-b-2 border-r-2 border-accent-2" />
+              {MARKS.map((mark) => (
+                <span
+                  key={mark}
+                  className={`absolute size-3 border-accent-2 ${mark}`}
+                />
+              ))}
             </span>
           )}
 
           <ul
-            className="flex flex-col items-end gap-4 sm:gap-6"
+            className="flex flex-col items-end gap-10 sm:gap-12"
             onPointerLeave={() => setMarked(restIndex)}
+            onBlur={onListBlur}
           >
             {nav.map((item, index) => {
               const active = index === currentIndex;
@@ -251,10 +290,11 @@ export function MenuOverlay({
                         : "opacity-50 hover:opacity-75 focus-visible:opacity-75"
                     }`}
                   >
-                    <span>{item.label}</span>
-                    {/* A fixed-width slot, so the labels right-align and the
-                        numbers still form a column of their own. */}
-                    <span className="w-9 shrink-0 text-left font-display text-[1.125rem] font-bold leading-none text-accent-2">
+                    {item.label}
+                    {/* Lime, small, raised to the top-right of the word and
+                        flush with its right edge — design.md §8. Absolute, so
+                        the word itself is what right-aligns to the column. */}
+                    <span className="u-pixel-num absolute right-0 top-0 -translate-y-[0.55em] text-accent-2">
                       {item.num}
                     </span>
                   </Link>
@@ -264,18 +304,19 @@ export function MenuOverlay({
           </ul>
         </div>
 
-        <div className="flex flex-col gap-8 lg:col-span-1">
+        {/* Contact starts at column 3, not 4 (audit C3). */}
+        <div className="flex flex-col gap-12 lg:col-span-2 lg:col-start-3 lg:pl-12">
           <div>
-            <p className="u-label text-accent-2">Socials</p>
+            <p className="u-label-sm text-accent-2">Socials</p>
             <SocialLinks
               showLabels
-              className="mt-3 flex-col"
-              linkClassName="justify-start text-white opacity-75 hover:opacity-100 focus-visible:outline-accent-2"
+              className="mt-2 flex-col items-start! gap-y-0"
+              linkClassName="justify-start text-white hover:opacity-70 focus-visible:outline-accent-2"
             />
           </div>
 
           <div>
-            <p className="u-label text-accent-2">E-mail</p>
+            <p className="u-label-sm text-accent-2">E-mail</p>
             {/* Not `Chip variant="bracketed"`: that variant is blue on canvas by
                 design, and would disappear on this ground. */}
             <a href={`mailto:${site.email}`} className={contactSkin}>
@@ -286,7 +327,7 @@ export function MenuOverlay({
           </div>
 
           <div>
-            <p className="u-label text-accent-2">Phone</p>
+            <p className="u-label-sm text-accent-2">Phone</p>
             <a href={`tel:${site.phoneHref}`} className={contactSkin}>
               {site.phone}
             </a>

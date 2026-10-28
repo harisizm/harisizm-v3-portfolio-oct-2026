@@ -3,7 +3,7 @@
 Third pass at the portfolio. Ships to **www.harisizm.com**.
 
 **Stack:** Next.js 16 (App Router) + React 19 + TypeScript strict + Tailwind v4.
-Display face Departure Mono (SIL OFL, self-hosted), body face Inter.
+Display face Chakra Petch 700 (Google Fonts, OFL), body face Inter.
 `npm run dev` / `build` / `typecheck` / `lint`.
 
 This is a design-and-experience project before it is a code project. Every
@@ -46,6 +46,19 @@ project is a case study with its own journey.
   path must work without hover and without JS. V2's "Hire me" button had no
   handler at all.
 - Honour `prefers-reduced-motion` on every animation from the start.
+- **No em dashes and no en dashes anywhere a visitor can read.** Not in the
+  data layer, not in component copy, not in metadata. Where a dash was doing
+  the work of a clause, write the clause. Hyphens inside compound words
+  (full-stack, eight-hour) are fine. Code comments are exempt.
+- **Write like a writer, not a bot.** Full sentences with a rhythm, specific
+  nouns, no hard cuts, no fragments stapled together with punctuation. If a
+  line would not survive being read aloud, rewrite it.
+- **Never leave a dev server running.** Haris starts the server himself in his
+  own VS Code terminal. Start one only when a change genuinely has to be seen in
+  a browser, then kill the whole process tree and confirm the port is free.
+  Prefer `npm run build`, `npm run typecheck` and `npm run lint` — none of them
+  hold a port. A stale server steals port 3000 and leaves orphaned node
+  processes behind.
 - Budget images. V2 shipped ~8 MB of PNGs; three project screenshots in
   `assets/projects/` are still over 900 KB and need re-exporting as WebP.
 
@@ -61,8 +74,9 @@ Full reasoning in `lessons.md`. Don't reopen these without a new entry there.
   the CV and in the footer only. (D-003)
 - **Every project gets a full case study.** The template is data-driven, not
   hand-built pages. More and stronger projects are coming. (D-004)
-- **Both reference typefaces are substituted for licensing reasons** — build
-  with Departure Mono + Inter behind `--font-display` / `--font-body`. (D-005)
+- **Display face is Chakra Petch 700, body face Inter**, behind
+  `--font-display` / `--font-body`. Departure Mono was retired on 2026-10-28
+  after the audit; the site is engineered, not retro. (D-005, D-015)
 - **`assets/docs/cv.pdf` has been read.** Findings and the conflicts it exposed
   are in `lessons.md` T-012.
 
@@ -78,7 +92,6 @@ Ask before assuming any of these:
   the CV already drops the SBI email-marketing role and promotes TransGPA and
   the Timetable Generator into `EXPERIENCE`.
 - Whether to publish the phone number from the CV. V2 never did.
-- Which display face to licence: buy Off-Bit, or commit to Departure Mono.
 
 
 ## Waiting on Haris — promised 2026-10-28

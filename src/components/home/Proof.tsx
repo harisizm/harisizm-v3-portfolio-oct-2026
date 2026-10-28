@@ -25,8 +25,8 @@ function EvidenceCard({ project }: { project: Project }) {
         <blockquote className="mt-4 max-w-[44ch] text-lead font-light">
           “{evidence.quote}”
         </blockquote>
-        <p className="u-label mt-4 text-mid-grey">
-          {evidence.author} — {evidence.authorRole}, {evidence.company}
+        <p className="u-label-sm mt-4 text-mid-grey">
+          {evidence.author}, {evidence.authorRole}, {evidence.company}
         </p>
       </div>
     );
@@ -40,7 +40,11 @@ function EvidenceCard({ project }: { project: Project }) {
         {evidence.headline}
       </p>
 
-      <dl className="mt-6 flex flex-wrap gap-x-10 gap-y-5">
+      {/* `items-start` is the fix for audit B5: with the default stretch, a
+          metric whose label wrapped grew taller and its column-reverse layout
+          floated the number 37px above its siblings. Sized to content, every
+          number sits on the same top line and the labels hang below. */}
+      <dl className="mt-6 flex flex-wrap items-start gap-x-10 gap-y-5">
         {evidence.metrics.map((metric) => (
           /* Reversed so the value reads first visually while the markup keeps
              the `dt` before its `dd` — a hidden duplicate label would make the
@@ -49,7 +53,7 @@ function EvidenceCard({ project }: { project: Project }) {
             key={`${metric.value}-${metric.label}`}
             className="flex max-w-[20ch] flex-col-reverse"
           >
-            <dt className="u-label mt-2 text-mid-grey">
+            <dt className="u-label-sm mt-2 text-mid-grey">
               {metric.label}
               {metric.note ? (
                 <span className="mt-1 block normal-case tracking-normal">
@@ -57,14 +61,14 @@ function EvidenceCard({ project }: { project: Project }) {
                 </span>
               ) : null}
             </dt>
-            <dd className="font-display text-[clamp(1.5rem,2.4vw,32px)] font-bold leading-[1.1] text-accent">
+            <dd className="font-display text-[32px] font-bold leading-[1.1] text-accent">
               {metric.value}
             </dd>
           </div>
         ))}
       </dl>
 
-      <p className="mt-6 text-label text-mid-grey">Source: {evidence.source}</p>
+      <p className="mt-6 text-label-sm text-mid-grey">Source: {evidence.source}</p>
     </div>
   );
 }
@@ -85,12 +89,12 @@ export function Proof() {
       <Reveal className="grid gap-8 lg:grid-cols-4 lg:gap-6">
         <div className="lg:col-span-3">
           <Chip>Proof</Chip>
-          <h2 className="mt-8 max-w-[24ch] text-[clamp(1.75rem,3.6vw,48px)] font-medium leading-[1.1] tracking-[-0.02em]">
+          <h2 className="mt-8 max-w-[24ch] text-[clamp(1.75rem,3.6vw,48px)] font-medium uppercase leading-[1.1] tracking-[-1px]">
             Every number here has a source next to it.
           </h2>
         </div>
         <p className="text-body text-mid-grey lg:col-start-4 lg:pl-6">
-          No client testimonials yet — this is employer and self-initiated work,
+          No client testimonials yet. This is employer and self-initiated work,
           so the evidence is usage and measurement rather than a quote. When a
           real one arrives it goes in the same slot.
         </p>

@@ -15,11 +15,11 @@ export const projects = [
     title: "Tourgenz: Tourism & Booking Platform",
     shortTitle: "Tourgenz",
     tagline:
-      "An AI-powered tourism and booking marketplace for Pakistan — a traveller app, five vendor portals and an admin control room, live in production.",
+      "An AI-powered tourism and booking marketplace for Pakistan: a traveller app, five vendor portals and an admin control room, live in production.",
     order: 1,
     date: "2026-09-01",
     dateLabel: "Live since September 2026",
-    durationLabel: "July 2026 – present",
+    durationLabel: "July 2026 to present",
     tags: ["Full-stack", "Production", "Geospatial", "AI"],
     stack: [
       "Next.js 15",
@@ -50,16 +50,16 @@ export const projects = [
     },
     caseStudy: {
       overview: {
-        lead: "Tourgenz is a tourism and booking marketplace for Pakistan: travellers plan and book on one side, five kinds of vendor run their own portal on the other, and an admin control room sits over both. It has been in production since September 2026.",
+        lead: "Tourgenz is a tourism and booking marketplace for Pakistan. Travellers plan and book on one side, five kinds of vendor run their own portal on the other, and an admin control room sits over both. The price of a booking is negotiated rather than fixed, the map covers the whole country without a metered API key, and the trip planner can only recommend what is actually for sale. It has been in production since September 2026.",
         aside:
-          "Core engineer on the platform at Web7Labs — the booking and payments flow, authentication and sessions, the geospatial layer and the AI trip planner, through to deployment and live monitoring.",
+          "Core engineer on the platform at Web7Labs, responsible for the booking and payments flow, authentication and sessions, the geospatial layer and the AI trip planner, through to deployment and live monitoring.",
       },
       challenge: {
         intro:
           "A marketplace where the price is negotiated is not a checkout with a different label. Four things made it harder than a fixed-price booking flow.",
         problems: [
           "Travellers name their own price. Every booking is an offer inside configurable discount floors and counter-offer limits, so there is no single moment where a price simply becomes final.",
-          "Money moves between travellers, five vendor types and the platform's own commission — which a single balance column cannot represent once holds and refunds exist.",
+          "Money moves between travellers, five vendor types and the platform's own commission, and once holds and refunds exist a single balance column cannot represent that.",
           "Map features normally mean a metered API key per environment, and the product needed administrative drill-down across the whole country.",
           "Five user roles reach the same data differently, and there was no CI pipeline to catch a regression before it reached production.",
         ],
@@ -73,7 +73,7 @@ export const projects = [
             title: "One tested path for every booking status change",
             body: "Offers, counters, acceptance, cancellation and refunds all pass through a single shared transition path rather than being re-implemented per caller, so the discount and counter limits are enforced in one place.",
             rejected:
-              "Per-endpoint status updates — faster to write, but the limits then live in as many places as there are callers.",
+              "Per-endpoint status updates would have been faster to write, but the limits would then live in as many places as there are callers.",
           },
           {
             title: "A wallet ledger, not a balance",
@@ -97,7 +97,7 @@ export const projects = [
             title: "Sessions built from scratch, with reuse detection",
             body: "Short-lived access tokens are held in memory and never in localStorage; httpOnly refresh cookies rotate automatically, and a stolen or replayed session signs itself out everywhere. Passwords are bcrypt-hashed and every endpoint checks the role.",
             rejected:
-              "Tokens in localStorage — convenient, and readable by any script that gets onto the page.",
+              "Tokens in localStorage, which are convenient and readable by any script that gets onto the page.",
           },
           {
             title: "Reliability without CI",
@@ -141,7 +141,7 @@ export const projects = [
           },
           { value: "~2,000", label: "tests guarding it" },
         ],
-        source: "CV, October 2026 — Web7Labs production platform at tourgenz.com",
+        source: "CV, October 2026. Web7Labs production platform at tourgenz.com.",
       },
       boards: [
         {
@@ -159,7 +159,7 @@ export const projects = [
           kind: "state-machine",
           title: "Booking state machine",
           caption:
-            "Offer, counter, accept, cancel, refund — every edge through one tested path.",
+            "Offer, counter, accept, cancel, refund: every edge through one tested path.",
           src: null,
           alt: "State machine diagram of the Tourgenz booking lifecycle.",
           after: "approach",
@@ -210,7 +210,7 @@ export const projects = [
     order: 2,
     date: "2026-05-01",
     dateLabel: "2026",
-    durationLabel: "May – July 2026",
+    durationLabel: "May to July 2026",
     tags: ["Backend", "Data engineering", "Automation"],
     stack: [
       "Python",
@@ -233,9 +233,9 @@ export const projects = [
     },
     caseStudy: {
       overview: {
-        lead: "A client's lead research ran by hand and took days. This replaced it with one pipeline: discover candidate business profiles, qualify them against the client's criteria, and export the survivors — start to finish, unattended.",
+        lead: "A client's lead research ran by hand and took days for every list. This replaced it with one pipeline that discovers candidate business profiles, qualifies them against the client's criteria and exports the survivors, start to finish, without anyone watching it. A full 124-hashtag list now clears in a single 24-hour run, and the run survives the crashes and network trouble that a day-long job collects along the way.",
         aside:
-          "Built at Bitbash. Python and FastAPI behind an async collection core, a React dashboard in front of it, running on a VPS.",
+          "Built at Bitbash: Python and FastAPI behind an asynchronous collection core, a React dashboard in front of it, and the whole thing running unattended on a VPS.",
       },
       challenge: {
         intro:
@@ -260,12 +260,12 @@ export const projects = [
           },
           {
             title: "A resilient egress subsystem",
-            body: "Around 25 datacenter proxies with reactive rotation and escalating cooldowns, so pressure is spread across the pool and a struggling route is rested rather than hammered. Sessions are presented consistently, so a long run looks like a long run rather than a burst.",
+            body: "Around 25 datacenter proxies sit behind the collector, with reactive rotation and escalating cooldowns, so pressure is spread across the pool and a struggling route is rested rather than hammered. Sessions are presented consistently, so a long run looks like a long run rather than a burst.",
           },
           {
             title: "Crash-resilient fault tolerance",
             body: "Progress is persisted to PostgreSQL as the run proceeds, so an interrupted collection resumes from where it stopped instead of restarting. That is what made a 24h+ unattended run on a VPS realistic.",
-            rejected: "Holding run state in memory — fine until the first restart.",
+            rejected: "Holding run state in memory, which works until the first restart.",
           },
           {
             title: "A dashboard the client can actually operate",
@@ -299,7 +299,7 @@ export const projects = [
           { value: "124", label: "hashtags per client list" },
           { value: "24h+", label: "continuous unattended operation" },
         ],
-        source: "CV, October 2026 — Bitbash client delivery, May–July 2026",
+        source: "CV, October 2026. Bitbash client delivery, May to July 2026.",
       },
       boards: [
         {
@@ -347,7 +347,7 @@ export const projects = [
     order: 3,
     date: "2026-05-15",
     dateLabel: "2026",
-    durationLabel: "May – July 2026",
+    durationLabel: "May to July 2026",
     tags: ["Backend", "Data engineering", "AI", "Automation"],
     stack: [
       "Python",
@@ -370,15 +370,15 @@ export const projects = [
     },
     caseStudy: {
       overview: {
-        lead: "One pipeline carries a job posting from the moment it appears to a published, search-optimised page: collect, filter with an LLM, generate listing, service and blog content, publish to a Next.js site — plus a real-time Discord feed for the postings worth acting on immediately.",
+        lead: "One pipeline carries a job posting from the moment it appears to a published, search-optimised page. It collects the posting, filters it with an LLM, generates listing, service and blog content for it and publishes the result to a Next.js site, while a real-time Discord feed carries the postings worth acting on straight to the team. Two PostgreSQL databases hold the two halves, and a watermark-based sync cron keeps them in step.",
         aside:
-          "Built at Bitbash. Two PostgreSQL databases kept in step by a watermark-based sync cron, with an Electron control surface over the collection side.",
+          "Built at Bitbash, with an Electron control surface over the collection side and the generated pages served from a public Next.js site that belongs to the client.",
       },
       challenge: {
         intro:
           "Job postings are only valuable while they are fresh, and content about them is only valuable if there is enough of it. Those two pressures pull in opposite directions.",
         problems: [
-          "Alerts are worthless late, so collection had to run continuously and survive a source that actively resists automated traffic.",
+          "Alerts are worthless late, so collection had to run continuously and keep producing them every day without a person restarting it.",
           "Content generation at one page per posting becomes the bottleneck the moment collection works.",
           "Collection and publication are different systems with different uptime needs, but they share a dataset.",
           "The content step depended on an LLM product for which no API key was available.",
@@ -397,7 +397,7 @@ export const projects = [
           },
           {
             title: "Resilient live collection",
-            body: "Postings are pulled from the platform's own structured data interface rather than parsed out of rendered HTML, with a transport layer built to keep a long-running collector viable against defended endpoints.",
+            body: "Postings are collected as structured records rather than parsed out of rendered HTML, so a layout change on the source does not take the collector down, and the transport layer is built for a collector that runs continuously rather than one restarted by hand each morning.",
             rejected:
               "DOM scraping of the rendered page, which breaks on every layout change and is far slower per posting.",
           },
@@ -407,7 +407,7 @@ export const projects = [
           },
           {
             title: "One prompt, four content blocks",
-            body: "Content generation was consolidated from several round trips into a single prompt returning four delimited blocks per job — listing, service and blog content together — cutting 1–2 minutes off every listing. The automation drives the model through a browser session with self-healing auth, since no API key was available.",
+            body: "Content generation was consolidated from several round trips into a single prompt that returns four delimited blocks per job, with listing, service and blog content arriving together. That took one to two minutes off every listing. Because no API key was available, the automation drives the model through a browser session with self-healing auth.",
             rejected:
               "A separate request per content type, which multiplies both latency and the number of places a session can fail.",
           },
@@ -424,7 +424,7 @@ export const projects = [
         metrics: [
           { value: "70%+", label: "faster content creation" },
           {
-            value: "1–2 min",
+            value: "1 to 2 min",
             label: "saved per listing",
             note: "from consolidating four content blocks into one prompt",
           },
@@ -449,7 +449,7 @@ export const projects = [
           { value: "Public", label: "source repository" },
         ],
         source:
-          "CV, October 2026 — Bitbash, May–July 2026; source at github.com/harisizm/upwork-seo-bot-and-listing-website",
+          "CV, October 2026. Bitbash, May to July 2026; source at github.com/harisizm/upwork-seo-bot-and-listing-website.",
       },
       boards: [
         {
@@ -466,7 +466,7 @@ export const projects = [
           kind: "data-flow",
           title: "One prompt, four blocks",
           caption:
-            "Before and after the consolidation that removed 1–2 minutes per listing.",
+            "Before and after the consolidation that removed one to two minutes per listing.",
           src: null,
           alt: "Diagram comparing multi-request and single-prompt content generation.",
           after: "approach",
@@ -511,7 +511,7 @@ export const projects = [
     },
     caseStudy: {
       overview: {
-        lead: "The Web7Labs marketing team spent a full working day gathering roughly 300 leads from Google Maps by hand. Client Hunt does the same work in about ten minutes, on their own machines, with the duplicates already removed.",
+        lead: "The Web7Labs marketing team spent a full working day gathering roughly 300 leads from Google Maps by hand, and did it again for every new area. Client Hunt does the same work in about ten minutes on their own machines. It searches outward across a coordinate grid instead of one viewport at a time, drops the duplicates and records why each one was dropped, and lands the result in the spreadsheet the team already uses.",
         aside:
           "Built for an internal team rather than a client, which changes the design: it has to survive being closed mid-run, and the output has to land in the spreadsheet they already use.",
       },
@@ -521,7 +521,7 @@ export const projects = [
         problems: [
           "A single search covers one area, so broad coverage means many searches and a lot of overlap between them.",
           "Overlapping searches return the same business repeatedly, and a deduplicated list is useless if nobody can see why a row was dropped.",
-          "A long run on a desktop machine will be interrupted — closed, slept, disconnected.",
+          "A long run on a desktop machine will be interrupted at some point: the window closes, the laptop sleeps or the connection drops.",
           "The output had to arrive as a spreadsheet the team could use immediately, not as a database to query.",
         ],
         breakingPoint:
@@ -545,19 +545,19 @@ export const projects = [
           },
           {
             title: "Crash resilience as a default, not a feature",
-            body: "Because state is on disk from the first row, closing the tool mid-run costs nothing — the next run continues against what is already stored.",
+            body: "Because state is on disk from the first row, closing the tool mid-run costs nothing. The next run continues against what is already stored.",
           },
           {
             title: "One-click Excel/CSV export",
             body: "Output lands directly as Excel or CSV, in the shape the marketing team's existing process already expects.",
             rejected:
-              "A dashboard — more to build, and it would have put a second tool between the team and the spreadsheet they actually work in.",
+              "A dashboard, which would have been more to build and would have put a second tool between the team and the spreadsheet they actually work in.",
           },
         ],
       },
       outcome: {
         headline: "An eight-hour manual day became roughly ten minutes.",
-        body: "The team's prospecting routine — around 300 leads gathered by hand over a full day — now runs as a single unattended pass, with deduplication and export included rather than done afterwards.",
+        body: "The team's prospecting routine, around 300 leads gathered by hand over a full day, now runs as a single unattended pass, with deduplication and export included rather than done afterwards.",
         metrics: [
           { value: "8h → ~10 min", label: "per prospecting run" },
           {
@@ -575,7 +575,7 @@ export const projects = [
           { value: "~10 min", label: "to replace a full working day" },
           { value: "~300", label: "leads per run, deduplicated" },
         ],
-        source: "CV, October 2026 — Web7Labs internal tooling",
+        source: "CV, October 2026. Web7Labs internal tooling.",
       },
       boards: [
         {
@@ -635,9 +635,9 @@ export const projects = [
     },
     caseStudy: {
       overview: {
-        lead: "Students work out what grades they need by hand, or by pasting a transcript into whatever tool is nearest. TransGPA reads the transcript PDF in the browser, shows the picture, and lets them simulate the semester ahead — without the document leaving their machine.",
+        lead: "Students work out what grades they need by hand, or by pasting a transcript into whatever tool is nearest. TransGPA reads the transcript PDF inside the browser, shows the picture across semesters, and lets a student edit the grades ahead and watch the projected CGPA move. The document never leaves their machine: there is no upload, no server-side parser and nothing stored. Over 100 students have used it.",
         aside:
-          "Self-initiated, built for students at the University of Lahore. Over 100 of them have used it.",
+          "Self-initiated, built for students at the University of Lahore and deployed publicly on Vercel. The parse finishes in under two seconds because there is no server round trip to wait for.",
       },
       challenge: {
         intro:
@@ -656,11 +656,11 @@ export const projects = [
             title: "Parse locally, store nothing",
             body: "pdf.js reads the transcript entirely in the browser. There is no upload endpoint and no server-side storage, so the privacy guarantee is structural rather than a policy sentence.",
             rejected:
-              "A server-side parser — easier to iterate on, but it makes the tool a custodian of other people's academic records.",
+              "A server-side parser, which is easier to iterate on but makes the tool a custodian of other people's academic records.",
           },
           {
             title: "Simulation as the primary interaction",
-            body: "Grades are editable in place and the projected CGPA updates as they change, so the question students actually have — what do I need next semester — is answered by direct manipulation rather than a form submission.",
+            body: "Grades are editable in place and the projected CGPA updates as they change. The question students actually have is what they need next semester, and it is answered by direct manipulation rather than a form submission.",
           },
           {
             title: "Charts that carry the state, not decorate it",
@@ -693,7 +693,7 @@ export const projects = [
           kind: "data-flow",
           title: "Where the document goes",
           caption:
-            "File picker, parser, chart — and the server that is not in the diagram.",
+            "File picker, parser, chart, and the server that is not in the diagram.",
           src: null,
           alt: "Data-flow diagram showing transcript parsing entirely client-side.",
           after: "approach",
@@ -741,9 +741,9 @@ export const projects = [
     },
     caseStudy: {
       overview: {
-        lead: "A gaming peripherals store built end to end — storefront, catalog, orders, and the admin side that makes a 100-product catalog something one person can actually run.",
+        lead: "A gaming peripherals store built end to end: storefront, catalog, orders, and the admin side that makes a catalog of 100+ products something one person can actually run. Customers and admins read the same API at different levels of access, five analytics modules report sales, inventory and order tracking, and image storage and transactional email are automated so that neither turns into a daily chore.",
         aside:
-          "Self-initiated. The interesting half is the operator's surface: five analytics modules covering sales, inventory and order tracking.",
+          "Self-initiated, on the MERN stack, with the source public and the store deployed on Vercel. The part worth reading is the operator's side rather than the storefront.",
       },
       challenge: {
         intro:
@@ -769,7 +769,7 @@ export const projects = [
           },
           {
             title: "Automate the two recurring chores",
-            body: "Cloudinary handles image storage and transformation, and transactional email is delivered automatically — the two jobs that otherwise turn into daily manual work.",
+            body: "Cloudinary handles image storage and transformation, and transactional email is delivered automatically. Those are the two jobs that otherwise turn into daily manual work.",
             rejected:
               "Storing and resizing images on the app server, which makes every deploy carry the media with it.",
           },

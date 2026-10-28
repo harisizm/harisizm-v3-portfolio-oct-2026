@@ -14,10 +14,10 @@ export const experience = [
     title: "Full-Stack Software Engineer",
     start: "2026-07-01",
     end: null,
-    dateLabel: "July 2026 – Present",
+    dateLabel: "July 2026 to present",
     location: "Lahore, Pakistan",
     summary:
-      "Core engineer on Tourgenz, an AI-powered tourism and booking marketplace for Pakistan, live in production since September 2026 — a traveller app, five vendor portals and an admin control room.",
+      "Core engineer on Tourgenz, an AI-powered tourism and booking marketplace for Pakistan, live in production since September 2026 with a traveller app, five vendor portals and an admin control room.",
     highlights: [
       "Built Tourgenz's booking and payments flow, authentication and sessions, geospatial layer and AI trip planner, through to deployment and live production monitoring.",
       "Kept the platform reliable without a CI pipeline: ~2,000 automated tests across 214 files and 111 hand-written SQL migrations for the PostGIS/pgvector database.",
@@ -31,10 +31,10 @@ export const experience = [
     title: "Software Engineering Intern",
     start: "2026-05-01",
     end: "2026-07-31",
-    dateLabel: "May 2026 – July 2026",
+    dateLabel: "May to July 2026",
     location: "Lahore, Pakistan",
     summary:
-      "Shipped two production automation platforms — a lead-generation pipeline and a job intelligence and SEO publishing system — then operated them live, including a VPS-hosted service running unattended for 24h+.",
+      "Shipped two production automation platforms, one for lead generation and one for job intelligence and SEO publishing, then operated them live, including a VPS-hosted service that ran unattended for 24h+.",
     highlights: [
       "Built an Instagram lead-generation platform that replaced a multi-day manual research process with a fully automated discovery-to-export pipeline, cutting manual effort by 95%+ while delivering thousands of qualified business leads daily.",
       "Engineered a resilient Upwork job collection and alerting system with a real-time Discord delivery pipeline pushing hundreds of automated alerts daily across multiple niches.",
