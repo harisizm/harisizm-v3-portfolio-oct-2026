@@ -94,37 +94,39 @@ Ask before assuming any of these:
 - Whether to publish the phone number from the CV. V2 never did.
 
 
-## Waiting on Haris — promised 2026-10-28
+## Waiting on Haris
 
 Build continues without these; they slot into existing nulls and stubs. Nothing
 here should be guessed, invented, or worked around with a placeholder that
 renders.
 
-- [ ] **Repo links** for Tourgenz, Instagram Lead Generator, Client Hunt, TransGPA.
-      Currently `null` in `src/data/projects.ts` with `// TODO: user supplying`,
-      so no control renders (T-002). **`github.com/harisizm/TransGpa` is dead —
-      404, verified.** Do not restore that URL.
-      Already verified live: `tourgenz.com`, `trans-gpa-uol.vercel.app`,
-      `khilariverse.vercel.app`, `github.com/harisizm/Khilariverse`,
-      `github.com/harisizm/upwork-seo-bot-and-listing-website`.
-- [ ] **Cover art + media** for the four employer projects (Tourgenz, Instagram,
-      Upwork, Client Hunt). All six `cover.src` are `null`; the home and work
-      pages render a deliberate placeholder frame, not a broken image.
-      TransGPA and Khilariverse already have WebP covers in `public/projects/`.
-      Screen recordings of real flows are the strongest evidence available —
-      see D-014.
-- [ ] **Per-project sign-off** for everything Web7Labs or Bitbash owns —
+- [ ] **Per-project sign-off** for everything Web7Labs or Bitbash owns:
       Tourgenz, Client Hunt, Instagram Lead Generator, Upwork platform. All four
       are `approvalStatus: "draft"`; `approvedProjects()` is the publication
-      gate. See T-014 — approval does **not** generalise between projects.
-- [ ] **Hero line** — the home page ships alternates in a comment for Haris to pick.
+      gate. See T-014. Approval does **not** generalise between projects. The
+      case studies now carry real screenshots of employer systems, which makes
+      this sign-off more important, not less.
+- [ ] **Hero line.** `Hero.tsx` ships "WHAT YOU DO / BY HAND, I TURN / INTO A
+      SYSTEM." with two alternates in the comment at the top of the file.
 - [ ] **Decide** whether `skills.ts` keeps "TLS impersonation" and
-      "GraphQL scraping" verbatim, or softens them. Same sensitivity as T-014 but
-      on the skills list rather than a case study.
-- [ ] **Booking URL** if one is wanted. `site.booking` is `null`, which renders
-      no control at all.
-- [ ] **Re-export the CV** — it carries the wrong email (`haris687.chohan@`
-      vs the real `hariszim01@`) and still points at `harisifti.vercel.app`.
+      "GraphQL scraping" verbatim, or softens them.
+- [ ] **Booking URL** if one is wanted. `site.booking` is `null`.
+- [ ] **Re-export the CV**: wrong email (`haris687.chohan@` vs the real
+      `hariszim01@`) and it still points at `harisifti.vercel.app`.
+- [ ] **Diagrams.** Five board slots are drawn by `/diagram` when wanted:
+      Client Hunt expansion grid and dedupe store, TransGPA and Khilariverse
+      architecture, plus the three home-page process diagrams.
+
+### Resolved 2026-10-28
+
+- **Repo links.** All four non-public repos (Tourgenz, Instagram, Client Hunt,
+  TransGPA) show a one-line note in place of a Source link; the employer ones
+  cite client constraints, TransGPA just says the code is not public.
+- **Covers and boards.** All six projects have a real cover and image boards
+  between sections. Sources: tourgenz.com live; the Instagram folder on the
+  Desktop (new 29 June set); the Upwork GitHub repo; Client Hunt run locally
+  from `Desktop/marketing` and captured; the live TransGPA and Khilariverse
+  sites. See T-016 for what was deliberately excluded.
 
 ## V2 reference
 

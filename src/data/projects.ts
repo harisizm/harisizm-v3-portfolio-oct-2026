@@ -43,9 +43,12 @@ export const projects = [
     employer: "Web7Labs",
     approvalStatus: "draft",
     live: "https://tourgenz.com",
-    repo: null, // TODO: user supplying — Web7Labs repo, may stay private
+    repo: null,
+    repoNote: "Oops, this one cannot be public. Client constraints.",
     cover: {
-      src: null, // TODO: user supplying — no Tourgenz capture exists in assets/projects
+      src: "/projects/tourgenz.webp",
+      width: 1440,
+      height: 988,
       alt: "The Tourgenz traveller app showing the 3D satellite globe over Pakistan.",
     },
     caseStudy: {
@@ -226,9 +229,12 @@ export const projects = [
     employer: "Bitbash",
     approvalStatus: "draft",
     live: null, // internal client tooling — there is no public deployment to link
-    repo: null, // TODO: user supplying — Bitbash-owned
+    repo: null,
+    repoNote: "Oops, this one cannot be public. Client constraints.",
     cover: {
-      src: null, // TODO: user supplying
+      src: "/projects/instagram/dashboard.webp",
+      width: 1600,
+      height: 942,
       alt: "The lead generator dashboard showing live KPIs during a collection run.",
     },
     caseStudy: {
@@ -303,31 +309,78 @@ export const projects = [
       },
       boards: [
         {
-          id: "instagram-pipeline",
+          id: "instagram-fetch-fallbacks",
           kind: "data-flow",
-          title: "Discovery to export",
-          caption: "The three async stages and where state is persisted between them.",
-          src: null,
-          alt: "Data-flow diagram of the discovery, qualification and export pipeline.",
+          title: "Three tiers of fetching",
+          caption:
+            "How one profile is fetched. A direct request first, an HTML parse when that is refused, and a real browser only when both fail, so a bad hour on one tier never stops the run.",
+          src: "/projects/instagram/fetch-fallbacks.webp",
+
+          width: 1145,
+
+          height: 774,
+
+          alt: "Flowchart of the three fetching tiers and the failure paths between them.",
           after: "overview",
         },
         {
-          id: "instagram-egress",
-          kind: "architecture",
-          title: "Egress and backoff",
+          id: "instagram-hashtag-queue",
+          kind: "interface",
+          title: "The hashtag queue",
           caption:
-            "Pool rotation, reactive cooldown escalation, and the recovery path after a failure.",
-          src: null,
-          alt: "Diagram of the proxy rotation and cooldown subsystem.",
+            "Every target hashtag with its state and live lead count. Pending, active, paused and failed are visible at a glance, and a whole client list can be imported as one file.",
+          src: "/projects/instagram/hashtag-queue.webp",
+
+          width: 1600,
+
+          height: 948,
+
+          alt: "The hashtag queue screen listing scraping targets with status badges and lead counts.",
+          after: "overview",
+        },
+        {
+          id: "instagram-tier-usage",
+          kind: "measurement",
+          title: "Tier usage, per job",
+          caption:
+            "Each batch records which fetching tier did the work and how many requests were refused. The numbers are what made the backoff rules defensible rather than guessed.",
+          src: "/projects/instagram/tier-usage.webp",
+
+          width: 1600,
+
+          height: 948,
+
+          alt: "Usage summaries showing attempts, successes and refusals per fetching tier for each job.",
+          after: "approach",
+        },
+        {
+          id: "instagram-export",
+          kind: "interface",
+          title: "Streaming export",
+          caption:
+            "Filter by hashtag, follower range and whether an email was found, then stream the result straight to CSV. The export is the deliverable the client actually opens.",
+          src: "/projects/instagram/export.webp",
+
+          width: 1600,
+
+          height: 948,
+
+          alt: "The export screen with filters and a completed streaming download of 965 leads.",
           after: "approach",
         },
         {
           id: "instagram-throughput",
           kind: "metrics",
-          title: "Throughput over a 24-hour run",
-          caption: "Qualified profiles against elapsed time for one full client list.",
-          src: null,
-          alt: "Chart of qualified profiles collected over a 24-hour run.",
+          title: "175 leads in fifteen minutes",
+          caption:
+            "The dashboard on the first full day: 175 qualified profiles in the last fifteen minutes, 291 in the hour, 922 across the day, with the proxy pool reporting healthy.",
+          src: "/projects/instagram/175-per-15-min.webp",
+
+          width: 1600,
+
+          height: 948,
+
+          alt: "Dashboard KPIs reading 175 leads in the last 15 minutes and 922 in the last 24 hours.",
           after: "outcome",
         },
       ],
@@ -365,7 +418,9 @@ export const projects = [
     live: null, // the generated listing site is the client's property, not linked here
     repo: "https://github.com/harisizm/upwork-seo-bot-and-listing-website",
     cover: {
-      src: null, // TODO: user supplying
+      src: "/projects/upwork/home.webp",
+      width: 1600,
+      height: 950,
       alt: "The published SEO listing site generated by the pipeline.",
     },
     caseStudy: {
@@ -453,31 +508,63 @@ export const projects = [
       },
       boards: [
         {
-          id: "upwork-architecture",
-          kind: "architecture",
-          title: "Collector, sync, publisher",
-          caption: "Two databases and the watermark cron that keeps them in step.",
-          src: null,
-          alt: "Architecture diagram of the collection, sync and publishing halves.",
+          id: "upwork-generated-blog",
+          kind: "interface",
+          title: "One job, one article",
+          caption:
+            "A blog post generated from a single job listing and published on the public site, with the original post linked from the article details. The text is the pipeline's own output, untouched.",
+          src: "/projects/upwork/generated-blog.webp",
+
+          width: 1600,
+
+          height: 950,
+
+          alt: "A generated blog article on the public listing site, with an article details panel linking to the original job post.",
           after: "overview",
         },
         {
-          id: "upwork-prompt",
-          kind: "data-flow",
-          title: "One prompt, four blocks",
+          id: "upwork-recent-blogs",
+          kind: "interface",
+          title: "The public site",
           caption:
-            "Before and after the consolidation that removed one to two minutes per listing.",
-          src: null,
-          alt: "Diagram comparing multi-request and single-prompt content generation.",
+            "Recent articles on the Next.js listing site. Every card here began as a job posting a few hours earlier; nobody wrote these pages by hand.",
+          src: "/projects/upwork/recent-blogs.webp",
+
+          width: 1600,
+
+          height: 950,
+
+          alt: "The recent blogs section of the listing site showing three generated SEO articles.",
+          after: "overview",
+        },
+        {
+          id: "upwork-jobs-table",
+          kind: "schema",
+          title: "Jobs selected",
+          caption:
+            "The publishing database after a sync: each selected job carries its campaign and title, and the watermark tables beside it are what let the two databases agree on what has already crossed.",
+          src: "/projects/upwork/jobs-table.webp",
+
+          width: 1600,
+
+          height: 967,
+
+          alt: "pgAdmin showing the jobs_selected table with eight rows and the sync watermark tables in the schema tree.",
           after: "approach",
         },
         {
-          id: "upwork-schema",
+          id: "upwork-products-table",
           kind: "schema",
-          title: "Watermark sync",
-          caption: "What each database holds, and what crosses between them.",
-          src: null,
-          alt: "Schema diagram of the two PostgreSQL databases and the sync watermark.",
+          title: "Four pages per job",
+          caption:
+            "The product table, one row per job, holding the generated page content. Blog, service, product and job pages come from the same single prompt, split into four blocks.",
+          src: "/projects/upwork/products-table.webp",
+
+          width: 1600,
+
+          height: 962,
+
+          alt: "pgAdmin showing the product table with generated page content keyed by job id.",
           after: "approach",
         },
       ],
@@ -504,10 +591,13 @@ export const projects = [
     employer: "Web7Labs",
     approvalStatus: "draft",
     live: null, // an internal desktop tool — there is nothing deployed to link
-    repo: null, // TODO: user supplying — Web7Labs internal
+    repo: null,
+    repoNote: "Oops, this one cannot be public. Client constraints.",
     cover: {
-      src: null, // TODO: user supplying
-      alt: "The Client Hunt desktop window partway through a prospecting run.",
+      src: "/projects/client-hunt/dashboard.webp",
+      width: 1440,
+      height: 988,
+      alt: "The Client Hunt window after a finished run: the search form, a progress panel reading 17 of 17 places collected, and the activity log.",
     },
     caseStudy: {
       overview: {
@@ -592,18 +682,40 @@ export const projects = [
           id: "client-hunt-dedupe",
           kind: "schema",
           title: "Dedupe store and reason tags",
-          caption: "The local SQLite shape, and what each rejection reason means.",
+          caption:
+            "The local SQLite shape, and what each rejection reason means.",
           src: null,
           alt: "Schema diagram of the SQLite deduplication store.",
           after: "approach",
         },
         {
-          id: "client-hunt-before-after",
+          id: "client-hunt-searches",
           kind: "measurement",
-          title: "Eight hours against ten minutes",
-          caption: "The manual routine and the automated run on the same timeline.",
-          src: null,
-          alt: "Before-and-after timeline comparing manual prospecting with Client Hunt.",
+          title: "Six areas, timed",
+          caption:
+            "The run history as the marketing team sees it. Johar Town: 164 places found and saved in 5 minutes 43 seconds. Khayaban-e-Amin: 152 in 4 minutes 43. A plain Google search had shown 33 for Johar Town.",
+          src: "/projects/client-hunt/searches.webp",
+
+          width: 1440,
+
+          height: 988,
+
+          alt: "The searches table listing six finished runs with places found, places saved and time taken, beside the export filters.",
+          after: "outcome",
+        },
+        {
+          id: "client-hunt-export",
+          kind: "interface",
+          title: "What lands in the spreadsheet",
+          caption:
+            "One sheet per area with name, phone, address, rating, review count and category, headers bold and filterable, repeats tinted so nobody calls the same hostel twice. Phone digits are masked here.",
+          src: "/projects/client-hunt/sample-export.webp",
+
+          width: 1400,
+
+          height: 520,
+
+          alt: "A trimmed sample of the Excel export with masked phone numbers.",
           after: "outcome",
         },
       ],
@@ -628,9 +740,12 @@ export const projects = [
     ownership: "personal",
     approvalStatus: "approved",
     live: "https://trans-gpa-uol.vercel.app",
-    repo: null, // TODO: user supplying — the V2-era repo URL now 404s
+    repo: null,
+    repoNote: "Oops, the code for this one is not public.",
     cover: {
-      src: null, // TODO: re-export assets/projects/Transgpa.png to WebP under /public first
+      src: "/projects/transgpa.webp",
+      width: 2215,
+      height: 1276,
       alt: "The TransGPA dashboard showing a simulated CGPA across semesters.",
     },
     caseStudy: {
@@ -708,6 +823,36 @@ export const projects = [
           alt: "Measurement panel showing local PDF parse timing under two seconds.",
           after: "outcome",
         },
+        {
+          id: "transgpa-upload",
+          kind: "interface",
+          title: "Nothing leaves the browser",
+          caption:
+            "The entry point. A transcript is dropped onto the page and parsed with pdf.js in the browser itself; the line under the drop zone is the whole privacy model in one sentence.",
+          src: "/projects/transgpa/upload.webp",
+
+          width: 1440,
+
+          height: 900,
+
+          alt: "The TransGPA landing page with the transcript drop zone and the note that files are processed locally.",
+          after: "overview",
+        },
+        {
+          id: "transgpa-calculator",
+          kind: "interface",
+          title: "Simulate, then watch the charts move",
+          caption:
+            "GPA calculator mode: semesters and courses are editable in place, and the trend, grade distribution and credit-load charts on the right recompute as a grade changes.",
+          src: "/projects/transgpa/calculator.webp",
+
+          width: 1440,
+
+          height: 900,
+
+          alt: "The GPA calculator with an editable semester table and performance analytics charts beside it.",
+          after: "approach",
+        },
       ],
     },
   },
@@ -736,7 +881,9 @@ export const projects = [
     live: "https://khilariverse.vercel.app",
     repo: "https://github.com/harisizm/Khilariverse",
     cover: {
-      src: null, // TODO: re-export assets/projects/Khilariverse.png to WebP under /public first
+      src: "/projects/khilariverse.webp",
+      width: 2256,
+      height: 1276,
       alt: "The Khilariverse storefront listing gaming peripherals.",
     },
     caseStudy: {
@@ -820,6 +967,36 @@ export const projects = [
           src: null,
           alt: "Screenshot of the Khilariverse admin analytics modules.",
           after: "outcome",
+        },
+        {
+          id: "khilariverse-categories",
+          kind: "interface",
+          title: "Browse by category",
+          caption:
+            "The storefront's category grid: six peripheral types, each a filtered view of the same product catalogue served by the Express API.",
+          src: "/projects/khilariverse/categories.webp",
+
+          width: 1440,
+
+          height: 900,
+
+          alt: "The Khilariverse category grid showing keyboards, mice, headsets, chairs, monitors and components.",
+          after: "overview",
+        },
+        {
+          id: "khilariverse-product",
+          kind: "interface",
+          title: "A product page",
+          caption:
+            "Specifications, price, colour and quantity on one screen, with the product image served through Cloudinary and the cart wired to the role-aware checkout.",
+          src: "/projects/khilariverse/product.webp",
+
+          width: 1440,
+
+          height: 900,
+
+          alt: "A Khilariverse product page for a wireless gaming mouse with key specifications and an add-to-cart control.",
+          after: "approach",
         },
       ],
     },

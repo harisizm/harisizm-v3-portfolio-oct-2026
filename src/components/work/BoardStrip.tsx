@@ -28,15 +28,16 @@ export function BoardStrip({ boards }: BoardStripProps) {
     <div className="grid gap-10 border-t border-border py-14 sm:grid-cols-2">
       {drawn.map((board) => (
         <figure key={board.id}>
-          <div className="relative aspect-[4/3] w-full overflow-hidden bg-surface-alt">
-            <Image
-              src={board.src}
-              alt={board.alt}
-              fill
-              sizes="(min-width: 1024px) 36vw, (min-width: 640px) 45vw, 100vw"
-              className="object-contain"
-            />
-          </div>
+          {/* The image sets its own height. A fixed 4:3 frame with
+              object-contain letterboxed every 16:9 dashboard in grey. */}
+          <Image
+            src={board.src}
+            alt={board.alt}
+            width={board.width ?? 1600}
+            height={board.height ?? 950}
+            sizes="(min-width: 1024px) 36vw, (min-width: 640px) 45vw, 100vw"
+            className="h-auto w-full border border-border"
+          />
           <figcaption className="mt-4">
             <span className="u-label text-accent">{board.title}</span>
             <span className="mt-2 block max-w-[52ch] text-mid-grey">

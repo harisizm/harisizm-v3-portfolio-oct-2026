@@ -59,6 +59,9 @@ export interface Board {
   readonly title: string;
   readonly caption: string;
   readonly src: string | null;
+  /** Intrinsic pixels, so next/image can reserve the box before it loads. */
+  readonly width?: number;
+  readonly height?: number;
   readonly alt: string;
   /** The section this board follows in the scroll. */
   readonly after: CaseStudySectionId;
@@ -145,6 +148,12 @@ export interface Project {
   readonly live: string | null;
   /** null ⇒ no repo control. Never guess a URL to fill this. */
   readonly repo: string | null;
+  /**
+   * Shown in place of the Source link when the code is private. It is a
+   * sentence, not a control: nothing to click, so T-002 is untouched. Only
+   * read when `repo` is null.
+   */
+  readonly repoNote?: string;
   readonly cover: ImageRef;
   readonly caseStudy: CaseStudy;
   /**

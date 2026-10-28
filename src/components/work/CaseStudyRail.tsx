@@ -64,6 +64,15 @@ export function CaseStudyRail({ project, sections }: CaseStudyRailProps) {
             ) : null}
           </div>
         ) : null}
+
+        {/* Private code gets a sentence where the Source link would be. Plain
+            text on purpose: a greyed-out link would be the V2 dead control. */}
+        {project.repo === null && project.repoNote !== undefined ? (
+          <p className="mt-3 flex max-w-[30ch] items-start gap-2 text-label-sm text-mid-grey">
+            <GitHubIcon />
+            <span>{project.repoNote}</span>
+          </p>
+        ) : null}
       </div>
 
       <RailNav sections={sections} className="mt-12 hidden lg:mt-0 lg:block" />

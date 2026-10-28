@@ -490,3 +490,29 @@ sentences that were never written. The site should read as written by a person.
 **How to apply:** grep `src/` for `—` and `–` before every commit; the copy pass
 on 2026-10-28 removed the ones already there. New copy is written without them
 from the start, and read aloud once before it ships.
+
+---
+
+### T-016 · Screenshots of real systems carry real people; check before publishing
+**2026-10-28 · standing rule from the media pass**
+
+The media for the case studies came from working systems, so the frames held
+real data. Excluded or masked on sight:
+
+- The Instagram Leads page and lead modal: real Instagram handles, names,
+  follower counts and one personal email of scraped third parties. **Never
+  publish scraped personal data**, even behind a case study.
+- Client Hunt's activity log: two hostels' phone numbers. Masked in the image
+  with a drawn bar; the Excel board uses the already-masked sample export, not a
+  real export.
+- The Upwork site captures: full browser chrome with a colleague's Slack DM and
+  GitHub handle in the tab strip. Cropped to the page viewport.
+- `developer/logs` captures with account usernames in the filenames: left out
+  entirely.
+
+**How to apply:** view every candidate image before converting it; crop browser
+chrome; mask phone numbers and emails; prefer the system's own sample or demo
+data over production rows; and when a screen is nothing but other people's
+data, do not use it however good it looks. The Chakra Petch display face and the
+canvas-coloured mask bar make a masked span read as deliberate, not as damage.
+
