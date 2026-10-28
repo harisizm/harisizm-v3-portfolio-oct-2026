@@ -1,3 +1,4 @@
+import { Reveal, STAGGER, Stagger } from "@/components/motion";
 import { Chip } from "@/components/ui";
 import type { CaseStudy } from "@/data";
 import { CaseStudySection } from "./CaseStudySection";
@@ -20,32 +21,46 @@ export interface ApproachSectionProps {
  *
  * Numbers are hidden from assistive tech: the `<ol>` already conveys the
  * sequence.
+ *
+ * Motion (lessons.md D-017): the steps are one `Stagger`, each step stating
+ * its own delay, and each REJECTED block lands `REJECTED_LAG` after its step
+ * so the argument reads before the thing it argued against. The list is tall,
+ * so the trigger fires on a tenth of it rather than the default fifth.
  */
+const REJECTED_LAG = 0.15;
+
 export function ApproachSection({ approach }: ApproachSectionProps) {
   return (
     <CaseStudySection id="approach" label="The Approach">
-      <p className="font-light">{approach.intro}</p>
+      <Reveal>
+        <p className="font-light">{approach.intro}</p>
+      </Reveal>
 
-      <ol className="mt-12 space-y-12">
-        {approach.steps.map((step, index) => (
-          <li key={step.title}>
-            <div className="flex items-baseline gap-3">
-              <span aria-hidden="true" className="u-pixel-num text-accent">
-                &#216;{index + 1}
-              </span>
-              <h3 className="text-lead font-semibold">{step.title}</h3>
-            </div>
-            <p className="mt-3">{step.body}</p>
-
-            {hasContent(step.rejected) ? (
-              <div className="mt-6 border-l border-accent pl-5">
-                <Chip>Rejected</Chip>
-                <p className="mt-3 font-light text-mid-grey">{step.rejected}</p>
+      <Stagger className="mt-12" amount={0.1}>
+        <ol className="space-y-12">
+          {approach.steps.map((step, index) => (
+            <Reveal key={step.title} as="li" delay={index * STAGGER}>
+              <div className="flex items-baseline gap-3">
+                <span aria-hidden="true" className="u-pixel-num text-accent">
+                  &#216;{index + 1}
+                </span>
+                <h3 className="text-lead font-semibold">{step.title}</h3>
               </div>
-            ) : null}
-          </li>
-        ))}
-      </ol>
+              <p className="mt-3">{step.body}</p>
+
+              {hasContent(step.rejected) ? (
+                <Reveal
+                  className="mt-6 border-l border-accent pl-5"
+                  delay={index * STAGGER + REJECTED_LAG}
+                >
+                  <Chip>Rejected</Chip>
+                  <p className="mt-3 font-light text-mid-grey">{step.rejected}</p>
+                </Reveal>
+              ) : null}
+            </Reveal>
+          ))}
+        </ol>
+      </Stagger>
     </CaseStudySection>
   );
 }

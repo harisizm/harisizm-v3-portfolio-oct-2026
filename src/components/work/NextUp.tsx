@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Reveal } from "@/components/motion";
 import { DarkPanel } from "@/components/ui";
 import type { Project } from "@/data";
 import { ProjectCover } from "./ProjectCover";
@@ -14,6 +15,9 @@ export interface NextUpProps {
  * `adjacentProjects()` wraps at both ends, so `next` is only null if the slug is
  * unknown — which `notFound()` has already handled. The guard is still here so
  * the two surviving exits render rather than the component throwing.
+ *
+ * The block reveals as one (lessons.md D-017); the cover's parallax is
+ * `ProjectCover`'s own and the dark panel brings its own press and lean.
  */
 export function NextUp({ next }: NextUpProps) {
   return (
@@ -21,7 +25,7 @@ export function NextUp({ next }: NextUpProps) {
       aria-labelledby="next-up-heading"
       className="border-t border-border py-10"
     >
-      <div className="u-container">
+      <Reveal className="u-container">
         <div className="flex items-center justify-between gap-4">
           <Link
             href="/work"
@@ -88,7 +92,7 @@ export function NextUp({ next }: NextUpProps) {
             </Link>
           ) : null}
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

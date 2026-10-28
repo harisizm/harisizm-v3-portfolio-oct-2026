@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Magnetic, Press } from "@/components/motion";
 import { resolveHref } from "./link";
 
 export interface SplitCtaProps {
@@ -27,6 +28,12 @@ export interface SplitCtaProps {
  * Label is the body face at 18px uppercase (audit A1), not the pixel face. The
  * reference button measures 220×42 for "LET'S BUILD YOURS"; 42px tall with 24px
  * side padding lands a label of that length at about that width.
+ *
+ * Motion (lessons.md D-017): the anchor leans toward a fine pointer and
+ * presses on tap. Both wrappers are inert spans around an unchanged anchor, so
+ * the click, the focus ring and the single tab stop are the anchor's own. The
+ * caller's `className` goes on the outer wrapper, which is the box that sits in
+ * the caller's layout.
  */
 export function SplitCta({
   href,
@@ -37,7 +44,7 @@ export function SplitCta({
 }: SplitCtaProps) {
   const { internal, targetProps } = resolveHref(href, newTab);
 
-  const shell = `group inline-flex items-stretch gap-2 ${className}`;
+  const shell = "group inline-flex items-stretch gap-2";
   const filled =
     "u-label-lg flex min-h-[42px] items-center bg-accent px-6 text-white transition-opacity duration-300 ease-[ease] group-hover:opacity-80";
   const square =
@@ -52,22 +59,19 @@ export function SplitCta({
     </>
   );
 
-  if (internal) {
-    return (
-      <Link href={href} aria-label={ariaLabel} className={shell}>
-        {inner}
-      </Link>
-    );
-  }
-
-  return (
-    <a
-      href={href}
-      aria-label={ariaLabel}
-      className={shell}
-      {...targetProps}
-    >
+  const control = internal ? (
+    <Link href={href} aria-label={ariaLabel} className={shell}>
+      {inner}
+    </Link>
+  ) : (
+    <a href={href} aria-label={ariaLabel} className={shell} {...targetProps}>
       {inner}
     </a>
+  );
+
+  return (
+    <Magnetic className={`inline-block ${className}`}>
+      <Press>{control}</Press>
+    </Magnetic>
   );
 }

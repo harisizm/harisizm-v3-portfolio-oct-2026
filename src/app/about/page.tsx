@@ -8,6 +8,7 @@ import {
   StatRow,
   StoryBlock,
 } from "@/components/about";
+import { Reveal } from "@/components/motion";
 import { DarkPanel, RuleToLink } from "@/components/ui";
 import { about } from "@/data";
 
@@ -40,15 +41,19 @@ export default function AboutPage() {
       <Credentials />
 
       <section className="u-container border-t border-border py-16 lg:py-24">
-        <RuleToLink
-          heading={ruleHeading}
-          href="/work"
-          label={ruleLabel}
-          headingClassName="text-title font-medium uppercase tracking-tight sm:text-heading"
-        />
-        <DarkPanel href="/contact" label={panelLabel} className="mt-12 lg:w-1/2">
-          <p className="text-title font-medium tracking-tight">{panelBody}</p>
-        </DarkPanel>
+        <Reveal>
+          <RuleToLink
+            heading={ruleHeading}
+            href="/work"
+            label={ruleLabel}
+            headingClassName="text-title font-medium uppercase tracking-tight sm:text-heading"
+          />
+        </Reveal>
+        <Reveal>
+          <DarkPanel href="/contact" label={panelLabel} className="mt-12 lg:w-1/2">
+            <p className="text-title font-medium tracking-tight">{panelBody}</p>
+          </DarkPanel>
+        </Reveal>
       </section>
     </main>
   );

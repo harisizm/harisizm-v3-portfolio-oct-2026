@@ -263,9 +263,10 @@ JS for choreography.
 | Headline character reveals | SplitText (or a hand-rolled span splitter) |
 | Moving the hover reticle between nav items | Flip (or FLIP via `getBoundingClientRect`) |
 
-**You do not need GSAP to ship v1.** IntersectionObserver plus CSS transforms covers
-reveals and the reticle. Add GSAP only when a specific effect demands it, and say
-which effect in `lessons.md`. Do not add a dependency without a reason worth stating.
+> Resolved 2026-10-28: the engine is **`motion`** (lessons.md D-017), at showpiece
+> intensity, with a cover-led morph between work card and case study. The primitive
+> set and its contract live in `src/components/motion/README.md`; page components
+> use the primitives and never import the library directly. GSAP was not needed.
 
 ### Reduced motion — non-negotiable
 

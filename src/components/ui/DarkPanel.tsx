@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Magnetic, Press } from "@/components/motion";
 import { resolveHref } from "./link";
 import type { ReactNode } from "react";
 
@@ -34,6 +35,12 @@ export interface DarkPanelProps {
  * The focus ring is the global one: 2px accent at a 3px offset, which lands on
  * the canvas outside the panel rather than on the ink inside it, so blue-on-dark
  * contrast never comes into it.
+ *
+ * Motion (lessons.md D-017): the panel leans toward a fine pointer and presses
+ * on tap. The wrappers are block spans with the caller's `className` on the
+ * outer one, so grid placement and margins land where they did before; the
+ * anchor fills them (`h-full`) so a panel in a stretched grid cell still
+ * matches its neighbour's height. The anchor itself is unchanged.
  */
 export function DarkPanel({
   href,
@@ -45,7 +52,8 @@ export function DarkPanel({
 }: DarkPanelProps) {
   const { internal, targetProps } = resolveHref(href, newTab);
 
-  const shell = `group relative flex min-h-[180px] flex-col justify-end bg-ink p-6 text-white transition-opacity duration-300 ease-[ease] hover:opacity-90 ${className}`;
+  const shell =
+    "group relative flex h-full min-h-[180px] flex-col justify-end bg-ink p-6 text-white transition-opacity duration-300 ease-[ease] hover:opacity-90";
 
   const inner = (
     <>
@@ -69,21 +77,22 @@ export function DarkPanel({
     </>
   );
 
-  if (internal) {
-    return (
-      <Link href={href} className={shell}>
-        {inner}
-      </Link>
-    );
-  }
-
-  return (
-    <a
-      href={href}
-      className={shell}
-      {...targetProps}
-    >
+  const control = internal ? (
+    <Link href={href} className={shell}>
+      {inner}
+    </Link>
+  ) : (
+    <a href={href} className={shell} {...targetProps}>
       {inner}
     </a>
+  );
+
+  /* A panel is a large target, so a small lean (6px) reads as weight, not drift. */
+  return (
+    <Magnetic className={`block ${className}`} strength={6}>
+      <Press className="block h-full" scale={0.985}>
+        {control}
+      </Press>
+    </Magnetic>
   );
 }

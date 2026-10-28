@@ -1,3 +1,4 @@
+import { Press } from "@/components/motion";
 import { Chip } from "@/components/ui";
 import { site } from "@/lib/site";
 
@@ -31,6 +32,10 @@ export interface BottomRailProps {
  *
  * The bar itself is `pointer-events-none` and each item re-enables them, so the
  * empty space between the three never swallows a click meant for the page.
+ * The `Press` wrappers inherit the `none`, so they add no click surface of
+ * their own; the tap and hover gestures still reach them by bubbling up from
+ * the link. The scroll cue's `hidden sm:` split sits on the wrapper, not the
+ * link, or an empty wrapper would hold a gap in the phone layout.
  */
 export function BottomRail({ scrollTo, className = "" }: BottomRailProps) {
   const cue = (
@@ -56,20 +61,24 @@ export function BottomRail({ scrollTo, className = "" }: BottomRailProps) {
             {cue}
           </p>
         ) : (
-          <a
-            href={`#${scrollTo}`}
-            className="u-label pointer-events-auto hidden min-h-11 items-center gap-1 bg-canvas px-2 text-accent transition-opacity duration-300 ease-[ease] hover:opacity-70 sm:inline-flex"
-          >
-            {cue}
-          </a>
+          <Press className="hidden sm:inline-block">
+            <a
+              href={`#${scrollTo}`}
+              className="u-label pointer-events-auto inline-flex min-h-11 items-center gap-1 bg-canvas px-2 text-accent transition-opacity duration-300 ease-[ease] hover:opacity-70"
+            >
+              {cue}
+            </a>
+          </Press>
         )}
 
-        <a
-          href={`mailto:${site.email}`}
-          className="pointer-events-auto inline-flex min-h-11 items-center bg-canvas transition-opacity duration-300 ease-[ease] hover:opacity-70"
-        >
-          <Chip variant="bracketed">{site.email}</Chip>
-        </a>
+        <Press>
+          <a
+            href={`mailto:${site.email}`}
+            className="pointer-events-auto inline-flex min-h-11 items-center bg-canvas transition-opacity duration-300 ease-[ease] hover:opacity-70"
+          >
+            <Chip variant="bracketed">{site.email}</Chip>
+          </a>
+        </Press>
       </div>
     </div>
   );

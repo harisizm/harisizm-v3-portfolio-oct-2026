@@ -1,7 +1,7 @@
+import { CountUp, Reveal, Stagger, STAGGER } from "@/components/motion";
 import { Chip } from "@/components/ui";
 import { isTestimonial, sortedProjects, type Project } from "@/data";
 
-import { Reveal } from "./Reveal";
 import { Section } from "./Section";
 
 /**
@@ -12,6 +12,11 @@ import { Section } from "./Section";
  * quote can drop into the same slot without a redesign (lessons.md D-014). None
  * exists yet, and none is to be written (T-003) — until one does, every project
  * resolves to the usage branch.
+ *
+ * Motion: each value runs through `CountUp`, which counts the leading integer
+ * and leaves the rest of the string literal, so `~2,000`, `95%+` and `24h+`
+ * end exactly as written. The source line is its own `Reveal` and arrives
+ * last, after the number it vouches for.
  */
 function EvidenceCard({ project }: { project: Project }) {
   const { evidence } = project.caseStudy;
@@ -62,13 +67,15 @@ function EvidenceCard({ project }: { project: Project }) {
               ) : null}
             </dt>
             <dd className="font-display text-[32px] font-bold leading-[1.1] text-accent">
-              {metric.value}
+              <CountUp value={metric.value} />
             </dd>
           </div>
         ))}
       </dl>
 
-      <p className="mt-6 text-label-sm text-mid-grey">Source: {evidence.source}</p>
+      <Reveal y={0} delay={STAGGER * 6}>
+        <p className="mt-6 text-label-sm text-mid-grey">Source: {evidence.source}</p>
+      </Reveal>
     </div>
   );
 }
@@ -100,13 +107,13 @@ export function Proof() {
         </p>
       </Reveal>
 
-      <div className="mt-16 grid gap-12 lg:mt-24 lg:grid-cols-2 lg:gap-x-6 lg:gap-y-16">
+      <Stagger className="mt-16 grid gap-12 lg:mt-24 lg:grid-cols-2 lg:gap-x-6 lg:gap-y-16">
         {projects.map((project) => (
           <Reveal key={project.slug} className="lg:pr-10">
             <EvidenceCard project={project} />
           </Reveal>
         ))}
-      </div>
+      </Stagger>
     </Section>
   );
 }

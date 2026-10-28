@@ -29,9 +29,17 @@
  */
 
 import { BottomRail } from "@/components/layout";
+import { Magnetic, Reveal, SplitLines, STAGGER } from "@/components/motion";
 import { SplitCta } from "@/components/ui";
 
 import { Section } from "./Section";
+
+/* The hero's entrance, in reading order: three headline lines rise from their
+   clips one after another, the support paragraph fades up once the last line
+   is moving, the CTA lands last. Timed off the line stagger so a change to
+   `STAGGER` moves the whole sequence together. */
+const SUPPORT_DELAY = STAGGER * 5;
+const CTA_DELAY = STAGGER * 8;
 
 /**
  * Hero — design.md §9.1 item 1, composed like `reference/nvrmnd/home-0.webp`.
@@ -46,6 +54,11 @@ import { Section } from "./Section";
  * own line, breaking the bold/light split, and it forced the paragraph before
  * the `h1` in source so screen readers heard it first. A grid keeps the DOM in
  * reading order.
+ *
+ * Motion (lessons.md D-017): each headline line is its own `SplitLines`, the
+ * mixed-weight case the primitive documents. The paragraph and the CTA are
+ * `Reveal`s on the grid cells, so the cells keep their placement and only the
+ * content inside fades. `Magnetic` wraps the CTA; the anchor is untouched.
  */
 export function Hero() {
   return (
@@ -57,26 +70,40 @@ export function Hero() {
         {/* clamp rather than the `text-hero` token: the token is the 120px cap
             and this has to survive 390px. 0.9 line-height per design.md §4. */}
         <h1 className="text-center text-[clamp(2.25rem,8.4vw,120px)] uppercase leading-[0.9] lg:col-span-3">
-          <span className="block font-semibold">Eight hours</span>
-          <span className="block font-semibold">of work, done in</span>
-          <span className="block font-light">ten minutes.</span>
+          <SplitLines className="font-semibold">Eight hours</SplitLines>
+          <SplitLines className="font-semibold" delay={STAGGER}>
+            of work, done in
+          </SplitLines>
+          <SplitLines className="font-light" delay={STAGGER * 2}>
+            ten minutes.
+          </SplitLines>
         </h1>
 
-        <p className="mt-10 max-w-[38ch] text-lead font-light text-ink lg:col-start-4 lg:row-start-1 lg:mt-0 lg:pt-3">
-          Haris, a full-stack engineer in Lahore. Core engineer on{" "}
-          <span className="whitespace-nowrap">tourgenz.com</span>, a tourism and
-          booking marketplace that has been live since September 2026, and the
-          author of three automation platforms running in production for paying
-          clients.
-        </p>
+        <Reveal
+          delay={SUPPORT_DELAY}
+          className="mt-10 lg:col-start-4 lg:row-start-1 lg:mt-0 lg:pt-3"
+        >
+          <p className="max-w-[38ch] text-lead font-light text-ink">
+            Haris, a full-stack engineer in Lahore. Core engineer on{" "}
+            <span className="whitespace-nowrap">tourgenz.com</span>, a tourism
+            and booking marketplace that has been live since September 2026, and
+            the author of three automation platforms running in production for
+            paying clients.
+          </p>
+        </Reveal>
 
-        <div className="mt-12 flex justify-center lg:col-span-3 lg:row-start-2 lg:mt-14">
-          <SplitCta
-            href="/contact"
-            label="Start a project"
-            ariaLabel="Start a project: go to the contact page"
-          />
-        </div>
+        <Reveal
+          delay={CTA_DELAY}
+          className="mt-12 flex justify-center lg:col-span-3 lg:row-start-2 lg:mt-14"
+        >
+          <Magnetic>
+            <SplitCta
+              href="/contact"
+              label="Start a project"
+              ariaLabel="Start a project: go to the contact page"
+            />
+          </Magnetic>
+        </Reveal>
       </div>
 
       {/* Anchored to the hero, not the viewport — see BottomRail. The scroll cue

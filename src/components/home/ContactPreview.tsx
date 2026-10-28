@@ -1,9 +1,9 @@
 import Link from "next/link";
 
+import { CountUp, Reveal, Stagger, STAGGER } from "@/components/motion";
 import { Chip, DarkPanel } from "@/components/ui";
 import { site } from "@/lib/site";
 
-import { Reveal } from "./Reveal";
 import { Section } from "./Section";
 
 /**
@@ -14,6 +14,11 @@ import { Section } from "./Section";
  * and a real `tel:` in the markup. That is the whole point: V2's only route to
  * the email address was hovering a button and reading a toast, which did not
  * exist at all on touch (lessons.md T-002, T-007).
+ *
+ * Motion: the two cards are a `Stagger`, each a `Reveal` set to `grid` so the
+ * card inside still stretches to the row's height as it did before the wrapper
+ * existed. The `Ø1` / `Ø2` numerals run through `CountUp`. The blue panel
+ * follows on its own `Reveal`, a beat later.
  */
 export function ContactPreview() {
   return (
@@ -31,45 +36,53 @@ export function ContactPreview() {
         </p>
       </Reveal>
 
-      <Reveal className="mt-14 grid gap-6 lg:mt-20 lg:grid-cols-2">
+      <Stagger className="mt-14 grid gap-6 lg:mt-20 lg:grid-cols-2">
         {/* Grey panel — the first step of the trio. Hand-rolled rather than a
             DarkPanel on a lighter ground, because the `↗` and the label need to
             stay ink-on-grey for contrast. The label gets its own block with a
             fixed top gap: this card's body is the longer of the two, so the
             flex slack that spaces card 02's label never existed here and the
             label sat flush under the paragraph (audit B6). */}
-        <Link
-          href="/contact"
-          className="group relative flex min-h-[180px] flex-col justify-end bg-surface-alt p-6 transition-opacity duration-300 ease-[ease] hover:opacity-90"
-        >
-          <span
-            aria-hidden="true"
-            className="absolute right-6 top-6 text-body leading-none text-accent"
+        <Reveal className="grid">
+          <Link
+            href="/contact"
+            className="group relative flex min-h-[180px] flex-col justify-end bg-surface-alt p-6 transition-opacity duration-300 ease-[ease] hover:opacity-90"
           >
-            ↗
-          </span>
-          <div className="mb-auto max-w-[34ch] pr-10">
-            <p className="u-pixel-num text-mid-grey">Ø1</p>
-            <p className="mt-4 text-lead font-light">
-              Start a project. A few questions about scope, budget and timeline,
-              and you get a straight answer about whether I am the right person
-              for it.
-            </p>
-          </div>
-          <span className="u-label mt-8 block text-accent">Start a project</span>
-        </Link>
+            <span
+              aria-hidden="true"
+              className="absolute right-6 top-6 text-body leading-none text-accent"
+            >
+              ↗
+            </span>
+            <div className="mb-auto max-w-[34ch] pr-10">
+              <p className="u-pixel-num text-mid-grey">
+                <CountUp value="Ø1" />
+              </p>
+              <p className="mt-4 text-lead font-light">
+                Start a project. A few questions about scope, budget and timeline,
+                and you get a straight answer about whether I am the right person
+                for it.
+              </p>
+            </div>
+            <span className="u-label mt-8 block text-accent">Start a project</span>
+          </Link>
+        </Reveal>
 
-        <DarkPanel href="/contact" label="Hiring or something else">
-          <p className="u-pixel-num text-accent-2">Ø2</p>
-          <p className="mt-4 text-lead font-light">
-            Hiring, or something else entirely. The CV, the code and the
-            profiles, without a form in the way.
-          </p>
-        </DarkPanel>
-      </Reveal>
+        <Reveal className="grid">
+          <DarkPanel href="/contact" label="Hiring or something else">
+            <p className="u-pixel-num text-accent-2">
+              <CountUp value="Ø2" />
+            </p>
+            <p className="mt-4 text-lead font-light">
+              Hiring, or something else entirely. The CV, the code and the
+              profiles, without a form in the way.
+            </p>
+          </DarkPanel>
+        </Reveal>
+      </Stagger>
 
       {/* Blue panel — the plain path. No hover, no JavaScript, no form. */}
-      <Reveal className="mt-6">
+      <Reveal className="mt-6" delay={STAGGER * 2}>
         <div className="bg-accent p-6 text-white lg:p-10">
           <p className="u-label">Or just email me</p>
 

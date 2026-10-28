@@ -1,3 +1,4 @@
+import { Reveal, Stagger } from "@/components/motion";
 import { Chip } from "@/components/ui";
 import { about, type CardTone } from "@/data";
 
@@ -32,41 +33,49 @@ const TONE: Record<CardTone, { shell: string; num: string; body: string }> = {
  * Chip and heading centred above; cards in columns 2 to 4 at `lg`, all three
  * starting at the same top with the middle one running 22px lower, which is
  * what makes the trio read as a climb instead of three equal columns.
+ *
+ * Motion: the cards are a `Stagger` with a longer rise (`y={24}`) than the
+ * default, so the climb is something you watch happen. `Stagger` cannot be an
+ * `ol`, so it wraps the list and the `li`s are the `Reveal`s inside it.
  */
 export function ApproachCards() {
   const { chip, heading, cards } = about.approach;
 
   return (
     <section className="u-container py-16 lg:py-24">
-      <div className="flex flex-col items-center text-center">
+      <Reveal className="flex flex-col items-center text-center">
         <Chip>{chip}</Chip>
         <h2 className="mt-6 max-w-[20ch] text-balance text-title font-medium uppercase tracking-tight sm:text-heading">
           {heading}
         </h2>
-      </div>
+      </Reveal>
 
       <div className="mt-12 grid gap-6 lg:grid-cols-4 lg:items-start">
-        <ol className="grid gap-4 sm:grid-cols-3 lg:col-span-3 lg:col-start-2 lg:gap-6 lg:items-start">
-          {cards.map((card, i) => {
-            const tone = TONE[card.tone];
-            const taller = i === 1 ? "lg:pb-[54px]" : "";
+        <Stagger className="lg:col-span-3 lg:col-start-2">
+          <ol className="grid gap-4 sm:grid-cols-3 lg:gap-6 lg:items-start">
+            {cards.map((card, i) => {
+              const tone = TONE[card.tone];
+              const taller = i === 1 ? "lg:pb-[54px]" : "";
 
-            return (
-              <li
-                key={card.num}
-                className={`flex min-h-[300px] flex-col p-6 lg:p-8 ${tone.shell} ${taller}`}
-              >
-                <span className={`u-pixel-num ${tone.num}`}>{card.num}</span>
-                <h3 className="mt-6 text-[32px] font-medium leading-[1.15] tracking-tight">
-                  {card.title}
-                </h3>
-                <p className={`mt-4 max-w-[40ch] text-body font-light ${tone.body}`}>
-                  {card.body}
-                </p>
-              </li>
-            );
-          })}
-        </ol>
+              return (
+                <Reveal
+                  key={card.num}
+                  as="li"
+                  y={24}
+                  className={`flex min-h-[300px] flex-col p-6 lg:p-8 ${tone.shell} ${taller}`}
+                >
+                  <span className={`u-pixel-num ${tone.num}`}>{card.num}</span>
+                  <h3 className="mt-6 text-[32px] font-medium leading-[1.15] tracking-tight">
+                    {card.title}
+                  </h3>
+                  <p className={`mt-4 max-w-[40ch] text-body font-light ${tone.body}`}>
+                    {card.body}
+                  </p>
+                </Reveal>
+              );
+            })}
+          </ol>
+        </Stagger>
       </div>
     </section>
   );

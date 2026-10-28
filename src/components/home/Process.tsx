@@ -1,9 +1,9 @@
 import Image from "next/image";
 
+import { Reveal, Stagger, STAGGER } from "@/components/motion";
 import { Chip, RuleToLink } from "@/components/ui";
 import { processSteps, type ProcessStep } from "@/data";
 
-import { Reveal } from "./Reveal";
 import { Section } from "./Section";
 
 /** The reference's line-art slot is about 200px square (audit B4). */
@@ -13,6 +13,10 @@ const DIAGRAM_PX = 200;
  * The diagram slot. A null `diagram` is spacing, not a placeholder: the column
  * keeps its rhythm so the SVG drops into the same spot when it is drawn, and
  * nothing renders that could be mistaken for a broken image (T-002).
+ *
+ * The drawing fades in a beat after its step (a plain fade, `y={0}`: line art
+ * sliding reads as a layout shift). It sits inside the step's `Reveal`, so it
+ * inherits the stagger and only adds its own delay on top.
  */
 function Diagram({ step }: { step: ProcessStep }) {
   if (step.diagram === null) {
@@ -20,14 +24,16 @@ function Diagram({ step }: { step: ProcessStep }) {
   }
 
   return (
-    <Image
-      src={step.diagram}
-      alt=""
-      width={DIAGRAM_PX}
-      height={DIAGRAM_PX}
-      loading="lazy"
-      className="mx-auto"
-    />
+    <Reveal y={0} delay={STAGGER * 3}>
+      <Image
+        src={step.diagram}
+        alt=""
+        width={DIAGRAM_PX}
+        height={DIAGRAM_PX}
+        loading="lazy"
+        className="mx-auto"
+      />
+    </Reveal>
   );
 }
 
@@ -41,6 +47,11 @@ function Diagram({ step }: { step: ProcessStep }) {
  * The column-1 link is a `RuleToLink` with its rule hidden on desktop: the
  * reference has a bare `LEARN MORE ↗` there, and reusing the primitive keeps
  * one implementation of the arrow link (T-005).
+ *
+ * Motion: the three steps are a `Stagger`; each `li` is a `Reveal` so the
+ * number, name, subtitle and body rise together and the next step follows.
+ * `Stagger` cannot render an `ol`, so it wraps the list and the `li`s take
+ * part from inside it, which the primitive allows.
  */
 export function Process() {
   return (
@@ -62,30 +73,32 @@ export function Process() {
           />
         </Reveal>
 
-        <ol className="grid gap-14 lg:col-span-3 lg:grid-cols-3 lg:gap-6">
-          {processSteps.map((step) => (
-            <li key={step.num} className="text-center">
-              <Reveal className="mx-auto max-w-[36ch] lg:px-4">
-                <p className="u-pixel-num text-mid-grey">{step.num}</p>
+        <Stagger className="lg:col-span-3">
+          <ol className="grid gap-14 lg:grid-cols-3 lg:gap-6">
+            {processSteps.map((step) => (
+              <Reveal key={step.num} as="li" className="text-center">
+                <div className="mx-auto max-w-[36ch] lg:px-4">
+                  <p className="u-pixel-num text-mid-grey">{step.num}</p>
 
-                {/* Step name: display face, 48px/700/+1px — design.md §4. */}
-                <h3 className="mt-1 font-display text-[clamp(1.75rem,3.6vw,48px)] font-bold uppercase leading-[1.1] tracking-[1px] text-accent">
-                  {step.name}
-                </h3>
+                  {/* Step name: display face, 48px/700/+1px — design.md §4. */}
+                  <h3 className="mt-1 font-display text-[clamp(1.75rem,3.6vw,48px)] font-bold uppercase leading-[1.1] tracking-[1px] text-accent">
+                    {step.name}
+                  </h3>
 
-                <p className="mt-2 text-lead font-normal leading-[1.4] text-ink">
-                  {step.subtitle}
-                </p>
+                  <p className="mt-2 text-lead font-normal leading-[1.4] text-ink">
+                    {step.subtitle}
+                  </p>
 
-                <div className="my-10">
-                  <Diagram step={step} />
+                  <div className="my-10">
+                    <Diagram step={step} />
+                  </div>
+
+                  <p className="text-body">{step.body}</p>
                 </div>
-
-                <p className="text-body">{step.body}</p>
               </Reveal>
-            </li>
-          ))}
-        </ol>
+            ))}
+          </ol>
+        </Stagger>
       </div>
     </Section>
   );

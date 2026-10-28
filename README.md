@@ -40,7 +40,7 @@ production platform, and three automation systems.
 | Styling | **Tailwind v4** via PostCSS | Tokens live as CSS custom properties, exposed to utilities through `@theme inline` |
 | Display face | **Chakra Petch 700** (SIL OFL, via `next/font`) | Squared technical face for the logo, chips, menu, step names, numbers and wordmark |
 | Body face | **Inter** via `next/font` | Everything a human reads in a sentence |
-| Motion | IntersectionObserver + CSS | No animation library earned its place yet |
+| Motion | `motion` (framer-motion's successor) | Page transitions with real exit frames, a cover that flies from card to case study, split-line headlines, staggers, count-ups, a marquee, a magnetic pointer on links. Every effect resolves to its final state with JavaScript off or under reduced motion |
 | Images | AVIF → WebP via `next/image` | V2 shipped ~8 MB of PNGs |
 
 ---
@@ -126,6 +126,11 @@ and scale evenly at 125% and 150% Windows DPI (a 2× variant ships via `image-se
 
 **The hero sets one sentence in two weights at one size** — the opening clause at 600,
 the resolving clause at 300. Hierarchy without a change of size or colour.
+
+**Motion is a layer, not the content.** `src/components/motion/README.md` documents
+the primitive set; nothing in the pages imports the library directly. A boot script
+decides before the body parses whether entering elements stay hidden, so a reader
+with JavaScript off or reduced motion on sees every section at once.
 
 Full spec: **[`design.md`](design.md)**.
 

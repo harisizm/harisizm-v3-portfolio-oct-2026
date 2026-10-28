@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence } from "motion/react";
 import { useCallback, useId, useRef, useState, type CSSProperties } from "react";
 
+import { Press } from "@/components/motion";
 import { StatusPill, Wordmark } from "@/components/ui";
 import { site } from "@/lib/site";
 
@@ -115,24 +116,28 @@ export function Header() {
             </div>
           )}
 
-          <button
-            ref={triggerRef}
-            type="button"
-            aria-expanded={open}
-            aria-controls={open ? overlayId : undefined}
-            onClick={() => {
-              if (open) dismiss();
-              else setOpenedAt(pathname);
-            }}
-            className={`u-pixel inline-flex min-h-11 min-w-[103px] items-center justify-center gap-2 px-4 transition-opacity duration-300 ease-[ease] hover:opacity-80 ${triggerSkin}`}
-          >
-            {/* The glyph is state, not name: the accessible name stays "MENU"
-                at both ends of the toggle, and `aria-expanded` carries the
-                state. A name that flips to "Close" would break voice control,
-                which types what it sees. */}
-            <span aria-hidden="true">{open ? "✕" : "+"}</span>
-            Menu
-          </button>
+          {/* `Press` is a span around the button, not a replacement for it:
+              the ref, the aria wiring and the click stay on the real control. */}
+          <Press>
+            <button
+              ref={triggerRef}
+              type="button"
+              aria-expanded={open}
+              aria-controls={open ? overlayId : undefined}
+              onClick={() => {
+                if (open) dismiss();
+                else setOpenedAt(pathname);
+              }}
+              className={`u-pixel inline-flex min-h-11 min-w-[103px] items-center justify-center gap-2 px-4 transition-opacity duration-300 ease-[ease] hover:opacity-80 ${triggerSkin}`}
+            >
+              {/* The glyph is state, not name: the accessible name stays "MENU"
+                  at both ends of the toggle, and `aria-expanded` carries the
+                  state. A name that flips to "Close" would break voice control,
+                  which types what it sees. */}
+              <span aria-hidden="true">{open ? "✕" : "+"}</span>
+              Menu
+            </button>
+          </Press>
         </div>
       </div>
 

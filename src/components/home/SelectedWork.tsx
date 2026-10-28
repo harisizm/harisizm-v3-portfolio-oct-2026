@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { MorphCover, Parallax } from "@/components/motion";
+import { MorphCover, Parallax, Press, Stagger, STAGGER } from "@/components/motion";
 import { Chip, DarkPanel } from "@/components/ui";
 import { COVER_DRIFT, COVER_FRAME } from "@/components/work/ProjectCover";
 import { sortedProjects, type Project } from "@/data";
@@ -133,45 +133,58 @@ function Cover({ project, size }: CoverProps) {
  * the image's baseline, the image across columns 2 to 4. No second "read the
  * case study" control: the card is the control, and the link's accessible name
  * is the heading plus the tagline, which is what a reader would want announced.
+ *
+ * Motion: the card is one `Reveal`, with `Press` on the whole link so the one
+ * control gives press feedback. Inside, the title block and the tagline row are
+ * a `Stagger` of their own, a beat behind the card, so the text arrives in
+ * reading order while the cover (already drifting under `Parallax`) fades up
+ * with the card.
  */
 function WorkCard({ project }: { project: Project }) {
   return (
     <Reveal>
-      <Link
-        href={`/work/${project.slug}`}
-        className="group grid gap-8 lg:grid-cols-4 lg:gap-6"
-      >
-        <div className="flex flex-col lg:justify-between lg:pr-10">
-          <div>
-            <Chip>Work</Chip>
-            <h3 className="mt-6 text-[clamp(1.6rem,3vw,40px)] font-medium uppercase leading-[1.1] transition-opacity duration-300 ease-[ease] group-hover:opacity-70">
-              {project.shortTitle}
-            </h3>
-          </div>
+      {/* No tap scale: the cover morph measures this card on click, and a
+          card shrunk by 3% hands it the wrong box. Hover lift only. */}
+      <Press className="block" scale={1}>
+        <Link
+          href={`/work/${project.slug}`}
+          className="group grid gap-8 lg:grid-cols-4 lg:gap-6"
+        >
+          <Stagger
+            delay={STAGGER * 2}
+            className="flex flex-col lg:justify-between lg:pr-10"
+          >
+            <Reveal>
+              <Chip>Work</Chip>
+              <h3 className="mt-6 text-[clamp(1.6rem,3vw,40px)] font-medium uppercase leading-[1.1] transition-opacity duration-300 ease-[ease] group-hover:opacity-70">
+                {project.shortTitle}
+              </h3>
+            </Reveal>
 
-          <div className="mt-8 lg:mt-16">
-            <p className="max-w-[40ch] text-body font-light text-ink">
-              {project.tagline}
-            </p>
+            <Reveal className="mt-8 lg:mt-16">
+              <p className="max-w-[40ch] text-body font-light text-ink">
+                {project.tagline}
+              </p>
 
-            <div className="mt-6 flex items-center gap-4">
-              <Cover project={project} size="thumb" />
-              <div className="min-w-0">
-                <p className="text-body font-medium leading-tight">
-                  {project.shortTitle}
-                </p>
-                <p className="mt-1 text-label-sm text-mid-grey">
-                  {project.dateLabel}
-                </p>
+              <div className="mt-6 flex items-center gap-4">
+                <Cover project={project} size="thumb" />
+                <div className="min-w-0">
+                  <p className="text-body font-medium leading-tight">
+                    {project.shortTitle}
+                  </p>
+                  <p className="mt-1 text-label-sm text-mid-grey">
+                    {project.dateLabel}
+                  </p>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
+            </Reveal>
+          </Stagger>
 
-        <div className="transition-opacity duration-300 ease-[ease] group-hover:opacity-90 lg:col-span-3">
-          <Cover project={project} size="full" />
-        </div>
-      </Link>
+          <div className="transition-opacity duration-300 ease-[ease] group-hover:opacity-90 lg:col-span-3">
+            <Cover project={project} size="full" />
+          </div>
+        </Link>
+      </Press>
     </Reveal>
   );
 }

@@ -1,7 +1,9 @@
 "use client";
 
-import { useScrollSpy } from "@/hooks";
-import type { RailSection } from "./RailNav";
+import { motion } from "motion/react";
+
+import { useReducedMotion, useScrollSpy } from "@/hooks";
+import { RAIL_SPRING, type RailSection } from "./RailNav";
 
 export interface ScrollProgressProps {
   sections: readonly RailSection[];
@@ -23,9 +25,15 @@ export interface ScrollProgressProps {
  *
  * Not a live region: it would announce on every section change while a screen
  * reader user is reading the headings that caused it.
+ *
+ * The fill moves on `RAIL_SPRING` (lessons.md D-017), the same spring as the
+ * desktop marker it stands in for. `initial={false}` renders the current width
+ * on the server, so the first paint is right and only later changes animate;
+ * under reduced motion they snap.
  */
 export function ScrollProgress({ sections, className = "" }: ScrollProgressProps) {
   const active = useScrollSpy(sections.map((section) => section.id));
+  const reduced = useReducedMotion();
 
   if (sections.length === 0) return null;
 
@@ -48,9 +56,11 @@ export function ScrollProgress({ sections, className = "" }: ScrollProgressProps
         </span>
       </p>
       <div aria-hidden="true" className="h-[2px] w-full bg-border">
-        <div
-          className="h-full bg-accent transition-[width] duration-300 ease-out"
-          style={{ width: `${percent}%` }}
+        <motion.div
+          className="h-full bg-accent"
+          initial={false}
+          animate={{ width: `${percent}%` }}
+          transition={reduced ? { duration: 0 } : RAIL_SPRING}
         />
       </div>
     </div>

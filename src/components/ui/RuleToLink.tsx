@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Press } from "@/components/motion";
 import { resolveHref } from "./link";
 import type { ReactNode } from "react";
 
@@ -29,6 +30,10 @@ export interface RuleToLinkProps {
  * On narrow viewports the three parts stack, so the rule becomes a full-width
  * divider between heading and link rather than collapsing to nothing — the row
  * form needs horizontal slack a 48px heading does not leave on a phone.
+ *
+ * The link presses on tap (lessons.md D-017). `Press` is a span around the
+ * unchanged anchor; it takes the `shrink-0` the anchor had so the rule, not the
+ * label, is what gives way.
  */
 export function RuleToLink({
   heading,
@@ -42,7 +47,7 @@ export function RuleToLink({
   const { internal, targetProps } = resolveHref(href, newTab);
 
   const linkClass =
-    "u-label inline-flex min-h-11 shrink-0 items-center gap-2 text-accent transition-opacity duration-300 ease-[ease] hover:opacity-70";
+    "u-label inline-flex min-h-11 items-center gap-2 text-accent transition-opacity duration-300 ease-[ease] hover:opacity-70";
 
   const linkBody = (
     <>
@@ -62,19 +67,17 @@ export function RuleToLink({
         aria-hidden="true"
         className="h-px w-full bg-border sm:w-auto sm:flex-1"
       />
-      {internal ? (
-        <Link href={href} className={linkClass}>
-          {linkBody}
-        </Link>
-      ) : (
-        <a
-          href={href}
-          className={linkClass}
-          {...targetProps}
-        >
-          {linkBody}
-        </a>
-      )}
+      <Press className="inline-block shrink-0">
+        {internal ? (
+          <Link href={href} className={linkClass}>
+            {linkBody}
+          </Link>
+        ) : (
+          <a href={href} className={linkClass} {...targetProps}>
+            {linkBody}
+          </a>
+        )}
+      </Press>
     </div>
   );
 }

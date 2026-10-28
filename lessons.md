@@ -548,3 +548,37 @@ Pointer-driven effects are gated on `(hover: hover) and (pointer: fine)`.
 morphs are not expressible in CSS alone with the App Router; the alternative
 was hand-rolling the same machinery.
 
+---
+
+### T-017 · A stale dev server serves a dead build and looks like a broken site
+**2026-10-28**
+
+A `next dev` from an earlier run survived a cleanup whose process filter only
+matched command lines containing `next` or `run dev`; the surviving process had
+been spawned as a bare `node server.js`-style child. The next verification run
+landed on a fresh port, the browser got a blank white page, and for a few
+minutes it looked as though the motion foundation had broken rendering. It had
+not: the stale server was answering with a build that no longer existed on
+disk.
+
+**How to apply:** the cleanup matches any `node.exe` whose command line
+contains the repo path, not a particular script name; a bounded wait replaces
+`until` loops so a server that never starts cannot hang the run; and the first
+check after any blank page is `curl` against the port, not the browser.
+
+---
+
+### T-018 · `FrozenRouter` leans on a Next internal
+**2026-10-28**
+
+Page exit animations need the old route to stay mounted for one frame. The
+only way that works in the App Router today is pinning `LayoutRouterContext`
+from `next/dist/shared/lib/app-router-context.shared-runtime`, which is not a
+public API. It is correct for Next 16.4 (verified against `layout-router.js`)
+and will break silently on a major upgrade.
+
+**How to apply:** after any Next major bump, open a case study from the home
+page and watch for the old page vanishing before the new one fades in. If it
+does, `PageTransition` has lost its exit frame; either re-pin against the new
+context export or drop to enter-only transitions, which need no internal.
+

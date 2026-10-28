@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ContactHero, ContactIntro, ProjectEnquiryForm } from "@/components/contact";
+import { Reveal } from "@/components/motion";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -17,6 +18,9 @@ export const metadata: Metadata = {
  * the reference's (audit G2): the ask comes first, the shortcut second.
  *
  * A Server Component; only the form itself is client-side.
+ *
+ * Motion: the intro column is a `Reveal`; the form column choreographs itself
+ * (a `Stagger` of its groups), so it is not wrapped a second time here.
  */
 export default function ContactPage() {
   return (
@@ -31,9 +35,9 @@ export default function ContactPage() {
           Start a project
         </h2>
         <div className="grid gap-16 lg:grid-cols-4 lg:gap-6">
-          <div className="lg:col-span-2 lg:pr-6">
+          <Reveal className="lg:col-span-2 lg:pr-6">
             <ContactIntro />
-          </div>
+          </Reveal>
           <div className="lg:col-span-2 lg:col-start-3 lg:pl-6">
             <ProjectEnquiryForm />
           </div>

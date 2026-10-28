@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Reveal } from "@/components/motion";
 import type { CaseStudySectionId } from "@/data";
 
 export interface CaseStudySectionProps {
@@ -27,6 +28,11 @@ export interface CaseStudySectionProps {
  * The label is the body face, 16px, sentence case, ink (`.u-section-label`).
  *
  * `scroll-mt` clears the mobile progress bar when a rail link jumps to a section.
+ *
+ * The label reveals (lessons.md D-017); the content column does not, because
+ * each section choreographs its own prose and a second fade over the top of a
+ * rising statement would muddy it. The `Reveal` takes the label's grid cell,
+ * so the two-column split is unchanged.
  */
 export function CaseStudySection({
   id,
@@ -44,9 +50,11 @@ export function CaseStudySection({
         split ? "lg:grid lg:grid-cols-[9fr_16fr]" : ""
       }`}
     >
-      <h2 id={`${id}-label`} className="u-section-label">
-        {label}
-      </h2>
+      <Reveal>
+        <h2 id={`${id}-label`} className="u-section-label">
+          {label}
+        </h2>
+      </Reveal>
       <div
         className={`min-w-0 ${split ? "mt-6 lg:mt-0 lg:max-w-[640px]" : "mt-6"}`}
       >

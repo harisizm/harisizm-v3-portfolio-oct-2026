@@ -1,3 +1,4 @@
+import { Pulse } from "@/components/motion";
 import { site } from "@/lib/site";
 
 export interface StatusPillProps {
@@ -17,13 +18,18 @@ export interface StatusPillProps {
  * `site.availability.open` flag: when it is false this renders nothing, which is
  * the point. V2 welded "Available for new projects" into an SVG textPath with no
  * way to turn it off.
+ *
+ * The square breathes (`Pulse`, lessons.md D-017): the one continuous motion
+ * in the chrome, and it is off entirely under reduced motion, not slowed.
  */
 export function StatusPill({ label, className = "" }: StatusPillProps) {
   if (!site.availability.open) return null;
 
   return (
     <p className={`inline-flex items-center gap-2 text-accent ${className}`}>
-      <span aria-hidden="true" className="size-1.5 shrink-0 bg-accent-2" />
+      <Pulse className="shrink-0">
+        <span aria-hidden="true" className="size-1.5 bg-accent-2" />
+      </Pulse>
       <span className="u-label-sm">{label ?? site.availability.label}</span>
     </p>
   );

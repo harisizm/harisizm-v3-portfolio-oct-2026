@@ -1,3 +1,4 @@
+import { Magnetic, Reveal } from "@/components/motion";
 import { contactCopy } from "@/data";
 import { site } from "@/lib/site";
 
@@ -16,6 +17,10 @@ const directLink =
  * handler at all (lessons.md T-002, T-007). Both links here are plain anchors
  * in the server HTML, so they work with scripts disabled and on a touch device
  * that has no hover state to reveal them.
+ *
+ * Motion: `Magnetic` on the email and phone links (a wrapper; the anchors are
+ * untouched and still plain `mailto:` and `tel:`), and the hiring panel, the
+ * page's second option, on its own `Reveal`.
  */
 export function ContactIntro() {
   const { intro, direct, booking } = contactCopy;
@@ -27,12 +32,16 @@ export function ContactIntro() {
       <div>
         <p className="text-label-sm text-mid-grey">{direct}</p>
         <p className="mt-1 flex flex-col items-start">
-          <a href={`mailto:${site.email}`} className={directLink}>
-            {site.email}
-          </a>
-          <a href={`tel:${site.phoneHref}`} className={directLink}>
-            {site.phone}
-          </a>
+          <Magnetic>
+            <a href={`mailto:${site.email}`} className={directLink}>
+              {site.email}
+            </a>
+          </Magnetic>
+          <Magnetic>
+            <a href={`tel:${site.phoneHref}`} className={directLink}>
+              {site.phone}
+            </a>
+          </Magnetic>
         </p>
 
         {/* A booking control renders only when there is a booking link to
@@ -51,7 +60,9 @@ export function ContactIntro() {
         ) : null}
       </div>
 
-      <HiringPanel />
+      <Reveal>
+        <HiringPanel />
+      </Reveal>
     </div>
   );
 }

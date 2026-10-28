@@ -1,3 +1,4 @@
+import { Reveal, Stagger } from "@/components/motion";
 import { Chip } from "@/components/ui";
 import { about, certifications, education } from "@/data";
 
@@ -10,14 +11,16 @@ const linkSkin =
  *
  * The certificate has a live verification URL but its PDF is not published yet.
  * A null `file` renders no link at all rather than a control that 404s (T-002).
+ *
+ * Motion: the two columns are `Reveal`s in one `Stagger`, education first.
  */
 export function Credentials() {
   const { educationChip, certificationChip, verify, download } = about.credentials;
 
   return (
     <section className="u-container border-t border-border py-16 lg:py-24">
-      <div className="grid gap-12 lg:grid-cols-2 lg:gap-6">
-        <div>
+      <Stagger className="grid gap-12 lg:grid-cols-2 lg:gap-6">
+        <Reveal>
           <Chip>{educationChip}</Chip>
           <ul className="mt-8 space-y-8">
             {education.map((entry) => (
@@ -31,9 +34,9 @@ export function Credentials() {
               </li>
             ))}
           </ul>
-        </div>
+        </Reveal>
 
-        <div className="lg:pl-6">
+        <Reveal className="lg:pl-6">
           <Chip>{certificationChip}</Chip>
           <ul className="mt-8 space-y-8">
             {certifications.map((cert) => (
@@ -62,8 +65,8 @@ export function Credentials() {
               </li>
             ))}
           </ul>
-        </div>
-      </div>
+        </Reveal>
+      </Stagger>
     </section>
   );
 }

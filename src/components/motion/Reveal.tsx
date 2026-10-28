@@ -66,7 +66,15 @@ export function Reveal({
 
   const variants = {
     hidden: { opacity: 0, y },
-    shown: { opacity: 1, y: 0, transition: { duration, delay, ease: EASE } },
+    // `delay` is only written when set. motion-dom builds a staggered child's
+    // transition as `{ delay: staggerDelay, ...childTransition }`, so an
+    // explicit `delay: 0` here would override the parent's `staggerChildren`
+    // and every child of a `Stagger` would fire at once.
+    shown: {
+      opacity: 1,
+      y: 0,
+      transition: { duration, ease: EASE, ...(delay > 0 ? { delay } : {}) },
+    },
   };
 
   if (staggered) {

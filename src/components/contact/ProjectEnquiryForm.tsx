@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { Magnetic, Reveal, Stagger } from "@/components/motion";
 import { FormField } from "@/components/ui";
 import {
   enquiryCopy,
@@ -64,6 +65,12 @@ function validate(values: Record<EnquiryField, string>) {
  *     sent from the page.
  *  3. **JS with `NEXT_PUBLIC_ENQUIRY_ENDPOINT` set.** It POSTs and reports the
  *     real outcome. See `submitEnquiry.ts`, the only file that changes.
+ *
+ * Motion: the two field groups and the submit row are a `Stagger`. `Reveal`
+ * cannot be a `fieldset`, so each group's wrapper carries the rule and the
+ * spacing and the `fieldset` inside stays a plain one. The error summary sits
+ * outside the choreography: it appears on submit and must not fade in late.
+ * `Magnetic` wraps the submit button; the button is unchanged.
  */
 export function ProjectEnquiryForm() {
   const [values, setValues] = useState<Record<EnquiryField, string>>(EMPTY);
@@ -184,41 +191,47 @@ export function ProjectEnquiryForm() {
         </div>
       ) : null}
 
-      {enquiryGroups.map((group, i) => (
-        <fieldset
-          key={group.num}
-          className={`border-0 p-0 ${i > 0 ? "mt-10 border-t border-border pt-10" : ""}`}
-        >
-          <legend className="float-left w-full text-[24px] font-medium leading-[1.2] text-ink">
-            {group.num} | {group.title}
-          </legend>
-          <div className="mt-8 grid gap-8 sm:grid-cols-2">
-            {group.fields.map(renderField)}
-          </div>
-        </fieldset>
-      ))}
-
-      {/* The split CTA's skin (design.md §7.2, 18px body face, 42px tall) as a
-          submit control. `SplitCta` is an anchor by design and cannot submit a
-          form, so the two-part shape is rebuilt here rather than bending that
-          component into a button. */}
-      <div className="mt-10 border-t border-border pt-10">
-        <button
-          type="submit"
-          disabled={pending}
-          className="group inline-flex items-stretch gap-2 disabled:opacity-60"
-        >
-          <span className="u-label-lg flex min-h-[42px] items-center bg-accent px-6 text-white transition-opacity duration-300 ease-[ease] group-hover:opacity-80">
-            {pending ? enquiryCopy.submitting : enquiryCopy.submit}
-          </span>
-          <span
-            aria-hidden="true"
-            className="flex size-[42px] shrink-0 items-center justify-center border border-accent text-accent transition-opacity duration-300 ease-[ease] group-hover:opacity-80"
+      <Stagger>
+        {enquiryGroups.map((group, i) => (
+          <Reveal
+            key={group.num}
+            className={i > 0 ? "mt-10 border-t border-border pt-10" : ""}
           >
-            ↗
-          </span>
-        </button>
-      </div>
+            <fieldset className="border-0 p-0">
+              <legend className="float-left w-full text-[24px] font-medium leading-[1.2] text-ink">
+                {group.num} | {group.title}
+              </legend>
+              <div className="mt-8 grid gap-8 sm:grid-cols-2">
+                {group.fields.map(renderField)}
+              </div>
+            </fieldset>
+          </Reveal>
+        ))}
+
+        {/* The split CTA's skin (design.md §7.2, 18px body face, 42px tall) as a
+            submit control. `SplitCta` is an anchor by design and cannot submit a
+            form, so the two-part shape is rebuilt here rather than bending that
+            component into a button. */}
+        <Reveal className="mt-10 border-t border-border pt-10">
+          <Magnetic>
+            <button
+              type="submit"
+              disabled={pending}
+              className="group inline-flex items-stretch gap-2 disabled:opacity-60"
+            >
+              <span className="u-label-lg flex min-h-[42px] items-center bg-accent px-6 text-white transition-opacity duration-300 ease-[ease] group-hover:opacity-80">
+                {pending ? enquiryCopy.submitting : enquiryCopy.submit}
+              </span>
+              <span
+                aria-hidden="true"
+                className="flex size-[42px] shrink-0 items-center justify-center border border-accent text-accent transition-opacity duration-300 ease-[ease] group-hover:opacity-80"
+              >
+                ↗
+              </span>
+            </button>
+          </Magnetic>
+        </Reveal>
+      </Stagger>
 
       <div role="status" aria-live="polite" className="mt-8 max-w-[62ch]">
         {result ? <ResultMessage result={result} /> : null}

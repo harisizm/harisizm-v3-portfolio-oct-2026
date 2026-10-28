@@ -27,7 +27,10 @@ interface ParsedValue {
 /* The first run of digits, with its thousands separators. Everything before it
    and everything after it is literal: `8h → ~10 min` counts the 8 and leaves
    `h → ~10 min` alone. */
-const LEADING_INTEGER = /^(\D*?)(\d{1,3}(?:,\d{3})+|\d+)([\s\S]*)$/;
+// The prefix may only be a symbol run (~, <, >, +, $, spaces). A value that
+// opens with a word ("Sept 2026") is a date or a label, not a quantity, and
+// counting its digits from zero reads as nonsense mid-animation.
+const LEADING_INTEGER = /^([~<>+$\s]*)(\d{1,3}(?:,\d{3})+|\d+)([\s\S]*)$/;
 
 function parse(value: string): ParsedValue | null {
   const match = LEADING_INTEGER.exec(value);

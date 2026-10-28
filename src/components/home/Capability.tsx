@@ -1,16 +1,23 @@
+import { Marquee, Reveal, Stagger } from "@/components/motion";
 import { Chip, RuleToLink } from "@/components/ui";
 import { skills } from "@/data";
 
-import { Reveal } from "./Reveal";
 import { Section } from "./Section";
+
+/** Every stack name, in the CV's order, for the strip. One source: `skills`. */
+const stackNames = skills.flatMap((group) => group.items);
 
 /**
  * Capability — design.md §9.1 item 5.
  *
  * The CV's seven groups, in the CV's order, rendered as a definition list:
- * grouping is the information, so it survives into the markup. Explicitly not a
- * marquee — V2's scrolling toolbox read as padding, could not be stopped, and
- * ran with no reduced-motion guard (lessons.md T-009).
+ * grouping is the information, so it survives into the markup.
+ *
+ * Above the list runs one `Marquee` of the same names (lessons.md D-017,
+ * showpiece). It is allowed where V2's toolbox was not (T-009) because it stops
+ * under the pointer, is a single static row under reduced motion and with JS
+ * off, and repeats nothing the grouped list below does not already state: the
+ * strip is texture, the list is the content.
  */
 export function Capability() {
   return (
@@ -28,18 +35,36 @@ export function Capability() {
         </p>
       </Reveal>
 
-      <Reveal>
-        <dl className="mt-16 grid gap-10 border-t border-border pt-10 lg:mt-24 lg:grid-cols-2 lg:gap-x-6 lg:gap-y-12">
+      {/* Hidden from assistive tech as a whole: the same names are read out
+          of the list below, and a strip that scrolls has no reading order. */}
+      <Reveal y={0} className="mt-16 border-t border-border py-6 lg:mt-24">
+        <div aria-hidden="true">
+          <Marquee className="u-label text-mid-grey">
+            {stackNames.map((name) => (
+              <span
+                key={name}
+                className="flex items-center gap-12 whitespace-nowrap"
+              >
+                {name}
+                <span className="size-1.5 bg-accent" />
+              </span>
+            ))}
+          </Marquee>
+        </div>
+      </Reveal>
+
+      <Stagger>
+        <dl className="grid gap-10 border-t border-border pt-10 lg:grid-cols-2 lg:gap-x-6 lg:gap-y-12">
           {skills.map((group) => (
-            <div key={group.id} className="lg:pr-10">
+            <Reveal key={group.id} className="lg:pr-10">
               <dt className="u-label text-accent">{group.label}</dt>
               <dd className="mt-3 max-w-[48ch] text-body text-ink">
                 {group.items.join(", ")}
               </dd>
-            </div>
+            </Reveal>
           ))}
         </dl>
-      </Reveal>
+      </Stagger>
 
       <Reveal className="mt-16 lg:mt-20">
         <RuleToLink

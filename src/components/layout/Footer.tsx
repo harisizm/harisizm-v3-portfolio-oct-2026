@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { Press, Reveal, STAGGER, Stagger } from "@/components/motion";
 import { nav, site } from "@/lib/site";
 
 import { FooterWordmark } from "./FooterWordmark";
@@ -58,27 +59,31 @@ export function SocialLinks({
     >
       {SOCIALS.map((social, index) => (
         <li key={social.label} className="inline-flex items-center">
-          <a
-            href={social.href}
-            target="_blank"
-            rel="noreferrer noopener"
-            /* The icon is not the label: an icon-only link needs a real
-               accessible name, never a hover tooltip. design.md §11. */
-            aria-label={labelled ? undefined : social.label}
-            className={`u-label inline-flex min-h-11 min-w-11 items-center justify-center gap-2 transition-opacity duration-300 ease-[ease] ${linkClassName}`}
-          >
-            {inline ? null : (
-              <svg
-                aria-hidden="true"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="size-4 shrink-0"
-              >
-                <path d={social.path} />
-              </svg>
-            )}
-            {labelled ? <span>{social.label}</span> : null}
-          </a>
+          {/* Press feedback on the anchor (lessons.md D-017); the wrapper is a
+              span, the link underneath is untouched. */}
+          <Press>
+            <a
+              href={social.href}
+              target="_blank"
+              rel="noreferrer noopener"
+              /* The icon is not the label: an icon-only link needs a real
+                 accessible name, never a hover tooltip. design.md §11. */
+              aria-label={labelled ? undefined : social.label}
+              className={`u-label inline-flex min-h-11 min-w-11 items-center justify-center gap-2 transition-opacity duration-300 ease-[ease] ${linkClassName}`}
+            >
+              {inline ? null : (
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="size-4 shrink-0"
+                >
+                  <path d={social.path} />
+                </svg>
+              )}
+              {labelled ? <span>{social.label}</span> : null}
+            </a>
+          </Press>
           {/* The separator is decorative, so it stays out of the accessible
               name — and out of the link, so it is not a click target. */}
           {inline && index < SOCIALS.length - 1 ? (
@@ -111,6 +116,12 @@ const linkSkin =
  * rule-free.
  *
  * The year is computed. V2 hardcoded it; it was wrong within twelve months.
+ *
+ * Motion (lessons.md D-017): the quick links stagger in one after another,
+ * every link presses on tap, and the giant wordmark rises into place with a
+ * taller travel than a paragraph gets, because it is the one block on the page
+ * big enough to carry it. Each child in the stagger states its own delay: the
+ * step comes from the child, the shared trigger from `Stagger`.
  */
 export function Footer() {
   const year = new Date().getFullYear();
@@ -122,23 +133,32 @@ export function Footer() {
       <div className="u-container">
         <div className="flex flex-col gap-10 pb-10 pt-12 sm:flex-row sm:items-start sm:justify-between">
           <nav aria-label="Footer">
-            <p className="u-label-sm text-mid-grey">Quick Links</p>
-            {/* Comma-separated inline list. The separator is decorative, so it
-                stays out of each link's accessible name. */}
-            <ul className="flex flex-wrap items-center gap-x-1">
-              {nav.map((item, index) => (
-                <li key={item.href} className="inline-flex items-center">
-                  <Link href={item.href} className={linkSkin}>
-                    {item.label}
-                  </Link>
-                  {index < nav.length - 1 ? (
-                    <span aria-hidden="true" className="u-label">
-                      ,
-                    </span>
-                  ) : null}
-                </li>
-              ))}
-            </ul>
+            <Stagger>
+              <p className="u-label-sm text-mid-grey">Quick Links</p>
+              {/* Comma-separated inline list. The separator is decorative, so it
+                  stays out of each link's accessible name. */}
+              <ul className="flex flex-wrap items-center gap-x-1">
+                {nav.map((item, index) => (
+                  <Reveal
+                    key={item.href}
+                    as="li"
+                    className="inline-flex items-center"
+                    delay={index * STAGGER}
+                  >
+                    <Press>
+                      <Link href={item.href} className={linkSkin}>
+                        {item.label}
+                      </Link>
+                    </Press>
+                    {index < nav.length - 1 ? (
+                      <span aria-hidden="true" className="u-label">
+                        ,
+                      </span>
+                    ) : null}
+                  </Reveal>
+                ))}
+              </ul>
+            </Stagger>
           </nav>
 
           <div className="flex flex-col sm:items-end">
@@ -147,25 +167,34 @@ export function Footer() {
               className="sm:justify-end"
               linkClassName="hover:opacity-70"
             />
-            <a
-              href={`mailto:${site.email}`}
-              className={`${linkSkin} text-accent`}
-            >
-              <span aria-hidden="true">[&nbsp;</span>
-              {site.email}
-              <span aria-hidden="true">&nbsp;]</span>
-            </a>
-            <a
-              href={`tel:${site.phoneHref}`}
-              className={`${linkSkin} text-mid-grey`}
-            >
-              {site.phone}
-            </a>
+            <Press>
+              <a
+                href={`mailto:${site.email}`}
+                className={`${linkSkin} text-accent`}
+              >
+                <span aria-hidden="true">[&nbsp;</span>
+                {site.email}
+                <span aria-hidden="true">&nbsp;]</span>
+              </a>
+            </Press>
+            <Press>
+              <a
+                href={`tel:${site.phoneHref}`}
+                className={`${linkSkin} text-mid-grey`}
+              >
+                {site.phone}
+              </a>
+            </Press>
           </div>
         </div>
 
         <div className="border-t border-ink pt-12">
-          <FooterWordmark />
+          {/* 48px of rise rather than the default 16: at this size a short
+              travel reads as a flicker. The wordmark's own box still measures
+              itself; the reveal only moves the box it sits in. */}
+          <Reveal y={48} duration={0.9}>
+            <FooterWordmark />
+          </Reveal>
         </div>
 
         <p className="u-label-sm py-8 text-center text-mid-grey">

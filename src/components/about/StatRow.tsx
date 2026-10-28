@@ -1,3 +1,4 @@
+import { CountUp, Reveal, Stagger } from "@/components/motion";
 import { about, resolveStats } from "@/data";
 
 /* The reference's panels step down the row: the first is short, the next
@@ -12,6 +13,10 @@ const PANEL_HEIGHTS = ["lg:h-24", "lg:h-48", "lg:h-72", "lg:h-48"] as const;
  * the display face that starts inside the panel and breaks out of its bottom
  * edge onto the canvas. The numeral is `--mid-grey`, which is quiet on both
  * grounds and still clears 3:1 at this size. Labels 18px light, mid grey.
+ *
+ * Motion: the four panels are a `Stagger` wrapping the `dl`, each stat a
+ * `Reveal`; the numeral runs through `CountUp`, which counts only the leading
+ * integer and keeps `8h → ~10 min` reading as written.
  */
 
 /* The reference's numerals are three characters ("25+", "3-6"). Ours run to
@@ -32,31 +37,33 @@ export function StatRow() {
       <h2 id="stats-heading" className="u-sr-only">
         {about.stats.heading}
       </h2>
-      <dl className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:items-start lg:gap-6">
-        {stats.map((stat, i) => (
-          <div key={`${stat.project}-${stat.label}`} className="flex flex-col">
-            <div aria-hidden="true" className={`h-20 bg-ink ${PANEL_HEIGHTS[i % PANEL_HEIGHTS.length]}`} />
-            <dt className="u-sr-only">
-              {stat.label}, {stat.project}
-            </dt>
-            <dd className="px-4">
-              {/* Pulled up by half its own height so it straddles the panel's
-                  bottom edge. `8h → ~10 min` is a long value in a 4-up column:
-                  it wraps rather than overflowing. */}
-              <span
-                className={`-mt-[0.5em] block whitespace-nowrap font-display font-bold leading-none text-mid-grey ${numeralSize(stat.value)}`}
-              >
-                {stat.value}
-              </span>
-              <span className="mt-3 block max-w-[24ch] text-body font-light text-mid-grey">
-                {stat.label}
-                {stat.note ? `, ${stat.note}` : null}
-              </span>
-              <span className="u-label-sm mt-4 block text-accent">{stat.project}</span>
-            </dd>
-          </div>
-        ))}
-      </dl>
+      <Stagger>
+        <dl className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:items-start lg:gap-6">
+          {stats.map((stat, i) => (
+            <Reveal key={`${stat.project}-${stat.label}`} className="flex flex-col">
+              <div aria-hidden="true" className={`h-20 bg-ink ${PANEL_HEIGHTS[i % PANEL_HEIGHTS.length]}`} />
+              <dt className="u-sr-only">
+                {stat.label}, {stat.project}
+              </dt>
+              <dd className="px-4">
+                {/* Pulled up by half its own height so it straddles the panel's
+                    bottom edge. `8h → ~10 min` is a long value in a 4-up column:
+                    it wraps rather than overflowing. */}
+                <span
+                  className={`-mt-[0.5em] block whitespace-nowrap font-display font-bold leading-none text-mid-grey ${numeralSize(stat.value)}`}
+                >
+                  <CountUp value={stat.value} />
+                </span>
+                <span className="mt-3 block max-w-[24ch] text-body font-light text-mid-grey">
+                  {stat.label}
+                  {stat.note ? `, ${stat.note}` : null}
+                </span>
+                <span className="u-label-sm mt-4 block text-accent">{stat.project}</span>
+              </dd>
+            </Reveal>
+          ))}
+        </dl>
+      </Stagger>
     </section>
   );
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { SplitLines } from "@/components/motion";
 import type { Project } from "@/data";
 import { RailNav, type RailSection } from "./RailNav";
 import { TagChip } from "./TagChip";
@@ -26,6 +27,10 @@ export interface CaseStudyRailProps {
  * no control at all — V2 shipped a "Live Demo" button pointing at `#` that
  * scrolled to the top, which is the single defect this repo exists to not repeat
  * (lessons.md T-002).
+ *
+ * The title rises line by line (`SplitLines`, lessons.md D-017). It is the
+ * first thing the eye lands on after the cover morph settles, so it is the one
+ * element in the rail that moves.
  */
 /* The rail is 276px wide. At the 48px heading size that holds about ten
    uppercase letters, so a title whose longest word runs past that steps down
@@ -49,11 +54,12 @@ export function CaseStudyRail({ project, sections }: CaseStudyRailProps) {
           Back
         </Link>
 
-        <h1
+        <SplitLines
+          as="h1"
           className={`mt-1 text-[32px] uppercase leading-[1.1] tracking-[-1px] sm:text-title ${railTitleSize(project.shortTitle)}`}
         >
           {project.shortTitle}
-        </h1>
+        </SplitLines>
 
         {/* Mobile only: the desktop meta block carries these below the cover. */}
         <div className="mt-3 flex flex-wrap gap-x-2 gap-y-2 lg:hidden">
