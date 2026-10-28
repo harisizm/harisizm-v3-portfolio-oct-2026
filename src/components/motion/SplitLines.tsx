@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, useInView } from "motion/react";
 import { Fragment, useEffect, useRef, useState, type CSSProperties } from "react";
 
 import { useReducedMotion } from "@/hooks";
@@ -51,6 +51,12 @@ export function SplitLines({
 }: SplitLinesProps) {
   const reduced = useReducedMotion();
   const twinRef = useRef<HTMLSpanElement>(null);
+  /* In-view is read on the whole block, never on a line: a line starts
+     translated fully outside its overflow-hidden clip, and IntersectionObserver
+     honours ancestor clipping, so the line itself would intersect nothing and a
+     `whileInView` on it could never fire. */
+  const blockRef = useRef<HTMLElement>(null);
+  const inView = useInView(blockRef, { once: true, amount });
   const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const [lines, setLines] = useState<string[] | null>(null);
   /* Measurement can fail to land (a bailed hydration, a hot reload that reset
@@ -122,7 +128,12 @@ export function SplitLines({
   ));
 
   return (
-    <Tag data-enter="" className={`relative block ${className}`} style={style}>
+    <Tag
+      ref={blockRef as never}
+      data-enter=""
+      className={`relative block ${className}`}
+      style={style}
+    >
       {split
         ? lines.map((line, i) => (
             /* The clip gets a little vertical slack and gives it back as
@@ -140,8 +151,7 @@ export function SplitLines({
               <motion.span
                 className="block"
                 initial={{ y: "110%" }}
-                whileInView={{ y: 0 }}
-                viewport={{ once: true, amount }}
+                animate={{ y: inView ? 0 : "110%" }}
                 transition={{ duration, delay: delay + i * stagger, ease: EASE }}
               >
                 {line}

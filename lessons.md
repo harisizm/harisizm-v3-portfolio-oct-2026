@@ -600,3 +600,11 @@ reduced motion, and `SplitLines` now shows its inline words after a 700 ms
 grace if the split has not arrived. When a primitive measures the DOM, treat
 the measurement as optional.
 
+**The actual cause, found after the grace was added:** each line was observed
+by `whileInView` while translated fully outside its own `overflow-hidden`
+clip. IntersectionObserver honours ancestor clipping, so a clipped-out line
+intersects nothing, the 20% threshold can never be met, and the rise never
+runs. `Reveal` never had the problem because it fades in place. The in-view
+check now sits on the whole block, and each line animates from that one
+signal. Never observe the element you have hidden; observe its container.
+
