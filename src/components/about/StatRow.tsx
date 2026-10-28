@@ -46,11 +46,13 @@ export function StatRow() {
                 {stat.label}, {stat.project}
               </dt>
               <dd className="px-4">
-                {/* Pulled up by half its own height so it straddles the panel's
-                    bottom edge. `8h → ~10 min` is a long value in a 4-up column:
-                    it wraps rather than overflowing. */}
+                {/* Pulled up by a quarter of its own height so it breaks the
+                    panel's bottom edge without sitting inside it: mid grey on ink
+                    is about 3:1, and at half-height the long values were mostly
+                    on the dark side. `8h → ~10 min` is a long value in a 4-up
+                    column: it shrinks rather than wrapping or overflowing. */}
                 <span
-                  className={`-mt-[0.5em] block whitespace-nowrap font-display font-bold leading-none text-mid-grey ${numeralSize(stat.value)}`}
+                  className={`-mt-[0.25em] block whitespace-nowrap font-display font-bold leading-none text-mid-grey ${numeralSize(stat.value)}`}
                 >
                   <CountUp value={stat.value} />
                 </span>
