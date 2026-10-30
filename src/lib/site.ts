@@ -17,6 +17,16 @@ export const site = {
   location: "Lahore, Pakistan",
 
   /**
+   * What the header mark's slot rolls through beside the word (lessons.md
+   * D-022): the role in two short lines, then a caret, then where the work
+   * is done. Lahore's coordinates, rounded to the city.
+   */
+  mark: {
+    role: ["Full-stack", "Engineer"],
+    coordinates: ["31.52° N", "74.35° E"],
+  },
+
+  /**
    * NOTE: this differs from the address printed on cv-2026-10.pdf
    * (haris687.chohan@gmail.com). The CV needs re-exporting. See lessons.md D-013.
    */
@@ -41,6 +51,11 @@ export const site = {
   availability: {
     open: true,
     label: "Available for projects",
+    /**
+     * The second line the status pill rolls to. Keep it a fact, not a promise:
+     * a booking month goes here only once Haris has confirmed one.
+     */
+    altLabel: "Remote, from Lahore",
   },
 } as const;
 

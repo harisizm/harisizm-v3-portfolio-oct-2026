@@ -26,14 +26,14 @@ export interface DarkPanelProps {
  * Dark panel — design.md §7.5.
  *
  * `--ink` ground, white text, `↗` top-right, label bottom-left. The middle
- * element of the grey → dark → blue escalating trio.
+ * element of the grey → dark → orange escalating trio.
  *
  * The subline is white at 60% rather than `--mid-grey`: `#727272` on `#222`
  * is 3.3:1 and fails AA for 16px text, while rgba(255,255,255,.6) lands at
  * ~7:1 and still reads as the secondary line.
  *
  * The focus ring is the global one: 2px accent at a 3px offset, which lands on
- * the canvas outside the panel rather than on the ink inside it, so blue-on-dark
+ * the canvas outside the panel rather than on the ink inside it, so orange-on-dark
  * contrast never comes into it.
  *
  * Motion (lessons.md D-017): the panel leans toward a fine pointer and presses

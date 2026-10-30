@@ -13,7 +13,7 @@ export interface GridOverlayProps {
    * `behind` is the section motif: the rules sit under the content. It needs a
    * positioned ancestor that does not paint its own background — sections on
    * canvas inherit the body's, so this holds.
-   * `front` is for the blue menu overlay, which the rules stay visible through
+   * `front` is for the orange menu overlay, which the rules stay visible through
    * (design.md §8).
    */
   layer?: "behind" | "front";

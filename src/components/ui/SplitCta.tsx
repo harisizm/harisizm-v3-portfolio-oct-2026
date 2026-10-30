@@ -20,7 +20,7 @@ export interface SplitCtaProps {
 /**
  * Split CTA — design.md §7.2.
  *
- * Two visual controls, one action: a filled blue button and a square outlined
+ * Two visual controls, one action: a filled orange button and a square outlined
  * `↗`. They live inside a single anchor, so there is exactly one tab stop, one
  * hover target and one destination — "two controls, one action" enforced by the
  * markup rather than by convention.

@@ -9,27 +9,33 @@
 
 /* ---------------------------------------------------------------------------
    Tokens — design.md §2. Nothing in the app hardcodes a hex value.
+   Palette "Workshop", chosen 2026-10-30 (lessons.md D-018): a warm bone
+   canvas, signal orange on every action and stat, deep slate for identity
+   and state. Every value was contrast-checked against the canvas; the
+   numbers are in design.md §2.
 --------------------------------------------------------------------------- */
 :root {
   /* Surface */
-  --canvas: #d9d9d9;
-  --ink: #222222;
+  --canvas: #efece6;
+  --ink: #151515;
   --white: #ffffff;
-  --surface-alt: #f4f4f4;
+  --surface-alt: #f7f5f0;
 
   /* Accent — exactly two. No third accent, no gradients. */
-  --accent: #033fed;
-  --accent-2: #befd66;
+  --accent: #c23a05;   /* signal orange: 4.57:1 on canvas, white on it 5.4:1 */
+  --accent-2: #1f3a5f; /* deep slate: 9.7:1 on canvas. Dark, so text on it is canvas, never ink */
 
-  /* Support */
-  --dim: #8c8c8c;      /* decorative state only — fails AA on canvas */
-  --mid-grey: #727272; /* the readable secondary. Use this for text. */
-  --border: #bbbdc1;
-  --grid-line: #2467ec;
+  /* Support — warm greys, biased toward the canvas */
+  --dim: #8f8a82;      /* decorative state only — fails AA on canvas */
+  --mid-grey: #6b665f; /* the readable secondary, 4.8:1. Use this for text. */
+  --border: #c9c4bb;
+  --grid-line: #c23a05;
 
   /* Type */
   --font-display: var(--font-chakra), "Chakra Petch", system-ui, sans-serif;
   --font-body: var(--font-inter), system-ui, -apple-system, sans-serif;
+  /* The hero stat only (D-018): an italic serif against the squared display face. */
+  --font-serif: var(--font-instrument), "Instrument Serif", Georgia, serif;
 
   --text-statement-cs: 33.6px;
 
@@ -55,6 +61,7 @@
 
   --font-display: var(--font-display);
   --font-body: var(--font-body);
+  --font-serif: var(--font-serif);
 
   /* Type scale — measured from the reference. design.md §4. */
   --text-hero: 120px;
@@ -78,6 +85,11 @@
   --text-wordmark--line-height: 1;
   --text-lead: 20px;
   --text-lead--line-height: 1.4;
+  /* The hero support paragraph: one step up from lead so it reads as part of
+     the opening statement rather than a caption beside it (D-018). */
+  --text-support: 24px;
+  --text-support--line-height: 1.35;
+  --text-support--letter-spacing: -0.01em;
   --text-body: 18px;
   --text-body--line-height: 1.5;
   /* Labels are the body face at 14/16/18 — see .u-label-* below. The pixel
@@ -107,6 +119,10 @@
   html {
     /* No root font-size hack. lessons.md T-001 — this broke every rem in V2. */
     -webkit-text-size-adjust: 100%;
+    /* Every in-page link (the scroll cue, the case-study rail, the form's
+       error summary) glides rather than jumps. The reduced-motion block
+       below forces this back to `auto`. */
+    scroll-behavior: smooth;
   }
 
   body {
@@ -262,11 +278,54 @@
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-/* The typewriter caret. Reduced motion never renders the caret at all. */
-@keyframes hero-caret {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
+/* The halo (lessons.md D-021). The column rules run behind everything, and
+   a rule passing through the counters of a headline reads as a flaw. Every
+   piece of content that sits on the canvas paints the canvas behind itself
+   with a soft edge, so the rule fades out on the way in and back in on the
+   way out. Only content on the canvas: anything inside a coloured ground
+   (panels, chips, figure boxes) or inside another haloed block is excluded,
+   and the header, menu and footer are outside `main`. `:where` keeps the
+   specificity at zero so any utility on the same element still wins. */
+main :where(h1, h2, h3, h4, p, blockquote, figure, dl, ul, ol, table, form):not(
+    .bg-ink *, .bg-accent *, .bg-accent-2 *, .bg-surface-alt *, .bg-white *,
+    figure *, .diagram *, dl *, ul *, ol *, form *
+  ) {
+  position: relative;
+  z-index: 1;
+  background-color: var(--canvas);
+  box-shadow:
+    0 0 0 6px var(--canvas),
+    0 0 22px 14px var(--canvas);
 }
-.hero-caret {
-  animation: hero-caret 1.05s steps(1, end) infinite;
+
+/* Case-study drawings (lessons.md D-019). Connectors carry `data-stroke` and
+   `pathLength="1"`, labels carry `data-fade`. They start hidden only once
+   `MotionBoot` has stamped `data-js` on the root, so a page without
+   JavaScript shows every drawing complete; `data-drawn` lands on the figure
+   when it scrolls into view. `--i` is each element's place in the sequence.
+   The reduced-motion rule above collapses both transitions to nothing. */
+html[data-js] .diagram [data-stroke] {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) calc(var(--i, 0) * 70ms);
+}
+html[data-js] .diagram [data-fade] {
+  opacity: 0;
+  transition: opacity 0.5s ease calc(var(--i, 0) * 70ms + 200ms);
+}
+html[data-js] .diagram[data-drawn] [data-stroke] {
+  stroke-dashoffset: 0;
+}
+html[data-js] .diagram[data-drawn] [data-fade] {
+  opacity: 1;
+}
+
+/* The status dot's blink: hard on and off, like an indicator lamp, not a
+   fade. The reduced-motion block above collapses it to a single still frame. */
+@keyframes status-blink {
+  0%, 55% { opacity: 1; }
+  56%, 100% { opacity: 0.15; }
+}
+.status-blink {
+  animation: status-blink 1s steps(1, end) infinite;
 }

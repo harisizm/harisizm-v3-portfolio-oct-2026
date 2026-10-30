@@ -9,7 +9,7 @@ export interface FormFieldOption {
 }
 
 interface FormFieldCommon {
-  /** Rendered as the blue chip. Always a real `<label htmlFor>`, never a placeholder. */
+  /** Rendered as the orange chip. Always a real `<label htmlFor>`, never a placeholder. */
   label: string;
   name: string;
   /** Supply only to pin the id; one is generated otherwise. */
@@ -56,7 +56,7 @@ export type FormFieldProps =
       onChange?: (event: ChangeEvent<HTMLSelectElement>) => void;
     });
 
-/* Shared control skin: 1px blue border, transparent fill (the reference's inputs
+/* Shared control skin: 1px orange border, transparent fill (the reference's inputs
    sit straight on the canvas — audit G3), square corners. The 18px body size is
    also what stops iOS zooming the viewport on focus. */
 const CONTROL =
@@ -65,7 +65,7 @@ const CONTROL =
 /**
  * Form field — design.md §7.4.
  *
- * The label is a blue chip straddling the input's top border, not a line of text
+ * The label is a orange chip straddling the input's top border, not a line of text
  * above it: the 10px of wrapper padding is what the chip hangs into, so the
  * border crosses it rather than clearing it. The chip is body face, 16px,
  * sentence case ("Website Type*") — the reference does not uppercase it and does

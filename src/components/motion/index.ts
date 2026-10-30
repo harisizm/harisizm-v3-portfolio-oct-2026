@@ -28,9 +28,6 @@ export type { CountUpProps } from "./CountUp";
 export { Marquee } from "./Marquee";
 export type { MarqueeProps } from "./Marquee";
 
-export { Pulse } from "./Pulse";
-export type { PulseProps } from "./Pulse";
-
 export { Parallax } from "./Parallax";
 export type { ParallaxProps } from "./Parallax";
 

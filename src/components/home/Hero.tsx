@@ -1,12 +1,13 @@
 /**
- * HERO LINE. The three lines and their timing live in `src/data/hero.ts`;
- * the headline cycles through them as a typewriter (see TypedHeadline).
+ * HERO LINE. The three lines, their timing and the support paragraph live in
+ * `src/data/hero.ts`; the headline rolls through them (see RollingHeadline).
  */
 
 import { BottomRail } from "@/components/layout";
-import { TypedHeadline } from "./TypedHeadline";
+import { RollingHeadline } from "./RollingHeadline";
 import { Magnetic, Reveal, STAGGER } from "@/components/motion";
 import { SplitCta } from "@/components/ui";
+import { heroSupport } from "@/data";
 
 import { Section } from "./Section";
 
@@ -31,8 +32,8 @@ const CTA_DELAY = STAGGER * 8;
  * the `h1` in source so screen readers heard it first. A grid keeps the DOM in
  * reading order.
  *
- * Motion (lessons.md D-017): the headline is a typewriter (TypedHeadline), the
- * mixed-weight case the primitive documents. The paragraph and the CTA are
+ * Motion (lessons.md D-017, D-018): the headline rolls row by row
+ * (RollingHeadline). The paragraph and the CTA are
  * `Reveal`s on the grid cells, so the cells keep their placement and only the
  * content inside fades. `Magnetic` wraps the CTA; the anchor is untouched.
  */
@@ -45,22 +46,36 @@ export function Hero() {
       <div className="lg:grid lg:grid-cols-4 lg:gap-x-6">
         {/* clamp rather than the `text-hero` token: the token is the 120px cap
             and this has to survive 390px. 0.9 line-height per design.md §4. */}
-        {/* 7.3vw, not 8.4: the headline's measure is three columns (1050px at
-            1440), and the widest row does not fit that at 120px, so the cap
-            only applies from about 1650px up. The lines themselves live in
+        {/* 6.8vw: the headline's measure is three columns (1050px at 1440) and
+            Chakra Petch 700 is wider than the Inter it replaced, so the widest
+            row ("of work, done in") needs the smaller slope to stay on one row.
+            The cap applies from about 1765px up. The lines themselves live in
             src/data/hero.ts. */}
-        <TypedHeadline className="text-[clamp(2.25rem,7.3vw,120px)] lg:col-span-3" />
+        <RollingHeadline className="text-[clamp(2.25rem,6.8vw,120px)] lg:col-span-3" />
 
         <Reveal
           delay={SUPPORT_DELAY}
           className="mt-10 lg:col-start-4 lg:row-start-1 lg:mt-0 lg:pt-3"
         >
-          <p className="max-w-[38ch] text-lead font-light text-ink">
-            Haris, a full-stack engineer in Lahore. Core engineer on{" "}
-            <span className="whitespace-nowrap">tourgenz.com</span>, a tourism
-            and booking marketplace that has been live since September 2026, and
-            the author of three automation platforms running in production for
-            paying clients.
+          {/* 24px from lg, regular weight, with the nouns a client scans for
+              set bold: a statement beside the headline, not a caption (D-018).
+              Below lg the headline floor is 36px, and 24px prose next to it
+              outranked the title, so it stays at the 20px lead there. */}
+          <p className="max-w-[34ch] text-lead text-ink lg:text-support">
+            {heroSupport.map((span, i) =>
+              typeof span === "string" ? (
+                span
+              ) : (
+                <strong
+                  key={i}
+                  className={`font-semibold ${
+                    span.emphasis === "accent" ? "text-accent" : ""
+                  }`}
+                >
+                  {span.text}
+                </strong>
+              ),
+            )}
           </p>
         </Reveal>
 

@@ -2,7 +2,7 @@ import { Reveal, Stagger } from "@/components/motion";
 import { Chip } from "@/components/ui";
 import { about, type CardTone } from "@/data";
 
-/* Grey → ink → blue. The escalation is the hierarchy (design.md §7.5), so the
+/* Grey → ink → orange. The escalation is the hierarchy (design.md §7.5), so the
    tone is content-driven rather than derived from the index: reordering the
    cards must not silently reorder the weights.
 

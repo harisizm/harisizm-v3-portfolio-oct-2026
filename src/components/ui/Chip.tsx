@@ -5,8 +5,8 @@ export type ChipVariant = "solid" | "bracketed";
 export interface ChipProps {
   children: ReactNode;
   /**
-   * `solid` — white on blue, pixel face, the label that sits above a section
-   * heading. `bracketed` — blue on canvas, body face, wrapped in `[ ]`, for
+   * `solid` — white on orange, pixel face, the label that sits above a section
+   * heading. `bracketed` — orange on canvas, body face, wrapped in `[ ]`, for
    * page-level labels (`[ WORK ]`, `[ CONTACT ]`).
    */
   variant?: ChipVariant;

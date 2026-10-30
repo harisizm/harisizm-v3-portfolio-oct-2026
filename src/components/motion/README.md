@@ -8,7 +8,7 @@ component built on `motion/react`, and everything here obeys three rules:
    depends on an animation having played.
 2. **Reduced motion means the final state, now.** Under
    `prefers-reduced-motion: reduce` every primitive renders its resting state
-   immediately, and continuous effects (`Marquee`, `Pulse`, `Magnetic`,
+   immediately, and continuous effects (`Marquee`, `Magnetic`,
    `Parallax`, the cover morph) do not run at all. Not slower. Off.
 3. **Pointer effects need a pointer.** `Press`'s hover lift and `Magnetic`
    are gated on `(hover: hover) and (pointer: fine)`.
@@ -187,16 +187,6 @@ copy.
 | `speed` | `60` | px per second |
 | `gap` | `48` | px between items and before the repeat |
 | `pauseOnHover` | `true` | |
-
-### `Pulse`
-
-Looping scale and opacity pulse for the status dot. Wrap the dot. Reduced
-motion: still, full size.
-
-| Prop | Default |
-|---|---|
-| `className` | `""` (rendered `inline-flex`) |
-| `duration` | `1.8` seconds per beat |
 
 ### `Parallax`
 

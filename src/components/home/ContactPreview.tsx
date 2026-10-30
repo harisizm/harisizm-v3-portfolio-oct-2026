@@ -9,15 +9,15 @@ import { Section } from "./Section";
 /**
  * Contact — design.md §9.1 item 7: the fork from §9.3, previewed.
  *
- * Laid out as the escalating trio from §7.5 — grey panel, dark panel, blue
- * panel. The blue one is the plain-email fallback, and it is a real `mailto:`
+ * Laid out as the escalating trio from §7.5 — grey panel, dark panel, orange
+ * panel. The orange one is the plain-email fallback, and it is a real `mailto:`
  * and a real `tel:` in the markup. That is the whole point: V2's only route to
  * the email address was hovering a button and reading a toast, which did not
  * exist at all on touch (lessons.md T-002, T-007).
  *
  * Motion: the two cards are a `Stagger`, each a `Reveal` set to `grid` so the
  * card inside still stretches to the row's height as it did before the wrapper
- * existed. The `Ø1` / `Ø2` numerals run through `CountUp`. The blue panel
+ * existed. The `Ø1` / `Ø2` numerals run through `CountUp`. The orange panel
  * follows on its own `Reveal`, a beat later.
  */
 export function ContactPreview() {
@@ -70,7 +70,9 @@ export function ContactPreview() {
 
         <Reveal className="grid">
           <DarkPanel href="/contact" label="Hiring or something else">
-            <p className="u-pixel-num text-accent-2">
+            {/* Orange, not the slate accent: slate on the ink panel is invisible,
+                orange is 3.4:1, enough for an 18px bold figure (D-018). */}
+            <p className="u-pixel-num text-accent">
               <CountUp value="Ø2" />
             </p>
             <p className="mt-4 text-lead font-light">
@@ -81,7 +83,7 @@ export function ContactPreview() {
         </Reveal>
       </Stagger>
 
-      {/* Blue panel — the plain path. No hover, no JavaScript, no form. */}
+      {/* Orange panel — the plain path. No hover, no JavaScript, no form. */}
       <Reveal className="mt-6" delay={STAGGER * 2}>
         <div className="bg-accent p-6 text-white lg:p-10">
           <p className="u-label">Or just email me</p>

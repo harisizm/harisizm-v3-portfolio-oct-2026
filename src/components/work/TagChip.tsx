@@ -3,7 +3,7 @@ export interface TagChipProps {
 }
 
 /**
- * A project tag. Deliberately not the blue pixel-face `Chip`: that one labels a
+ * A project tag. Deliberately not the orange pixel-face `Chip`: that one labels a
  * section, this one classifies a project, and the reference keeps the two apart
  * with a quiet light-grey chip in the body face at the small label size
  * (m-cs-0, audit I). Tags are nouns, so no uppercase transform is forced on

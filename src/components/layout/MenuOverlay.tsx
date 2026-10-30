@@ -65,7 +65,7 @@ const MARKS = [
 /* ---------------------------------------------------------------------------
    Open and close choreography — lessons.md D-017.
 
-   The blue panel wipes in from the top-right corner, where the trigger is
+   The orange panel wipes in from the top-right corner, where the trigger is
    (a clip-path inset, 0.5s). The nav items start rising 0.2s into the wipe,
    0.06s apart, and the contact column fades up once the wipe has landed.
    Closing runs the sequence backwards and faster: column and items leave
@@ -138,7 +138,7 @@ function columnVariants(reduced: boolean) {
 /**
  * The menu — design.md §8.
  *
- * Full-viewport blue overlay with the dotted column rules still visible through
+ * Full-viewport orange overlay with the dotted column rules still visible through
  * it. Mounted only while open, by `Header`, which owns the open state: that ties
  * every effect here — scroll lock, focus trap, Escape — to the component's own
  * lifetime rather than to a flag, so none of them can leak. `AnimatePresence`
@@ -303,7 +303,7 @@ export function MenuOverlay({
     "relative inline-block font-display text-[clamp(2.75rem,11vw,var(--text-nav))] font-bold uppercase leading-none text-white transition-opacity duration-300 ease-[ease] outline-none";
 
   const contactSkin =
-    "u-label inline-flex min-h-11 items-center text-white transition-opacity duration-300 ease-[ease] hover:opacity-70 focus-visible:outline-accent-2";
+    "u-label inline-flex min-h-11 items-center text-white transition-opacity duration-300 ease-[ease] hover:opacity-70 focus-visible:outline-white";
 
   return (
     <motion.div
@@ -320,7 +320,7 @@ export function MenuOverlay({
       exit="closed"
       className="fixed inset-0 z-40 overflow-y-auto bg-accent outline-none"
     >
-      {/* The rules sit above the blue, not behind it — design.md §8. */}
+      {/* The rules sit above the orange, not behind it — design.md §8. */}
       <GridOverlay position="fixed" layer="front" tone="overlay" />
 
       {/* No column gap: the overlay's rules are plain 1fr tracks, so the panel's
@@ -352,7 +352,7 @@ export function MenuOverlay({
               {MARKS.map((mark) => (
                 <span
                   key={mark}
-                  className={`absolute size-3 border-accent-2 ${mark}`}
+                  className={`absolute size-3 border-ink ${mark}`}
                 />
               ))}
             </span>
@@ -388,10 +388,13 @@ export function MenuOverlay({
                     }`}
                   >
                     {item.label}
-                    {/* Lime, small, raised to the top-right of the word and
-                        flush with its right edge — design.md §8. Absolute, so
-                        the word itself is what right-aligns to the column. */}
-                    <span className="u-pixel-num absolute right-0 top-0 -translate-y-[0.55em] text-accent-2">
+                    {/* Ink, small, raised to the top-right of the word and
+                        flush with its right edge — design.md §8. Ink rather
+                        than the slate accent: slate on the orange ground is
+                        2:1, ink is 3.4:1, enough for an 18px bold figure
+                        (D-018). Absolute, so the word itself is what
+                        right-aligns to the column. */}
+                    <span className="u-pixel-num absolute right-0 top-0 -translate-y-[0.55em] text-ink">
                       {item.num}
                     </span>
                   </Link>
@@ -407,18 +410,18 @@ export function MenuOverlay({
           className="flex flex-col gap-12 lg:col-span-2 lg:col-start-3 lg:pl-12"
         >
           <div>
-            <p className="u-label-sm text-accent-2">Socials</p>
+            <p className="u-label-sm text-white/80">Socials</p>
             <SocialLinks
               showLabels
               className="mt-2 flex-col items-start! gap-y-0"
-              linkClassName="justify-start text-white hover:opacity-70 focus-visible:outline-accent-2"
+              linkClassName="justify-start text-white hover:opacity-70 focus-visible:outline-white"
             />
           </div>
 
           <div>
-            <p className="u-label-sm text-accent-2">E-mail</p>
-            {/* Not `Chip variant="bracketed"`: that variant is blue on canvas by
-                design, and would disappear on this ground. */}
+            <p className="u-label-sm text-white/80">E-mail</p>
+            {/* Not `Chip variant="bracketed"`: that variant is orange on canvas
+                by design, and would disappear on this ground. */}
             <a href={`mailto:${site.email}`} className={contactSkin}>
               <span aria-hidden="true">[&nbsp;</span>
               {site.email}
@@ -427,7 +430,7 @@ export function MenuOverlay({
           </div>
 
           <div>
-            <p className="u-label-sm text-accent-2">Phone</p>
+            <p className="u-label-sm text-white/80">Phone</p>
             <a href={`tel:${site.phoneHref}`} className={contactSkin}>
               {site.phone}
             </a>
