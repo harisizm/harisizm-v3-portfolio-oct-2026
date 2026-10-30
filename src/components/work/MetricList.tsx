@@ -1,4 +1,5 @@
 import { CountUp, Reveal, STAGGER, Stagger } from "@/components/motion";
+import { Icon } from "@/components/ui";
 import type { Metric } from "@/data";
 
 export interface MetricListProps {
@@ -43,6 +44,9 @@ export function MetricList({ metrics, className = "" }: MetricListProps) {
               ) : null}
             </dt>
             <dd className="m-0 font-display text-[32px] font-bold leading-none text-accent">
+              {metric.icon ? (
+                <Icon name={metric.icon} size={0.9} className="mb-3 block" />
+              ) : null}
               <CountUp value={metric.value} />
             </dd>
           </Reveal>

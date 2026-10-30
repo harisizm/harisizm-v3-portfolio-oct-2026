@@ -1,3 +1,5 @@
+import type { BrandSlug } from "./brands";
+
 /**
  * Shapes for the content layer. Nothing here renders; every component reads
  * these types rather than an object literal inside its own file (lessons.md T-010).
@@ -15,11 +17,67 @@ export interface ImageRef {
   readonly height?: number;
 }
 
+/**
+ * The icon vocabulary (lessons.md D-020). Content names one of these beside a
+ * figure and `components/ui/Icon.tsx` draws it; the set is closed so a name
+ * can never point at a drawing that does not exist.
+ */
+export type IconName =
+  | "clock"
+  | "clock-reduce"
+  | "users"
+  | "bot"
+  | "bots"
+  | "calendar"
+  | "globe"
+  | "map-pin"
+  | "store"
+  | "chart"
+  | "file"
+  | "shield"
+  | "bolt"
+  | "check"
+  | "hand-off"
+  | "mail"
+  | "sheet"
+  | "mic"
+  | "tag"
+  | "layers"
+  | "gauge"
+  | "refresh"
+  | "grid"
+  | "briefcase"
+  | "lock"
+  | "bell"
+  | "graduation"
+  | "hash"
+  | "rocket"
+  | "speak"
+  | "code"
+  | "layout"
+  | "server"
+  | "database"
+  | "wrench"
+  | "sparkle"
+  | "api"
+  | "async"
+  | "stream"
+  | "anchor"
+  | "pipeline"
+  | "switch"
+  | "funnel"
+  | "vector"
+  | "mask"
+  | "route"
+  | "state";
+
 /** A number that survived the rewrite intact. `source` keeps it auditable. */
 export interface Metric {
   readonly value: string;
   readonly label: string;
   readonly note?: string;
+  /** Drawn above the figure wherever the metric is shown (D-020). */
+  readonly icon?: IconName;
 }
 
 /** Who owns the work. Employer projects are gated on `approvalStatus` (T-014). */
@@ -31,11 +89,16 @@ export type Ownership = "personal" | "employer";
  */
 export type ApprovalStatus = "draft" | "approved";
 
+/**
+ * The case-study template, as a client reads it (lessons.md D-019): the
+ * problem they recognise, what they get, the three things worth seeing in how
+ * it was built, and the results. Evidence closes it.
+ */
 export type CaseStudySectionId =
-  | "overview"
-  | "challenge"
-  | "approach"
-  | "outcome"
+  | "problem"
+  | "delivers"
+  | "built"
+  | "results"
   | "evidence";
 
 export type BoardKind =
@@ -96,26 +159,102 @@ export interface Testimonial {
 
 export type Evidence = Testimonial | UsageEvidence;
 
-export interface ApproachStep {
+/* ---------------------------------------------------------------------------
+   Diagrams, as data. Each mechanism in a case study names one of these and the
+   `diagrams` components draw it inline in the site's own tokens, so a drawing
+   is never a raster that goes stale when the palette moves (D-019). Keep the
+   labels short: they are set at label size inside a 640px figure.
+--------------------------------------------------------------------------- */
+
+export interface FlowStep {
+  readonly label: string;
+  /** One short line under the label. */
+  readonly note?: string;
+  /** The step the drawing is about. One per flow, drawn in `--accent`. */
+  readonly accent?: boolean;
+}
+
+export interface BarSpec {
+  readonly label: string;
+  /** The figure printed at the end of the bar. */
+  readonly value: string;
+  /** Bar length as a share of the longer one, 0 to 1. */
+  readonly share: number;
+}
+
+export interface ExchangeRound {
+  readonly from: "left" | "right";
+  readonly label: string;
+  readonly accent?: boolean;
+}
+
+export type DiagramSpec =
+  /** Left to right, one arrow between steps. `excluded` draws a crossed-out
+      box under the flow for the thing deliberately not in it. */
+  | {
+      readonly kind: "flow";
+      readonly steps: readonly FlowStep[];
+      readonly excluded?: string;
+    }
+  /** One centre, spokes around it. The feature map. */
+  | {
+      readonly kind: "hub";
+      readonly centre: string;
+      readonly spokes: readonly string[];
+    }
+  /** Two horizontal bars: the old way and the new one. */
+  | {
+      readonly kind: "before-after";
+      readonly before: BarSpec;
+      readonly after: BarSpec;
+    }
+  /** Two parties passing offers, with a floor they cannot go under. */
+  | {
+      readonly kind: "exchange";
+      readonly left: string;
+      readonly right: string;
+      readonly rounds: readonly ExchangeRound[];
+      readonly floor: string;
+    }
+  /** One viewport against a grid of them, each with its count. */
+  | {
+      readonly kind: "coverage";
+      readonly single: { readonly label: string; readonly count: string };
+      readonly grid: { readonly label: string; readonly count: string };
+    };
+
+/** One thing the user gets. A title a client would say, and one line on it. */
+export interface Feature {
   readonly title: string;
   readonly body: string;
-  /** What was rejected and why — the part that makes the step an argument. */
-  readonly rejected?: string;
+  readonly icon: IconName;
+}
+
+/** One of the three things worth seeing in how it was built. */
+export interface Mechanism {
+  readonly title: string;
+  /** Two sentences at most. What it does for the user, then how. */
+  readonly body: string;
+  readonly diagram: DiagramSpec;
+  /** One line under the drawing. */
+  readonly caption: string;
 }
 
 export interface CaseStudy {
-  /** Big left block, then the smaller right-aligned continuation. */
-  readonly overview: { readonly lead: string; readonly aside: string };
-  readonly challenge: {
+  /** The problem, from the user's side. Big left block, smaller right-aligned continuation. */
+  readonly problem: { readonly lead: string; readonly aside: string };
+  /** What the user gets: a feature map around `centre`, then one line per feature. */
+  readonly delivers: {
     readonly intro: string;
-    readonly problems: readonly string[];
-    readonly breakingPoint: string;
+    readonly centre: string;
+    readonly features: readonly Feature[];
   };
-  readonly approach: {
+  /** How it was built: three mechanisms, each with its drawing. */
+  readonly built: {
     readonly intro: string;
-    readonly steps: readonly ApproachStep[];
+    readonly mechanisms: readonly Mechanism[];
   };
-  readonly outcome: {
+  readonly results: {
     readonly headline: string;
     readonly body: string;
     readonly metrics?: readonly Metric[];
@@ -200,7 +339,17 @@ export interface SkillGroup {
   readonly id: string;
   readonly label: string;
   readonly items: readonly string[];
+  /** Drawn beside the group's label (D-020). */
+  readonly icon: IconName;
 }
+
+/**
+ * What the moving strip draws beside one stack name (D-021): the brand's own
+ * mark where it publishes one, a hand-drawn line icon where it does not.
+ */
+export type StackMark =
+  | { readonly kind: "brand"; readonly slug: BrandSlug }
+  | { readonly kind: "icon"; readonly name: IconName };
 
 /**
  * The honest placeholder. Prose that is still missing says so rather than

@@ -7,10 +7,11 @@
 export * from "./types";
 export { projects, type ProjectSlug } from "./projects";
 export { experience, education, certifications } from "./experience";
-export { skills, type SkillGroupId } from "./skills";
+export { skills, stackMarks, type SkillGroupId } from "./skills";
+export { brandGlyphs, type BrandSlug } from "./brands";
 export * from "./about";
 export * from "./enquiry";
-export { processSteps, type ProcessStep } from "./process";
+export { processSteps, type ProcessDiagramId, type ProcessStep } from "./process";
 
 import { projects } from "./projects";
 import type {
@@ -24,10 +25,10 @@ import type {
 
 /** Scroll-spy nav for the case-study template, in document order. */
 export const caseStudySections = [
-  { id: "overview", label: "Overview" },
-  { id: "challenge", label: "The Challenge" },
-  { id: "approach", label: "The Approach" },
-  { id: "outcome", label: "The Outcome" },
+  { id: "problem", label: "The Problem" },
+  { id: "delivers", label: "What You Get" },
+  { id: "built", label: "How It Was Built" },
+  { id: "results", label: "The Results" },
   { id: "evidence", label: "Evidence" },
 ] as const satisfies readonly { id: CaseStudySectionId; label: string }[];
 
@@ -99,4 +100,11 @@ export function isTestimonial(evidence: Evidence): evidence is Testimonial {
 export function isUsageEvidence(evidence: Evidence): evidence is UsageEvidence {
   return evidence.kind === "usage";
 }
-export { heroLines, heroTyping, type HeroLine, type HeroSegment } from "./hero";
+export {
+  heroLines,
+  heroRoll,
+  heroSupport,
+  type HeroLine,
+  type HeroSegment,
+  type SupportSpan,
+} from "./hero";

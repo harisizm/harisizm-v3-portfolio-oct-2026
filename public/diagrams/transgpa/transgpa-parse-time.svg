@@ -3,19 +3,19 @@
 <title id="t">Measurement panel showing local PDF parse timing under two seconds.</title>
 <defs>
   <style>
-    text { font-family: Inter, system-ui, sans-serif; fill: #222222; }
+    text { font-family: Inter, system-ui, sans-serif; fill: #151515; }
     .k  { font-size: 16px; letter-spacing: 0.08em; text-transform: uppercase; }
     .l  { font-size: 18px; }
-    .s  { font-size: 16px; fill: #727272; }
-    .a  { fill: #033FED; }
-    .ln { fill: none; stroke: #222222; stroke-width: 1.5; }
-    .acc { stroke: #033FED; }
+    .s  { font-size: 16px; fill: #6B665F; }
+    .a  { fill: #C23A05; }
+    .ln { fill: none; stroke: #151515; stroke-width: 1.5; }
+    .acc { stroke: #C23A05; }
     .dash { stroke-dasharray: 6 6; }
   </style>
 </defs>
 
 <!-- Panel frame -->
-<rect x="60" y="60" width="1080" height="630" fill="none" stroke="#222222" stroke-width="1.5"/>
+<rect x="60" y="60" width="1080" height="630" fill="none" stroke="#151515" stroke-width="1.5"/>
 
 <!-- Header -->
 <text class="k" x="90" y="100">Measurement</text>
@@ -44,17 +44,17 @@
 <!-- Row 1: local parse, measured. Bar ends short of the budget line. -->
 <text class="k" x="90" y="450">Local parse</text>
 <!-- The bar stops short of the budget line; the exact figure varies by machine and is not printed. -->
-<rect x="90" y="462" width="540" height="28" fill="#033FED"/>
+<rect x="90" y="462" width="540" height="28" fill="#C23A05"/>
 <text class="l a" x="704" y="483">under 2.0 s</text>
 <text class="s" x="90" y="512">read file, pdf.js text extraction, parse rows into courses, render charts</text>
 
 <!-- Row 2: the server round trip that does not exist -->
 <text class="k" x="90" y="572">Network</text>
-<rect x="90" y="584" width="1.5" height="28" fill="#222222"/>
+<rect x="90" y="584" width="1.5" height="28" fill="#151515"/>
 <text class="l" x="106" y="605">0 requests, 0 bytes up, 0 bytes stored</text>
 <text class="s" x="106" y="634">There is no round trip to wait for, so there is no row to measure.</text>
 
 <!-- Footer -->
-<path class="ln" d="M90 662 H1110" style="stroke:#727272"/>
+<path class="ln" d="M90 662 H1110" style="stroke:#6B665F"/>
 <text class="s" x="90" y="682">One run, one real transcript. Timing varies by machine; the second guarantee does not.</text>
 </svg>

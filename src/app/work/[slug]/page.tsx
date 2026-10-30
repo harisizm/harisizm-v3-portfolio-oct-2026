@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
-  ApproachSection,
   BoardStrip,
+  BuiltSection,
   CaseStudyRail,
-  ChallengeSection,
+  DeliversSection,
   EvidenceSection,
   NextUp,
-  OutcomeSection,
-  OverviewSection,
+  ProblemSection,
   ProjectCover,
   ProjectMeta,
   RAIL_CELL,
   RAIL_GRID,
+  ResultsSection,
   ScrollProgress,
   hasPublishableEvidence,
 } from "@/components/work";
@@ -74,10 +74,13 @@ export async function generateMetadata({
  * other way round. Evidence drops out of both together when there is nothing
  * publishable in the slot.
  *
- * The nav shows the short form of each label ("Challenge", not "The
- * Challenge"): the reference's rail reads Overview / Challenge / Strategy while
+ * The nav shows the short form of each label ("Problem", not "The
+ * Problem"): the reference's rail reads Overview / Challenge / Strategy while
  * the section headings keep their article (audit E2). Only the display label
  * changes; the ids the spy and the anchors use are untouched.
+ *
+ * The sections are the client-facing template from lessons.md D-019: the
+ * problem, what you get, how it was built, the results, then evidence.
  */
 export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
   const { slug } = await params;
@@ -120,17 +123,17 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
 
           <ProjectMeta project={project} />
 
-          <OverviewSection overview={caseStudy.overview} />
-          <BoardStrip boards={boardsAfter(project, "overview")} />
+          <ProblemSection problem={caseStudy.problem} />
+          <BoardStrip boards={boardsAfter(project, "problem")} />
 
-          <ChallengeSection challenge={caseStudy.challenge} />
-          <BoardStrip boards={boardsAfter(project, "challenge")} />
+          <DeliversSection delivers={caseStudy.delivers} />
+          <BoardStrip boards={boardsAfter(project, "delivers")} />
 
-          <ApproachSection approach={caseStudy.approach} />
-          <BoardStrip boards={boardsAfter(project, "approach")} />
+          <BuiltSection built={caseStudy.built} />
+          <BoardStrip boards={boardsAfter(project, "built")} />
 
-          <OutcomeSection outcome={caseStudy.outcome} />
-          <BoardStrip boards={boardsAfter(project, "outcome")} />
+          <ResultsSection results={caseStudy.results} />
+          <BoardStrip boards={boardsAfter(project, "results")} />
 
           {showEvidence ? (
             <EvidenceSection evidence={caseStudy.evidence} />

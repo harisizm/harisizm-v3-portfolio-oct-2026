@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Press, Reveal, STAGGER } from "@/components/motion";
+import { CursorHint } from "@/components/ui";
 import type { Project } from "@/data";
 import { ProjectCover } from "./ProjectCover";
 
@@ -53,6 +54,7 @@ export function WorkIndexEntry({
         {/* A row this large wants a smaller press than a button: 0.97 of a
             full column reads as a lurch. */}
         <Press className="block" scale={1}>
+          <CursorHint label="View case study">
           <Link
             href={href}
             className="group block pb-2 transition-opacity duration-300 ease-[ease] hover:opacity-90"
@@ -62,11 +64,13 @@ export function WorkIndexEntry({
               sizes="(min-width: 1024px) 77vw, 100vw"
               priority={priority}
               morph={{ slug: project.slug, departTo: [href] }}
+              tint
             />
             <span className="u-sr-only">
               {project.title}: {project.tagline}
             </span>
           </Link>
+          </CursorHint>
         </Press>
       </Reveal>
     );

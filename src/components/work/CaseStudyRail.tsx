@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { SplitLines } from "@/components/motion";
+import { CursorHint } from "@/components/ui";
 import type { Project } from "@/data";
 import { RailNav, type RailSection } from "./RailNav";
 import { TagChip } from "./TagChip";
@@ -32,19 +33,22 @@ export interface CaseStudyRailProps {
  * first thing the eye lands on after the cover morph settles, so it is the one
  * element in the rail that moves.
  */
-/* The rail is 276px wide. At the 48px heading size that holds about ten
-   uppercase letters, so a title whose longest word runs past that steps down
-   rather than spilling into the content column ("INTELLIGENCE" did). */
+/* The rail is 276px wide and keeps 24px clear of its divider, so the title
+   has 252px. Inter uppercase at 500 runs about 0.68em per letter: 48px holds
+   seven letters, 40px holds nine, 34px holds ten, 30px holds twelve. A title
+   whose longest word runs past that steps down rather than touching the rule
+   ("GENERATOR" did, and "INTELLIGENCE" before it). */
 function railTitleSize(title: string): string {
   const longest = Math.max(...title.split(/\s+/).map((w) => w.length));
-  if (longest <= 9) return "lg:text-heading";
-  if (longest <= 11) return "lg:text-[40px]";
-  return "lg:text-[34px]";
+  if (longest <= 7) return "lg:text-heading";
+  if (longest <= 9) return "lg:text-[40px]";
+  if (longest <= 10) return "lg:text-[34px]";
+  return "lg:text-[30px]";
 }
 
 export function CaseStudyRail({ project, sections }: CaseStudyRailProps) {
   return (
-    <div className="pt-8 lg:sticky lg:top-[var(--header-h)] lg:flex lg:h-[calc(100svh-var(--header-h))] lg:flex-col lg:justify-between lg:py-14">
+    <div className="pt-8 lg:sticky lg:top-[var(--header-h)] lg:flex lg:h-[calc(100svh-var(--header-h))] lg:flex-col lg:justify-between lg:py-14 lg:pr-6">
       <div>
         <Link
           href="/work"
@@ -108,15 +112,17 @@ function RailLink({
   icon: ReactNode;
 }) {
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer noopener"
-      className="u-label inline-flex min-h-11 items-center gap-2 text-accent transition-opacity duration-300 ease-[ease] hover:opacity-70"
-    >
-      {icon}
-      {label}
-    </a>
+    <CursorHint label="Opens in a new tab" className="inline-flex">
+      <a
+        href={href}
+        target="_blank"
+        rel="noreferrer noopener"
+        className="u-label inline-flex min-h-11 items-center gap-2 text-accent transition-opacity duration-300 ease-[ease] hover:opacity-70"
+      >
+        {icon}
+        {label}
+      </a>
+    </CursorHint>
   );
 }
 

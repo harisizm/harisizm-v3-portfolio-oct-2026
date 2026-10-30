@@ -22,7 +22,7 @@ export interface StoryParagraph {
   readonly spans: readonly Span[];
 }
 
-/** The escalating trio: grey, then ink, then blue (design.md §7.5). */
+/** The escalating trio: grey, then ink, then orange (design.md §7.5). */
 export type CardTone = "grey" | "ink" | "accent";
 
 export interface ApproachCard {
@@ -187,8 +187,8 @@ export const about: AboutContent = {
  * dropped: a missing stat beats a stale one.
  */
 const statSources = [
-  { slug: "tourgenz", label: "automated tests" },
-  { slug: "tourgenz", label: "hand-written SQL migrations" },
+  { slug: "tourgenz", label: "vendor types" },
+  { slug: "tourgenz", label: "curated destinations" },
   { slug: "client-hunt", label: "per prospecting run" },
   { slug: "transgpa", label: "students using it" },
 ] as const;
@@ -199,9 +199,9 @@ function findMetric(slug: string, label: string): ResolvedStat | null {
   const project = projects.find((p) => p.slug === slug);
   if (!project) return null;
 
-  const { outcome, evidence } = project.caseStudy;
+  const { results, evidence } = project.caseStudy;
   const pool: readonly Metric[] = [
-    ...(outcome.metrics ?? []),
+    ...(results.metrics ?? []),
     ...(evidence.kind === "usage" ? evidence.metrics : []),
   ];
 

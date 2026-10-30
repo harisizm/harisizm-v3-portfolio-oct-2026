@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Reveal } from "@/components/motion";
-import { DarkPanel } from "@/components/ui";
+import { CursorHint, DarkPanel } from "@/components/ui";
 import type { Project } from "@/data";
 import { ProjectCover } from "./ProjectCover";
 
@@ -84,12 +84,15 @@ export function NextUp({ next }: NextUpProps) {
               out of the accessibility tree — and it does not render at all
               without an image, which would leave an empty anchor behind. */}
           {next && next.cover.src !== null ? (
-            <Link href={`/work/${next.slug}`} aria-hidden="true" tabIndex={-1}>
-              <ProjectCover
-                image={next.cover}
-                sizes="(min-width: 1024px) 52vw, 100vw"
-              />
-            </Link>
+            <CursorHint label="Next case study">
+              <Link href={`/work/${next.slug}`} aria-hidden="true" tabIndex={-1} className="group block">
+                <ProjectCover
+                  image={next.cover}
+                  sizes="(min-width: 1024px) 52vw, 100vw"
+                  tint
+                />
+              </Link>
+            </CursorHint>
           ) : null}
         </div>
       </Reveal>
