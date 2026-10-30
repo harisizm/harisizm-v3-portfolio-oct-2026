@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" width="720" height="240">
+  <title>harisizm, variation B: monogram and word</title>
+  <style>@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@700&family=Inter:wght@400;500&display=swap');</style>
+  <rect width="720" height="240" fill="#EFECE6"/>
+  <rect x="92" y="68" width="104" height="104" fill="#C23A05"/>
+  <path transform="translate(92 68) scale(1.625)" fill="#EFECE6" d="M17 11h10v15h11a7 7 0 0 1 7 7v20H35V34h-8v19H17z"/>
+  <text x="224" y="146" font-family="Chakra Petch, sans-serif" font-weight="700" font-size="76" letter-spacing="1" fill="#151515">harisizm</text>
+  <text x="226" y="178" font-family="Inter, sans-serif" font-weight="500" font-size="15" letter-spacing="2.4" fill="#1F3A5F">FULL-STACK SOFTWARE ENGINEER</text>
+</svg>

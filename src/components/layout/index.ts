@@ -1,7 +1,10 @@
 export { Header } from "./Header";
 
-export { LogoMark } from "./LogoMark";
-export type { LogoMarkProps } from "./LogoMark";
+export { StackedMark, MarkSlot, Reticle } from "./StackedMark";
+export type { StackedMarkProps } from "./StackedMark";
+
+export { FooterMark } from "./FooterMark";
+export { FaviconBlink } from "./FaviconBlink";
 
 export { Footer, SocialLinks } from "./Footer";
 export type { SocialLinksProps } from "./Footer";

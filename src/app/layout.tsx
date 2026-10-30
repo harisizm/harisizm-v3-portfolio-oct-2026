@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { Chakra_Petch, Inter } from "next/font/google";
-import { Footer, Header } from "@/components/layout";
+import { Chakra_Petch, Instrument_Serif, Inter } from "next/font/google";
+import { FaviconBlink, Footer, Header } from "@/components/layout";
 import { RouteGridOverlay } from "@/components/layout/RouteGridOverlay";
 import { MotionBoot, MotionProvider, PageTransition } from "@/components/motion";
 import { site } from "@/lib/site";
@@ -18,6 +18,16 @@ const chakra = Chakra_Petch({
   subsets: ["latin"],
   weight: ["700"],
   variable: "--font-chakra",
+  display: "swap",
+});
+
+// The hero stat only (lessons.md D-018): one italic cut against the squared
+// display face. Nothing else on the site is allowed to use it.
+const instrument = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: "italic",
+  variable: "--font-instrument",
   display: "swap",
 });
 
@@ -48,13 +58,14 @@ export default function RootLayout({
        on this element before React hydrates it. See MotionBoot.tsx. */
     <html
       lang="en"
-      className={`${inter.variable} ${chakra.variable}`}
+      className={`${inter.variable} ${chakra.variable} ${instrument.variable}`}
       suppressHydrationWarning
     >
       <body>
         {/* First in the body, so it runs before any content below is parsed:
             it decides whether server-rendered "hidden" states stay hidden. */}
         <MotionBoot />
+        <FaviconBlink />
         <MotionProvider>
           <Header />
           {/* One grid overlay for the whole page, not one per section: the

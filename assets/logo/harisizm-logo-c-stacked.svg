@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" width="720" height="240">
+  <title>harisizm, variation C: stacked in the reticle</title>
+  <style>@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@700&family=Inter:wght@400;500&display=swap');</style>
+  <rect width="720" height="240" fill="#EFECE6"/>
+  <g fill="none" stroke="#C23A05" stroke-width="3">
+    <path d="M220 44v-16h16M484 28h16v16M220 196v16h16M484 212h16v-16"/>
+  </g>
+  <text x="246" y="118" font-family="Chakra Petch, sans-serif" font-weight="700" font-size="82" letter-spacing="1" fill="#151515">haris</text>
+  <text x="246" y="194" font-family="Chakra Petch, sans-serif" font-weight="700" font-size="82" letter-spacing="1" fill="#C23A05">izm</text>
+  <text x="402" y="190" font-family="Chakra Petch, sans-serif" font-weight="700" font-size="22" fill="#1F3A5F">Ø1</text>
+  <line x1="404" y1="150" x2="486" y2="150" stroke="#1F3A5F" stroke-width="2" stroke-dasharray="2 6"/>
+</svg>

@@ -3,13 +3,13 @@ import Link from "next/link";
 import { Press, Reveal, STAGGER, Stagger } from "@/components/motion";
 import { nav, site } from "@/lib/site";
 
-import { FooterWordmark } from "./FooterWordmark";
+import { FooterMark } from "./FooterMark";
 
 /* ---------------------------------------------------------------------------
    Socials
 
    One implementation, three grounds: the footer and the bottom rail sit on
-   canvas, the menu overlay sits on blue. The icons inherit `currentColor` and
+   canvas, the menu overlay sits on orange. The icons inherit `currentColor` and
    the caller supplies the colour, so none of them carries a copy of these paths
    — lessons.md T-005. It lives in this file rather than its own because the
    footer is the canonical place the full list is shown.
@@ -189,12 +189,10 @@ export function Footer() {
         </div>
 
         <div className="border-t border-ink pt-12">
-          {/* 48px of rise rather than the default 16: at this size a short
-              travel reads as a flicker. The wordmark's own box still measures
-              itself; the reveal only moves the box it sits in. */}
-          <Reveal y={48} duration={0.9}>
-            <FooterWordmark />
-          </Reveal>
+          {/* The mark choreographs its own entrance (lines rise from a clip,
+              the reticle lands last), so it is not wrapped in a Reveal: two
+              movements on one block would fight. */}
+          <FooterMark />
         </div>
 
         <p className="u-label-sm py-8 text-center text-mid-grey">

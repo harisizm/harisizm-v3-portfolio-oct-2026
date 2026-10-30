@@ -7,7 +7,7 @@ import { useCallback, useId, useRef, useState, type CSSProperties } from "react"
 import { Press } from "@/components/motion";
 import { StatusPill } from "@/components/ui";
 
-import { LogoMark } from "./LogoMark";
+import { StackedMark } from "./StackedMark";
 import { MenuOverlay } from "./MenuOverlay";
 
 /* Measured on the reference: 96px bar, 193×58 logo chip, 103×44 menu button
@@ -52,10 +52,11 @@ export function Header() {
     setOpenedAt(null);
   }, []);
 
-  /* Open: a lime chip with blue text, not lime text on the blue. The focus ring
-     flips to lime for the same reason — blue on blue is invisible. */
+  /* Open: a slate chip with canvas text, not orange on the orange overlay. The
+     focus ring flips to white for the same reason — orange on orange is
+     invisible, and slate on it is 2:1. */
   const triggerSkin = open
-    ? "bg-accent-2 text-accent focus-visible:outline-accent-2"
+    ? "bg-accent-2 text-canvas focus-visible:outline-white"
     : "bg-accent text-white";
 
   // Solid canvas ground. Left transparent, page content scrolled visibly under
@@ -74,13 +75,13 @@ export function Header() {
         ref={barRef}
         className="u-container relative z-50 flex min-h-(--header-h) items-center justify-between gap-4"
       >
-        {/* The chip, its handles and the once-per-load ghost pointer. `onClick`
-            closes the menu as well as navigating: on the home page the route
-            does not change, so nothing else would. */}
-        <LogoMark open={open} onClick={navigate} />
+        {/* The stacked mark in its reticle (D-022). `onClick` closes the menu
+            as well as navigating: on the home page the route does not change,
+            so nothing else would. */}
+        <StackedMark onClick={navigate} />
 
         <div className="flex items-center gap-4">
-          {/* Blue text on the blue overlay would be invisible, and the menu is
+          {/* Orange on the orange overlay would be invisible, and the menu is
               its own surface — the pill belongs to the page, not to it. */}
           {open ? null : (
             <div className="hidden bg-canvas px-2 py-1 sm:block">
