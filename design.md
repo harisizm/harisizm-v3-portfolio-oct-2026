@@ -69,34 +69,46 @@ equally safe alternative.
 
 Declared once, as CSS custom properties on `:root`. Nothing hardcodes a hex value.
 
+> **Repalette 2026-10-30 (lessons.md D-018): the "Workshop" palette.** The
+> reference's grey, blue and lime are retired. Same roles, same two-accent
+> rule, new values. Every pairing below was measured against the canvas.
+
 ```css
 :root {
   /* Surface */
-  --canvas:      #D9D9D9;  /* page background — warm grey, never white */
-  --ink:         #222222;  /* body text, dark panels */
+  --canvas:      #EFECE6;  /* page background — warm bone, never white */
+  --ink:         #151515;  /* body text, dark panels. 15.5:1 on canvas */
   --white:       #FFFFFF;
-  --surface-alt: #F4F4F4;  /* rare — lifted cards on canvas */
+  --surface-alt: #F7F5F0;  /* rare — lifted cards on canvas */
 
   /* Accent — exactly two. No third accent, no gradients. */
-  --accent:      #033FED;  /* electric blue: links, chips, primary CTA, active state */
-  --accent-2:    #BEFD66;  /* acid lime: logo chip, menu detail, status dot, markers */
+  --accent:      #C23A05;  /* signal orange: links, chips, primary CTA, stats, active state.
+                              4.57:1 on canvas, white on it 5.4:1, 3.4:1 on ink */
+  --accent-2:    #1F3A5F;  /* deep slate: logo chip ground, status text, markers.
+                              9.7:1 on canvas. DARK: text on it is canvas, never ink (1.6:1) */
 
-  /* Support */
-  --dim:         #8C8C8C;  /* secondary text, inactive nav */
-  --mid-grey:    #727272;
-  --border:      #BBBDC1;
-  --grid-line:   #2467EC;  /* the dotted column rules — a lighter blue than --accent */
+  /* Support — warm greys, biased toward the canvas */
+  --dim:         #8F8A82;  /* decorative state only, 2.9:1 */
+  --mid-grey:    #6B665F;  /* readable secondary, 4.8:1 */
+  --border:      #C9C4BB;
+  --grid-line:   #C23A05;  /* work-card placeholder frames only */
 
   /* Type */
   --font-display: var(--font-chakra), "Chakra Petch", system-ui, sans-serif;
-  --font-body:    "Inter", system-ui, sans-serif;
+  --font-body:    var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-serif:   var(--font-instrument), "Instrument Serif", Georgia, serif; /* hero stat only */
 }
 ```
 
-**The two-accent rule is the whole discipline.** The reference looks expensive
-because it never reaches for a third colour. Blue carries every interactive
-affordance; lime is reserved for identity and state. A new colour is a design
-change, not an implementation detail — it goes through `lessons.md`.
+**The two-accent rule is the whole discipline.** Orange carries every
+interactive affordance and every measured number; slate is reserved for
+identity and state. A new colour is a design change, not an implementation
+detail — it goes through `lessons.md`.
+
+**Where the slate goes dark, the text goes light.** The old lime took ink and
+blue text; the slate takes canvas. On the orange menu overlay the small
+details that were lime are now ink (numbers, reticle) or white (labels), since
+slate on orange is 2:1. On the ink dark panel the `Ø2` is orange.
 
 ### Dark mode
 
@@ -130,6 +142,9 @@ Measured at 1440px:
 > overlay the same rules are white at 22% (`GridOverlay tone="overlay"`). The
 > `--grid-line` token stays defined for the work-card placeholder frames only.
 
+- **The halo (D-021):** content on the canvas paints the canvas behind itself
+  with a soft edge, so a rule never runs through a headline; it fades out
+  behind the content and back in past it.
 - 16px outer gutter, 1408px content width at 1440px viewport
 - 4 equal columns (352px each at 1440px)
 - Dotted 1px rules on every column boundary — **5 visible lines**, including both edges
@@ -191,6 +206,7 @@ phone, status pill, form labels. Uppercase where the reference is uppercase, 14�
 | Step name | 48px | 700 | 1.1 | +1px | display |
 | Project title | 40px | 500 | 1.1 | normal | body |
 | Wordmark | 24px | 700 | 1.0 | +0.6px | display |
+| Header mark (D-022) | 22px, two stacked lines | 700 | 0.95 | +0.3px | display, slot label 10px body |
 | Lead paragraph | 20px | 300 | 1.4 | −0.1px | body |
 | Body | 18px | 400 | 1.5 | normal | body |
 | Number (`Ø1`) | 18px | 700 | 1.1 | normal | display |
@@ -352,8 +368,14 @@ The escalating trio — grey panel, then dark panel, then blue panel — is the
 reference's strongest hierarchy device. Reuse it for any three-step sequence.
 
 ### 7.6 Status pill
-A 6px `--accent-2` square followed by uppercase **body-face 14px** text in blue
-(`.u-label-sm`): `▪ AVAILABLE FOR WORK — [MONTH]`.
+A blinking 6px `--accent` square followed by uppercase **body-face 14px** text
+in `--accent-2` (`.u-label-sm`): `▪ AVAILABLE FOR PROJECTS`. The pill is a
+link to `/contact`, underlined on hover and focus. The label rolls to
+`site.availability.altLabel` every 4s and back. Under reduced motion the dot
+is steady and the first label stays (D-018).
+
+> Repalette 2026-10-30. Was a lime square with blue text, a scale pulse on the
+> dot, and no destination.
 
 > Corrected 2026-10-28. Was display face (audit A1: reference pill is SF Pro 14px).
 
@@ -414,12 +436,16 @@ body scroll while open.
 Ordered so the strongest evidence comes first — V2's biggest structural error was
 burying shipped work under a degree that finishes in 2027.
 
-1. **Hero** — two-weight 120px headline, support paragraph right, split CTA, bottom rail
+1. **Hero** — three-row rolling headline in the display face, stat in the
+   italic serif in `--accent`, 24px support paragraph right with the key nouns
+   bold, split CTA, bottom rail (D-018)
 2. **Positioning** — one large statement paragraph, then a rule-to-link to About
 3. **Selected work** — 3 projects, each: label chip, title, description, thumbnail row
    on the left; large art-directed image on the right. Ends in a dark
    `[ VIEW ALL PROJECTS ]` panel
-4. **Process** — three numbered steps, display-face names, line-art diagram each
+4. **Process** — three numbered steps, display-face names, line-art diagram
+   each, drawn inline with its moving parts turned by the scroll position
+   (forward on the way down, back on the way up, no easing)
 5. **Capability** — the grouped stack from `context/skills.md`, not a flat marquee
 6. **Proof** — usage numbers and any real feedback
 7. **Contact** — the fork, previewed
@@ -428,6 +454,16 @@ burying shipped work under a degree that finishes in 2027.
 ### 9.2 Case study — the template
 
 This is the thing the whole site exists to deliver. Two columns.
+
+> **Rewritten 2026-10-30 (lessons.md D-019).** The sections are now written
+> for the client who reads them, not for an engineer: **The Problem** (from
+> the user's side, at the statement scale), **What You Get** (a feature map
+> drawn as a hub, then one line per feature with its icon), **How It Was
+> Built** (three mechanisms, each a numbered title, two sentences and an
+> inline drawing from `DiagramSpec`), **The Results** (headline, one
+> paragraph, metric tiles with icons), **Evidence**. Overview, Challenge and
+> Approach below describe the original shape and are kept for the measured
+> type sizes, which still apply.
 
 **Sticky left rail** (persists the entire scroll). Everything in it is the
 **body face** — nothing here is pixel text:

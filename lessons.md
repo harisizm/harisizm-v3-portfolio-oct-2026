@@ -610,6 +610,219 @@ signal. Never observe the element you have hidden; observe its container.
 
 ---
 
+### D-018 · Our own palette, face and hero motion: "Workshop"
+**2026-10-30 · supersedes the colour half of D-002 and the hero half of D-017**
+
+The site had been built as the reference's near-replica, and it worked as a
+mould. Haris asked for it to become his: the headline face read as a
+placeholder, the typewriter showed fragments for most of each cycle, the
+support paragraph was a caption, the status pill did nothing on click, and
+the grey, blue and lime were someone else's.
+
+Three palettes, four headline faces and three hero motions were mocked as a
+live comparison page with the real composition and chosen from there.
+
+**Chosen:**
+- **Palette "Workshop".** Bone canvas `#EFECE6`, ink `#151515`, signal orange
+  `#C23A05` on every action and stat, deep slate `#1F3A5F` for identity and
+  state. Every pairing contrast-checked; the numbers are in `design.md` §2.
+  Rejected: a dark graphite-and-lime option (a return to V2's dark ground) and
+  a cool-white option that kept the reference's cobalt.
+- **Hero face: Chakra Petch 700, stat in Instrument Serif italic.** The
+  display face finally carries the hero, so the chrome and the headline speak
+  with one voice; the italic serif on the number is the one contrast, the
+  human figure inside the engineered sentence. The serif is loaded as
+  `--font-serif` and is allowed nowhere else.
+- **Hero motion: rolling rows.** Each line holds 5s complete, then the three
+  rows slide out through a clip, staggered 80ms, and the next line's rows
+  slide in; the stat counts up from zero as its row lands. Rejected: a slowed
+  typewriter (still a fragment for most of the cycle) and a word-by-word
+  reveal.
+- **Support paragraph** stays in column 4 but at 24px regular with the key
+  nouns bold, driven from `heroSupport` in `src/data/hero.ts`.
+- **Status pill** is a link to `/contact`, the dot blinks as a hard 1s lamp,
+  and the label rolls between `label` and `altLabel` in `site.ts`.
+
+**Consequences:**
+- The slate is dark where the lime was light, so every place that set ink or
+  accent text on `--accent-2` now sets canvas; on the orange overlay the small
+  lime details became ink or white. Do not put ink on slate (1.6:1).
+- The diagram SVGs in `public/diagrams/` were recoloured to the new values.
+- The `Pulse` primitive lost its only caller and was removed.
+- Orange text on ink is 3.4:1: fine for the 18px bold `Ø2`, not for body text.
+  Body text on a dark panel stays white.
+- `altLabel` is a fact ("Remote, from Lahore"), not a booking promise. A month
+  goes in only once Haris has confirmed one.
+
+**Why not reopen the rest of D-002:** the grid, the chips, the `Ø` numbering,
+the split CTAs and the menu reticle stay. The mould still works; only the
+paint and the voice are ours now.
+
+---
+
+### D-019 · Case studies written for the client, drawn more than written
+**2026-10-30 · supersedes the case-study template in design.md §9.2 as first specified**
+
+The six case studies were written as engineering post-mortems: databases,
+queries, migrations, test counts, the alternative rejected at each step. The
+people who hire Haris do not buy that. They buy the outcome, the experience
+the user gets, and the problem it solves; the impressive part of the build is
+the bidding engine or the planner that only recommends real inventory, not
+the migration count. Haris asked for every project to be rethought with that
+reader in mind, and for the pages to carry diagrams instead of paragraphs.
+
+**Chosen, per project, by Haris:**
+- **Template:** The Problem (from the user's side, statement scale), What You
+  Get (a feature map and one line per feature), How It Was Built (three
+  mechanisms, each with a drawing and two sentences), The Results (tiles),
+  Evidence. The Challenge and Approach sections, with their rejected
+  alternatives, are gone.
+- **Tourgenz** leads with the AI planner with voice, price bidding, the five
+  vendor types in one place (hotels, transport, tour guides, tour operators,
+  restaurants) and the planner grounded in the live catalogue. The bidding
+  engine, the grounded planner and the voice path are the three mechanisms.
+- **Lead Generator** leads with the number and the deliverable: a list of
+  qualified businesses with contact details, overnight, from a run nobody
+  watches. Proxies and TLS stay in `internalNotes`; the copy says "routes".
+- **Job Intelligence** is for a sales team that gets the right jobs in
+  Discord minutes after posting, plus a site that writes itself.
+- **Client Hunt** leads with a day's prospecting in ten minutes and with
+  coverage: 164 found where a plain search showed 33.
+- **TransGPA** leads with "what do I need next semester", answered live, then
+  privacy, then speed. **Khilariverse** leads with a store one person can
+  run, with the shopping side shown.
+- **Diagrams:** drawn inline from data (`DiagramSpec` in `src/data/types.ts`,
+  components in `src/components/diagrams/`) in the site's tokens, with a
+  draw-on when they scroll into view. Five kinds cover all eighteen
+  mechanisms plus the six feature maps: flow, hub, before-after, exchange,
+  coverage. The product screenshots stay as boards. The technical SVGs
+  (architecture, schema, state machine, roles, tests) are deleted.
+
+**Rules this sets:**
+- A case study never names a database, a query, a migration or a test count
+  in its body copy. Where reliability matters to the client it is said as
+  reliability ("a change never breaks a live booking"), with the number in a
+  tile at most.
+- Three mechanisms, never more. If a fourth seems necessary, the first three
+  were not the impressive ones.
+- A new drawing is a new `DiagramSpec` entry in the data, not a file. A new
+  kind of drawing is a new component in `diagrams/`, and it must use the
+  shared frame, arrow and text styles so it reads as the same hand.
+- The About page's stat row reads results metrics by label; a label change in
+  `projects.ts` must be mirrored in `about.ts` or the stat silently drops.
+
+---
+
+### D-020 · Figures get pictures: the icon set
+**2026-10-30**
+
+Haris asked for the figures across the site to carry pictures: ten minutes
+as a clock becoming a smaller clock, the three automation platforms as three
+bots, September 2026 as a calendar, and the same treatment on every metric
+tile, feature and skill group.
+
+**Chosen:** one line-icon set in `src/components/ui/Icon.tsx`, 24-unit grid,
+1.5 stroke, round caps, `currentColor`, drawn in the same hand as the
+diagrams and the process drawings. The names are a closed union
+(`IconName` in `src/data/types.ts`) so content can only point at an icon
+that exists. Content carries the name: `HeroSegment.icon`, the support
+paragraph spans, `Metric.icon`, `Feature.icon`, `SkillGroup.icon`. The
+capability strip shows each stack name with its group's icon, moving with it.
+
+**Rules:** an icon is always beside words that say the same thing, and is
+hidden from assistive tech. Icons never sit inside running prose: a first
+pass put them in the hero paragraph and it read as clip art, and a ruled
+list of the same facts under the paragraph was then cut for repeating it.
+The hero paragraph stays plain prose. Never an icon alone as a control or a label.
+A few icons are wider than square because they draw a change (the clock
+that becomes a smaller clock, the three bots); keep that to the cases where
+the change is the point.
+
+Also from this session: every in-page link glides (`scroll-behavior: smooth`
+on the root, forced back to `auto` under reduced motion), and the browser tab
+carries the wordmark's "h" in canvas on the signal orange (`src/app/icon.svg`).
+
+---
+
+### D-021 · Images as detail crops, the halo, cursor hints, brand marks
+**2026-10-30**
+
+A second pass over the same day's review notes from Haris.
+
+**Project images.** Twenty-one screenshots sat in one 16:10 window with
+`object-contain`, so every ratio but 16:10 showed bone bands, and 1440px
+sources were stretched past their size on a 2x screen and read as blurry.
+Chosen: **detail crops with a slate tint.** Every cover is cut to 16:10 at
+export around the part of the product worth looking at, fills its frame
+with `object-cover`, and at rest on the home page and the index wears a
+slate `color` blend over a greyscale image that returns to colour under the
+pointer. The case-study hero never tints. Boards are cropped tight to the
+subject their caption names. The three public sites were re-captured in
+headless Chromium at 2x (tourgenz.com needs about 30 seconds for its globe
+tiles; the first frames are half black). Rejected: a drawn browser frame
+around whole screenshots, and window crops without the tint. The crop boxes
+are in the session's `crops.mjs`; the originals stay in `assets/`.
+
+**The halo.** The column rules ran through the counters of every headline.
+Content on the canvas now paints the canvas behind itself with a soft
+box-shadow edge (`globals.css`, "The halo"), so a rule fades out going in
+and back in coming out. Anything inside a coloured ground or a figure is
+excluded by selector, and the header, menu and footer are outside `main`.
+
+**Cursor hints.** `CursorHint` rides a display-face chip beside the pointer
+over the home work cards and index rows ("View case study"), the next-up
+cover ("Next case study") and the rail's external links ("Opens in a new
+tab"). Fine pointers only; it snaps rather than trails under reduced motion;
+portalled to `body` because the cards sit inside transformed ancestors.
+
+**Brand marks on the strip.** Every stack name on the capability strip now
+carries its own mark: the brand's published glyph from Simple Icons 13 (CC0,
+kept as path data in `src/data/brands.ts`) where one exists, a line icon in
+the site's hand where it does not (`stackMarks` in `skills.ts`). The group
+icon stays on the group label only.
+
+**Stat row.** The About page's grey numerals on ink panels were the dullest
+block on the site once the palette moved. Each stat is now a full panel in
+one of the site's grounds (slate, orange, ink, slate) with its icon top-left,
+the project top-right and the figure filling the bottom.
+
+**Also:** the case-study rail keeps 24px clear of its divider and steps the
+title down a size earlier, so "GENERATOR" no longer touches the rule.
+
+---
+
+### D-022 · The mark: stacked in the reticle, with a rolling slot
+**2026-10-30 · supersedes the chip logo and its ghost-cursor sequence**
+
+Three wordmark directions were drawn as SVGs in `assets/logo/` (the chip,
+monogram and word, stacked in the reticle) and Haris chose the stacked one,
+then asked what could replace the sequence number beside it. Four slot
+treatments followed (Lahore's coordinates, the caret, the role, bare) and he
+asked for the first three combined, animating between them.
+
+**Chosen:** `StackedMark` in the header. "haris" over "izm" in the display
+face, ink over orange, inside the menu's crop-mark reticle, with a fixed slot
+beside the second line that rolls every 3.2s through the role in two short
+lines, the blinking caret, and Lahore's coordinates. The lines live in
+`site.mark`. The server renders the role and reduced motion keeps it.
+`assets/logo/harisizm-logo-c-cycle.svg` is the same mark as a standalone
+animated SVG; the earlier candidates stay in that folder for reference.
+
+**Consequences:** the slate chip, the four selection handles and the
+once-per-load ghost pointer (`LogoMark`) are removed, and `Wordmark` with
+them; the reticle is now the one bracket motif, shared with the menu.
+
+**The footer and the tab follow (same day).** `FooterMark` replaces the giant
+uppercase wordmark: the stacked word at page width, "haris" fitted gutter to
+gutter by measurement, "izm" in the accent under it with the same rolling slot
+at a tenth of the line, the reticle around the block. The lines rise from a
+clip when it scrolls into view and the reticle lands last. The tab icon is the
+squared "h" with a caret block, and `FaviconBlink` swaps the icon link between
+two inline frames so the caret blinks in time with the header's, only while the
+tab is visible and never under reduced motion.
+
+---
+
 ### T-020 · motion cannot animate an inset from `auto`
 **2026-10-28 · from the logo's ghost-cursor drag**
 

@@ -68,12 +68,18 @@ Full reasoning in `lessons.md`. Don't reopen these without a new entry there.
 
 - **Audience: freelance clients first.** Recruiters get a labelled second path
   in the contact fork, not their own site. (D-001)
-- **Visual direction: near-replica of nvrmndstudio.com** — grey canvas, two
-  accents, pixel display face, visible column rules. (D-002)
+- **Visual direction: the reference's bones, our own paint.** Visible column
+  rules, chips, `Ø` numbering and split CTAs stay from nvrmndstudio.com
+  (D-002). The palette is ours since 2026-10-30: bone canvas, signal orange,
+  deep slate. The hero is Chakra Petch 700 with the stat in Instrument Serif
+  italic, rolling row by row. (D-018)
 - **Name: "Haris" in prose, `harisizm` as the wordmark.** Full legal name on
   the CV and in the footer only. (D-003)
 - **Every project gets a full case study.** The template is data-driven, not
   hand-built pages. More and stronger projects are coming. (D-004)
+- **Case studies are written for the client**: problem, what you get, three
+  mechanisms with drawings, results. No databases, queries or test counts in
+  body copy. (D-019)
 - **Display face is Chakra Petch 700, body face Inter**, behind
   `--font-display` / `--font-body`. Departure Mono was retired on 2026-10-28
   after the audit; the site is engineered, not retro. (D-005, D-015)
@@ -105,9 +111,9 @@ renders.
 - [ ] **Booking URL** if one is wanted. `site.booking` is `null`.
 - [ ] **Re-export the CV**: wrong email (`haris687.chohan@` vs the real
       `hariszim01@`) and it still points at `harisifti.vercel.app`.
-- [ ] **Diagrams.** Five board slots are drawn by `/diagram` when wanted:
-      Client Hunt expansion grid and dedupe store, TransGPA and Khilariverse
-      architecture, plus the three home-page process diagrams.
+- [x] **Diagrams.** Resolved 2026-10-30: case-study drawings are inline from
+      data (`DiagramSpec`, `src/components/diagrams/`), the process drawings
+      are inline and scroll-linked. No board slot waits on `/diagram`.
 
 ### Resolved 2026-10-28
 
