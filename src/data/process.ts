@@ -19,11 +19,15 @@ export interface ProcessStep {
   readonly subtitle: string;
   readonly body: string;
   /**
-   * Path to a line-art SVG under /public, or null if one is ever removed. A
-   * null diagram holds the slot as empty space, not a placeholder frame (T-002).
+   * Which of the inline line-art drawings in `ProcessDiagram.tsx` the step
+   * shows, or null if one is ever removed. They are drawn inline rather than
+   * served as files so their parts can turn with the scroll. A null diagram
+   * holds the slot as empty space, not a placeholder frame (T-002).
    */
-  readonly diagram: string | null;
+  readonly diagram: ProcessDiagramId | null;
 }
+
+export type ProcessDiagramId = "ship" | "measure" | "automate";
 
 export const processSteps = [
   {
@@ -31,20 +35,20 @@ export const processSteps = [
     name: "Ship",
     subtitle: "Ship // Production",
     body: "The first useful version goes somewhere real. Tourgenz has been live since September 2026 with a traveller app, five vendor portals and an admin control room, all of them carrying actual bookings. Everything after launch lands on software people already use.",
-    diagram: "/diagrams/process/ship.svg",
+    diagram: "ship",
   },
   {
     num: "Ø2",
     name: "Measure",
     subtitle: "Measure // Evidence",
     body: "A claim gets a number or it does not get made. Tourgenz is held in place by roughly 2,000 automated tests across 214 files and 111 hand-written SQL migrations, with no CI pipeline to lean on. TransGPA parses a transcript in under two seconds because it was timed, not because it felt quick.",
-    diagram: "/diagrams/process/measure.svg",
+    diagram: "measure",
   },
   {
     num: "Ø3",
     name: "Automate",
     subtitle: "Automate // Replace",
     body: "Once the manual process is understood well enough, it gets replaced. An eight-hour prospecting day became about ten minutes. A research job that took days became 10,000 qualified profiles in 24 hours, running unattended on a VPS.",
-    diagram: "/diagrams/process/automate.svg",
+    diagram: "automate",
   },
 ] as const satisfies readonly ProcessStep[];

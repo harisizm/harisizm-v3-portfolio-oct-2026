@@ -1,22 +1,19 @@
-import Image from "next/image";
-
 import { Reveal, Stagger, STAGGER } from "@/components/motion";
 import { Chip, RuleToLink } from "@/components/ui";
 import { processSteps, type ProcessStep } from "@/data";
 
+import { DIAGRAM_PX, ProcessDiagram } from "./ProcessDiagram";
 import { Section } from "./Section";
-
-/** The reference's line-art slot is about 200px square (audit B4). */
-const DIAGRAM_PX = 200;
 
 /**
  * The diagram slot. A null `diagram` is spacing, not a placeholder: the column
- * keeps its rhythm so the SVG drops into the same spot when it is drawn, and
- * nothing renders that could be mistaken for a broken image (T-002).
+ * keeps its rhythm so the drawing drops into the same spot when it is drawn,
+ * and nothing renders that could be mistaken for a broken image (T-002).
  *
  * The drawing fades in a beat after its step (a plain fade, `y={0}`: line art
  * sliding reads as a layout shift). It sits inside the step's `Reveal`, so it
- * inherits the stagger and only adds its own delay on top.
+ * inherits the stagger and only adds its own delay on top. Once in, its parts
+ * turn with the scroll (ProcessDiagram).
  */
 function Diagram({ step }: { step: ProcessStep }) {
   if (step.diagram === null) {
@@ -25,14 +22,7 @@ function Diagram({ step }: { step: ProcessStep }) {
 
   return (
     <Reveal y={0} delay={STAGGER * 3}>
-      <Image
-        src={step.diagram}
-        alt=""
-        width={DIAGRAM_PX}
-        height={DIAGRAM_PX}
-        loading="lazy"
-        className="mx-auto"
-      />
+      <ProcessDiagram id={step.diagram} />
     </Reveal>
   );
 }
