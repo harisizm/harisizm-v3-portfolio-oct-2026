@@ -1,31 +1,38 @@
 import { CountUp, Reveal, Stagger } from "@/components/motion";
+import { Icon } from "@/components/ui";
 import { about, resolveStats } from "@/data";
 
-/* The reference's panels step down the row: the first is short, the next
-   taller, the next taller again. Four stats, so the fourth steps back. */
-const PANEL_HEIGHTS = ["lg:h-24", "lg:h-48", "lg:h-72", "lg:h-48"] as const;
+/* Four panels on the three grounds the site has, so the row reads as the
+   palette itself: slate, orange, ink, slate. Text on each is canvas. */
+const GROUNDS = [
+  "bg-accent-2 text-canvas",
+  "bg-accent text-white",
+  "bg-ink text-canvas",
+  "bg-accent-2 text-canvas",
+] as const;
 
 /**
  * Numbers read out of the case studies, never retyped here, and each one is
  * printed with the project it belongs to so a reader can go and check it.
  *
- * Built to `about-2700.webp`: an ink panel on top, and a giant pale numeral in
- * the display face that starts inside the panel and breaks out of its bottom
- * edge onto the canvas. The numeral is `--mid-grey`, which is quiet on both
- * grounds and still clears 3:1 at this size. Labels 18px light, mid grey.
+ * Redrawn 2026-10-30 (lessons.md D-021). The reference's grey numerals
+ * breaking out of ink panels read as the dullest block on the site once the
+ * palette moved. Now each stat is a full panel in one of the site's own
+ * grounds, the figure in the display face filling the bottom, the icon that
+ * names it top-left, and the project it came from as the chip label.
  *
- * Motion: the four panels are a `Stagger` wrapping the `dl`, each stat a
- * `Reveal`; the numeral runs through `CountUp`, which counts only the leading
- * integer and keeps `8h → ~10 min` reading as written.
+ * Motion: the four panels are a `Stagger`; each figure runs through
+ * `CountUp`, which counts only the leading integer and keeps
+ * `8h → ~10 min` reading as written.
  */
 
-/* The reference's numerals are three characters ("25+", "3-6"). Ours run to
-   twelve ("8h → ~10 min"), so the size follows the length: a value that would
-   wrap or escape its column is sized down rather than broken across lines. */
+/* The reference's numerals are three characters ("25+"). Ours run to twelve
+   ("8h → ~10 min"), so the size follows the length: a value that would wrap
+   or escape its panel is sized down rather than broken across lines. */
 function numeralSize(value: string): string {
-  if (value.length <= 4) return "text-[clamp(56px,7vw,104px)]";
-  if (value.length <= 7) return "text-[clamp(40px,4.5vw,64px)]";
-  return "text-[clamp(28px,3vw,44px)]";
+  if (value.length <= 4) return "text-[clamp(64px,7.5vw,112px)]";
+  if (value.length <= 7) return "text-[clamp(44px,4.8vw,72px)]";
+  return "text-[clamp(30px,3.1vw,46px)]";
 }
 
 export function StatRow() {
@@ -38,29 +45,29 @@ export function StatRow() {
         {about.stats.heading}
       </h2>
       <Stagger>
-        <dl className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:items-start lg:gap-6">
+        <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
           {stats.map((stat, i) => (
-            <Reveal key={`${stat.project}-${stat.label}`} className="flex flex-col">
-              <div aria-hidden="true" className={`h-20 bg-ink ${PANEL_HEIGHTS[i % PANEL_HEIGHTS.length]}`} />
+            <Reveal
+              key={`${stat.project}-${stat.label}`}
+              className={`flex min-h-[300px] flex-col justify-between p-6 lg:min-h-[340px] ${GROUNDS[i % GROUNDS.length]}`}
+            >
+              <div className="flex items-start justify-between gap-4">
+                {stat.icon ? <Icon name={stat.icon} size={1.75} /> : <span />}
+                <span className="u-label-sm opacity-80">{stat.project}</span>
+              </div>
               <dt className="u-sr-only">
                 {stat.label}, {stat.project}
               </dt>
-              <dd className="px-4">
-                {/* Pulled up by a quarter of its own height so it breaks the
-                    panel's bottom edge without sitting inside it: mid grey on ink
-                    is about 3:1, and at half-height the long values were mostly
-                    on the dark side. `8h → ~10 min` is a long value in a 4-up
-                    column: it shrinks rather than wrapping or overflowing. */}
+              <dd className="m-0">
                 <span
-                  className={`-mt-[0.25em] block whitespace-nowrap font-display font-bold leading-none text-mid-grey ${numeralSize(stat.value)}`}
+                  className={`block whitespace-nowrap font-display font-bold leading-none ${numeralSize(stat.value)}`}
                 >
                   <CountUp value={stat.value} />
                 </span>
-                <span className="mt-3 block max-w-[24ch] text-body font-light text-mid-grey">
+                <span className="mt-4 block max-w-[22ch] text-body font-light opacity-90">
                   {stat.label}
                   {stat.note ? `, ${stat.note}` : null}
                 </span>
-                <span className="u-label-sm mt-4 block text-accent">{stat.project}</span>
               </dd>
             </Reveal>
           ))}

@@ -1,5 +1,5 @@
 import { CountUp, Reveal, Stagger, STAGGER } from "@/components/motion";
-import { Chip } from "@/components/ui";
+import { Chip, Icon } from "@/components/ui";
 import { isTestimonial, sortedProjects, type Project } from "@/data";
 
 import { Section } from "./Section";
@@ -67,6 +67,9 @@ function EvidenceCard({ project }: { project: Project }) {
               ) : null}
             </dt>
             <dd className="font-display text-[32px] font-bold leading-[1.1] text-accent">
+              {metric.icon ? (
+                <Icon name={metric.icon} size={0.9} className="mb-2 block" />
+              ) : null}
               <CountUp value={metric.value} />
             </dd>
           </div>

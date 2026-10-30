@@ -2,8 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { MorphCover, Parallax, Press, Stagger, STAGGER } from "@/components/motion";
-import { Chip, DarkPanel } from "@/components/ui";
-import { COVER_DRIFT, COVER_FRAME } from "@/components/work/ProjectCover";
+import { Chip, CursorHint, DarkPanel } from "@/components/ui";
+import {
+  COVER_DRIFT,
+  COVER_FRAME,
+  COVER_TINT_IMAGE,
+  COVER_TINT_OVERLAY,
+} from "@/components/work/ProjectCover";
 import { sortedProjects, type Project } from "@/data";
 
 import { Reveal } from "./Reveal";
@@ -35,7 +40,7 @@ interface CoverProps {
  * `assets/` awaiting a WebP export. So the null case is the normal case, and it
  * gets a *designed* frame rather than a broken `<img>` or a grey rectangle that
  * reads as a bug: the dotted rule from the grid motif, the project's monogram in
- * the display face, and the lime crop marks the menu reticle already uses
+ * the display face, and the slate crop marks the menu reticle already uses
  * (design.md §8). It is aria-hidden because it carries no information the
  * adjacent title and date row do not already state.
  *
@@ -64,16 +69,18 @@ function Cover({ project, size }: CoverProps) {
           departTo={[`/work/${project.slug}`]}
           className={COVER_FRAME}
         >
-          <Parallax amount={COVER_DRIFT} overscan={0}>
+          <Parallax amount={COVER_DRIFT} overscan={COVER_DRIFT}>
             <Image
               src={src}
               alt={alt}
               fill
               sizes="(min-width: 1024px) 75vw, 100vw"
               loading="lazy"
-              className="object-contain"
+              className={`object-cover ${COVER_TINT_IMAGE}`}
             />
           </Parallax>
+          {/* The slate tint at rest (D-021); the card is the `group`. */}
+          <span aria-hidden="true" className={COVER_TINT_OVERLAY} />
         </MorphCover>
       );
     }
@@ -146,6 +153,7 @@ function WorkCard({ project }: { project: Project }) {
       {/* No tap scale: the cover morph measures this card on click, and a
           card shrunk by 3% hands it the wrong box. Hover lift only. */}
       <Press className="block" scale={1}>
+        <CursorHint label="View case study">
         <Link
           href={`/work/${project.slug}`}
           className="group grid gap-8 lg:grid-cols-4 lg:gap-6"
@@ -184,6 +192,7 @@ function WorkCard({ project }: { project: Project }) {
             <Cover project={project} size="full" />
           </div>
         </Link>
+        </CursorHint>
       </Press>
     </Reveal>
   );

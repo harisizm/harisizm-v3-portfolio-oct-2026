@@ -1,11 +1,16 @@
 import { Marquee, Reveal, Stagger } from "@/components/motion";
-import { Chip, RuleToLink } from "@/components/ui";
-import { skills } from "@/data";
+import { Chip, Icon, RuleToLink, StackMark } from "@/components/ui";
+import { skills, stackMarks, type StackMark as StackMarkSpec } from "@/data";
 
 import { Section } from "./Section";
 
-/** Every stack name, in the CV's order, for the strip. One source: `skills`. */
-const stackNames = skills.flatMap((group) => group.items);
+/** Every stack name with its own mark, in the CV's order. One source: `skills`. */
+const stackItems = skills.flatMap((group) =>
+  group.items.map((name) => ({
+    name,
+    mark: (stackMarks[name] ?? { kind: "icon", name: group.icon }) as StackMarkSpec,
+  })),
+);
 
 /**
  * Capability — design.md §9.1 item 5.
@@ -40,12 +45,15 @@ export function Capability() {
       <Reveal y={0} className="mt-16 border-t border-border py-6 lg:mt-24">
         <div aria-hidden="true">
           <Marquee className="u-label text-mid-grey">
-            {stackNames.map((name) => (
+            {stackItems.map(({ name, mark }) => (
               <span
                 key={name}
                 className="flex items-center gap-12 whitespace-nowrap"
               >
-                {name}
+                <span className="flex items-center gap-3">
+                  <StackMark mark={mark} size={1.25} className="text-accent" />
+                  {name}
+                </span>
                 <span className="size-1.5 bg-accent" />
               </span>
             ))}
@@ -57,7 +65,10 @@ export function Capability() {
         <dl className="grid gap-10 border-t border-border pt-10 lg:grid-cols-2 lg:gap-x-6 lg:gap-y-12">
           {skills.map((group) => (
             <Reveal key={group.id} className="lg:pr-10">
-              <dt className="u-label text-accent">{group.label}</dt>
+              <dt className="u-label flex items-center gap-3 text-accent">
+                <Icon name={group.icon} size={1.5} />
+                {group.label}
+              </dt>
               <dd className="mt-3 max-w-[48ch] text-body text-ink">
                 {group.items.join(", ")}
               </dd>
